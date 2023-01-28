@@ -1,0 +1,60 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "../../../axios";
+
+function ProfileCard() {
+  const profile_id = localStorage.getItem("profile_id");
+  const token = JSON.parse(localStorage.getItem("token"))
+
+
+  const [profile, setProfile] = useState([]);
+  const fetchProfile = () => {
+    axios.get(`company-profile/?id=${profile_id}`, {
+      headers: {
+        Authorization: `Bearer ${token.access}`
+      }
+    }).then((res) => {
+      setProfile(res.data);
+    });
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+  const navigate = useNavigate()
+  return (
+    <div className="sm:m-10 lg:m-20 ">
+      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-10 sm:p-5 mb-5">
+        <div className="flex justify-center">
+          <img
+            className="h-40 w-40 rounded-full"
+            src={`http://127.0.0.1:8000/${profile.company_logo}`}
+            alt=""
+          />
+        </div>
+        <div className="flex flex-col items-center m-3">
+          <h1 className="text-xl font-bold m-3 uppercase">
+            {profile.company_name}
+          </h1>
+          <h1 className="text-sm font-semibold m-3 uppercase">
+            {profile.category?.category_name}
+          </h1>
+          <p className="text-center">{profile.about}</p>
+        </div>
+      </div>
+      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-5 sm:p-5 flex flex-col justify-center">
+        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5" onClick={() => {navigate('/recruiter-my-jobs')}}>
+          MY JOBS
+        </button>
+        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5">
+          SHORTLISTED CANDIDATES
+        </button>
+        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5">
+          PLAN DETAILS
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default ProfileCard;

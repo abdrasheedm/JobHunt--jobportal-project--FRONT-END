@@ -17,6 +17,8 @@ export const AuthProvider = ({children}) => {
     // let [recruiter,setRecruiter]=useState(()=>localStorage.getItem('adminAuthToken')? jwt_decode(localStorage.getItem('adminAuthToken')):null)
     let [adminAuthToken,setAdminAuthToken]=useState(()=>localStorage.getItem('adminAuthToken')? JSON.parse(localStorage.getItem('adminAuthToken')):null)
 
+    let [errorMsg, SetErrorMsg] = useState('')
+
     const navigate=useNavigate()
 
 
@@ -25,7 +27,7 @@ export const AuthProvider = ({children}) => {
         await axios.post('http://127.0.0.1:8000/api/user/signin/',{email:email,password:password}).then((res)=>{
                  console.log(res.data)
                  
-                 console.log('id is here',res.data.user.user_id);
+                //  console.log('id is here',res.data.user.user_id);
                  if (res.data.token){
                    console.log('recruiter is ' + res.data.user.user_type);
                    
@@ -33,7 +35,7 @@ export const AuthProvider = ({children}) => {
                     console.log("hai");
                     localStorage.setItem('authToken',JSON.stringify(res.data));
                     localStorage.setItem('token',JSON.stringify(res.data.token));
-                    console.log(res.data.token.access);
+                    localStorage.setItem('userType', JSON.stringify(res.data.user.user_type))
                     localStorage.setItem('profile_id', JSON.stringify(res.data.profile_id))
                     console.log(res.data);
                     setAuthToken(res.data)
@@ -43,9 +45,10 @@ export const AuthProvider = ({children}) => {
                      navigate('/')
                    }
                    else if(res.data.user.user_type == 'Recruiter'){
-                     localStorage.setItem('adminAuthToken',JSON.stringify(res.data))
+                     localStorage.setItem('authToken',JSON.stringify(res.data))
                      localStorage.setItem('token',JSON.stringify(res.data.token))
                      localStorage.setItem('profile_id', JSON.stringify(res.data.profile_id))
+                     localStorage.setItem('userType', JSON.stringify(res.data.user.user_type))
                      setAdminAuthToken(res.data)
                     setUser(res.data.token)                      
 
@@ -62,6 +65,11 @@ export const AuthProvider = ({children}) => {
                     //  SetError(res.data.message)
                      navigate('/')
                    };
+                 }else{
+                  SetErrorMsg(res.data.message)
+                  console.log(errorMsg)
+                  console.log("hai");
+
                  }
                
             //    if(res.data.message){              
@@ -76,7 +84,7 @@ export const AuthProvider = ({children}) => {
             //    }
  
              }
-             ) ; 
+             ).catch((response) => console.log('error', response)); ; 
          }
 
          let logOut=()=>{
@@ -107,7 +115,7 @@ export const AuthProvider = ({children}) => {
             adminToken:adminToken,
             mobile:mobile,
             setMobile:setMobile,   
-            // errors:errors,    
+            errorMsg : errorMsg, 
             adminAuthToken:adminAuthToken,
             admin:admin,
             // setShow:setShow,

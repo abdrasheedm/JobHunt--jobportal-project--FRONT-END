@@ -1,113 +1,129 @@
-import React, { useState } from 'react'
-import axios from '../../../axios'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import axios from "../../../axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function RecruiterRegister() {
+  const [categories, setCategory] = useState([]);
+  const fetchData = async () => {
+    await axios.get(`company-category/`).then((res) => {
+      setCategory(res.data);
+    });
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [company, setCompany] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [company, setCompany] = useState("");
+  const [companyCategory, setCompanyCategory] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
     setSubmitted(false);
-};
+  };
 
-const handleLastName = (e) => {
+  const handleLastName = (e) => {
     setLastName(e.target.value);
     setSubmitted(false);
-};
+  };
 
-const handleCompany = (e) => {
-  setCompany(e.target.value);
-  setSubmitted(false);
-};
+  const handleCompany = (e) => {
+    setCompany(e.target.value);
+    setSubmitted(false);
+  };
 
-
-const handleMobile = (e) => {
+  const handleMobile = (e) => {
     setMobile(e.target.value);
     setSubmitted(false);
-};
+  };
 
-const handleEmail = (e) => {
+  const handleEmail = (e) => {
     setEmail(e.target.value);
     setSubmitted(false);
-};
+  };
 
-// Handling the password change
-const handlePassword = (e) => {
+  // Handling the password change
+  const handlePassword = (e) => {
     setPassword(e.target.value);
     setSubmitted(false);
-};
+  };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  if (firstName === '' || lastName ==='' || company === '' || email === '' || mobile === '' || password === '') {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      company === "" ||
+      email === "" ||
+      mobile === "" ||
+      password === ""
+    ) {
       setError(true);
-  } else {
-      axios.post('user/signup/', {
-          first_name : firstName,
-          last_name : lastName,
-          company_name : company,
-          phone_number : mobile,
-          email : email,
-          user_type : "Recruiter",
-          password : password
-      }).then((res) => {
-          if(res.data.otp){
+    } else {
+      axios
+        .post("user/signup/", {
+          first_name: firstName,
+          last_name: lastName,
+          company_name: company,
+          company_category: companyCategory,
+          phone_number: mobile,
+          email: email,
+          user_type: "Recruiter",
+          password: password,
+        })
+        .then((res) => {
+          if (res.data.otp) {
             console.log(mobile);
-          dispatch({
-            type : 'mobile',
-            payload : mobile
-          })
-          navigate('/verify-otp')
-          
-
+            dispatch({
+              type: "mobile",
+              payload: mobile,
+            });
+            navigate("/verify-otp");
           }
-      })
-
+        });
       setSubmitted(true);
       setError(false);
-  }
-};
-const successMessage = () => {
-  return (
+    }
+  };
+  const successMessage = () => {
+    return (
       <div
-          className="success"
-          style={{
-              display: submitted ? '' : 'none',
-          }}>
-          <h1 className='text-green-700 text-xl'>User {firstName} successfully registered!!</h1>
+        className="success"
+        style={{
+          display: submitted ? "" : "none",
+        }}
+      >
+        <h1 className="text-green-700 text-xl">
+          User {firstName} successfully registered!!
+        </h1>
       </div>
-  );
-};
+    );
+  };
 
-// Showing error message if error is true
-const errorMessage = () => {
-  return (
+  // Showing error message if error is true
+  const errorMessage = () => {
+    return (
       <div
-          className="error"
-          style={{
-              display: error ? '' : 'none',
-          }}>
-          <h5 className='text-red-700 text-xl'>Please enter all the fields</h5>
+        className="error"
+        style={{
+          display: error ? "" : "none",
+        }}
+      >
+        <h5 className="text-red-700 text-xl">Please enter all the fields</h5>
       </div>
-  );
-};
-
-
-
+    );
+  };
 
   return (
     <div>
@@ -137,9 +153,9 @@ const errorMessage = () => {
                   />
                 </div>
               </div>
-              
+
               <div>
-              <label
+                <label
                   htmlFor="last_name"
                   className="block text-lg font-medium text-gray-700 undefined"
                 >
@@ -156,7 +172,7 @@ const errorMessage = () => {
                 </div>
               </div>
               <div>
-              <label
+                <label
                   htmlFor="company_name"
                   className="block text-lg font-medium text-gray-700 undefined"
                 >
@@ -170,6 +186,26 @@ const errorMessage = () => {
                     value={company}
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="company_name"
+                  className="block text-lg font-medium text-gray-700 undefined"
+                >
+                  Company Category
+                </label>
+                <div className="flex flex-col items-start">
+                <select className="container p-2 my-1 rounded-md"
+                onChange={(e) => {
+                  const selectedCategory = e.target.value;
+                  setCompanyCategory (selectedCategory)
+                }}>
+                    <option>Please choose one option</option>
+                    {categories.map((category, index) => {
+                      return <option value={category.category_name} key={index}>{category.category_name}</option>;
+                    })}
+                  </select>
                 </div>
               </div>
               <div className="mt-4">
@@ -190,7 +226,7 @@ const errorMessage = () => {
                 </div>
               </div>
               <div>
-              <label
+                <label
                   htmlFor="last_name"
                   className="block text-lg font-medium text-gray-700 undefined"
                 >
@@ -238,12 +274,13 @@ const errorMessage = () => {
                   />
                 </div>
               </div> */}
-              <div className='text-center py-10'>
-              {errorMessage()}
-              {successMessage()}
+              <div className="text-center py-10">
+                {errorMessage()}
+                {successMessage()}
               </div>
               <div className="flex items-center justify-end mt-4">
-                <Link to = '/signin'
+                <Link
+                  to="/signin"
                   className="text-sm text-gray-600 underline hover:text-gray-900"
                   href="#"
                 >
@@ -261,7 +298,7 @@ const errorMessage = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default RecruiterRegister
+export default RecruiterRegister;

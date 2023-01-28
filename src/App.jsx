@@ -11,6 +11,9 @@ import { Provider } from 'react-redux'
 import Store from './Redux/Store'
 import { AuthProvider } from './Context/AuthContext'
 import RecruiterProfile from './Components/Pages/RecruiterProfile/RecruiterProfile'
+import MyJobs from './Components/Pages/RecruiterProfile/MyJobs'
+import PostJob from './Components/Pages/RecruiterProfile/PostJob'
+import EditProfile from './Components/Pages/RecruiterProfile/EditProfile'
 
 function App() {
 
@@ -26,6 +29,9 @@ function App() {
         <Route path='/recruiter-register' element={<RecruiterRegister />} />
         <Route path='/verify-otp' element={<VerifyOtp />} />
         <Route path='/recruiter-profile' element={<RecruiterProfile />} />
+        <Route path='/recruiter-edit-profile' element={<EditProfile />} />
+        <Route path='/recruiter-my-jobs' element={<MyJobs />} />
+        <Route path='/recruiter-post-job' element={<PostJob />} />
       </Routes>
       <Footer />
 

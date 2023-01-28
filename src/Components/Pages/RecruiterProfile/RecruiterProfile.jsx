@@ -1,30 +1,45 @@
-import React from "react";
-import profile from "../../../assets/card1.webp";
+import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import profilePic from "../../../assets/card1.webp";
+import axios from "../../../axios"
+import ProfileCard from "../../Recruiter/ProfileCard/ProfileCard";
 
 function RecruiterProfile() {
+
+  const profile_id =localStorage.getItem("profile_id")
+  const token = JSON.parse(localStorage.getItem("token"))
+  
+  console.log(token);
+  console.log(token.access);
+
+
+  const [profile, setProfile] = useState([])
+  const fetchProfile = () => {
+    axios.get(`company-profile/?id=${profile_id}`, {
+      headers: {
+        Authorization: `Bearer ${token.access}`
+      }
+    }).then((res) => {
+      setProfile(res.data)
+    })
+  }
+
+useEffect(() => {
+  fetchProfile()
+
+}, [])
+console.log(profile);
+const navigate = useNavigate()
+
   return (
-    <div className="bg-primary sm:px-10 lg:py-20 lg:px-40">
+    <div className="bg-primary lg:py-20">
       <div className="grid lg:grid-cols-3">
-        <div className="bg-white lg:m-20 lg:p-10 rounded-2xl drop-shadow-2xl">
-          <div className="flex justify-center">
-            <img className="h-40 w-40 rounded-full" src={profile} alt="" />
-          </div>
-          <div className="flex flex-col items-center m-3">
-            <h1 className="text-xl font-bold m-3">COMPANY NAME</h1>
-            <h1 className="text-sm font-normal m-3">COMPANY type</h1>
-            <p className="text-center">
-              JB IT Solutions develops digital solutions and experiences that
-              help digital-first business models by designing, engineering, and
-              delivering them. For long-term innovation, we have the most
-              extensive digital engineering experience and client-centric
-              methodology.
-            </p>
-          </div>
-        </div>
-        <div className="bg-white m-20 p-16 col-span-2 rounded-2xl drop-shadow-2xl">
+        <ProfileCard />
+        <div className="lg:m-20 sm:m-10 col-span-2 ">
+          <div className="bg-white p-16 rounded-2xl drop-shadow-2xl mb-5">
           <div className="flex justify-between">
             <h1 className="text-xl font-bold">Basic Information</h1>
-            <button className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg">
+            <button className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg" onClick={() => {navigate('/recruiter-edit-profile')}}>
               Edit profile
             </button>
           </div>
@@ -32,31 +47,76 @@ function RecruiterProfile() {
           <div className="grid grid-cols-3 mt-8">
             <div>
                 <h1 className="mb-3">EMPLOYER ID</h1>
-                <p className="font-bold "> #132ee4325433</p>
+                <p className="font-bold "> # {profile.employer_id}</p>
             </div>
             <div>
             <h1 className="mb-3">EMAIL</h1>
-                <p className="text-sm font-bold ">rasheed@gmail.com</p>
+                <p className="text-sm font-bold ">{profile.recruiter?.email}</p>
 
             </div>
             <div>
             <h1 className="mb-3">PHONE NUMBER</h1>
-                <p className="font-bold ">+91 730600306</p>
+                <p className="font-bold ">{profile.recruiter?.phone_number} </p>
 
             </div>
           </div>
           <div className="grid grid-cols-3 mt-8">
             <div>
                 <h1 className="mb-3">LOCATION</h1>
-                <p className="font-bold "> New Joursey, USA</p>
+                <p className="font-bold "> {profile.head_office_location}</p>
             </div>
             <div>
             </div>
             <div>
-            <h1 className="mb-3">YEARS</h1>
-                <p className="font-bold ">25 YEARS</p>
+            <h1 className="mb-3">FOUNDER</h1>
+                <p className="font-bold ">{profile.founder} </p>
 
             </div>
+          </div>
+          </div>
+          <div className="bg-white p-16 rounded-2xl drop-shadow-2xl mb-5">
+          <div className="flex justify-between">
+            <h1 className="text-xl font-bold">Gallery</h1>
+            <button className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg">
+              Add Photo
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 mt-8">
+            <div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZVAmzvoHuZgTGb8Fa8Xd_00KIz9_RlKyUInZH3eFc&s" alt="" />
+            </div>
+            <div>
+            <div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZVAmzvoHuZgTGb8Fa8Xd_00KIz9_RlKyUInZH3eFc&s" alt="" />
+            </div>
+
+            </div>
+            <div>
+            <div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZVAmzvoHuZgTGb8Fa8Xd_00KIz9_RlKyUInZH3eFc&s" alt="" />
+            </div>
+
+            </div>
+          </div>
+          <div className="grid grid-cols-3 mt-8">
+            <div>
+            <div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZVAmzvoHuZgTGb8Fa8Xd_00KIz9_RlKyUInZH3eFc&s" alt="" />
+            </div>
+            </div>
+            <div>
+            <div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZVAmzvoHuZgTGb8Fa8Xd_00KIz9_RlKyUInZH3eFc&s" alt="" />
+            </div>
+            </div>
+            <div>
+            <div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZVAmzvoHuZgTGb8Fa8Xd_00KIz9_RlKyUInZH3eFc&s" alt="" />
+            </div>
+
+            </div>
+          </div>
           </div>
         </div>
       </div>
