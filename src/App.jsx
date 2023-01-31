@@ -14,6 +14,7 @@ import RecruiterProfile from './Components/Pages/RecruiterProfile/RecruiterProfi
 import MyJobs from './Components/Pages/RecruiterProfile/MyJobs'
 import PostJob from './Components/Pages/RecruiterProfile/PostJob'
 import EditProfile from './Components/Pages/RecruiterProfile/EditProfile'
+import EditJob from './Components/Pages/RecruiterProfile/EditJob'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route path='/recruiter-edit-profile' element={<EditProfile />} />
         <Route path='/recruiter-my-jobs' element={<MyJobs />} />
         <Route path='/recruiter-post-job' element={<PostJob />} />
+        <Route path='/recruiter-edit-job' element={<EditJob />} />
       </Routes>
       <Footer />
 

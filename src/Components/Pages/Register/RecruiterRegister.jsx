@@ -5,13 +5,13 @@ import { useDispatch } from "react-redux";
 
 function RecruiterRegister() {
   const [categories, setCategory] = useState([]);
-  const fetchData = async () => {
+  const fetchCategory = async () => {
     await axios.get(`company-category/`).then((res) => {
       setCategory(res.data);
     });
   };
   useEffect(() => {
-    fetchData();
+    fetchCategory();
   }, []);
 
   const [firstName, setFirstName] = useState("");

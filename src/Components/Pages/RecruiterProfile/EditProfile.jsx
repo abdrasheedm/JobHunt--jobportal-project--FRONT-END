@@ -4,28 +4,131 @@ import axios from "../../../axios";
 
 function EditProfile() {
   const profile_id = localStorage.getItem("profile_id");
+  const token = JSON.parse(localStorage.getItem("token"));
 
-  const [profile, setProfile] = useState([]);
-  const fetchProfile = () => {
-    axios.get(`company-profile/?id=${profile_id}`).then((res) => {
-      setProfile(res.data);
+  const [categories, setCategory] = useState([]);
+  const fetchCategory = async () => {
+    await axios.get(`company-category/`).then((res) => {
+      setCategory(res.data);
     });
   };
 
+  const [profile, setProfile] = useState([]);
+  const fetchProfile = () => {
+    axios
+      .get(`company-profile/?id=${profile_id}`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+        setProfile(res.data);
+        setFirstName(res.data.recruiter.first_name);
+        setLastName(res.data.recruiter.last_name);
+        setMobile(res.data.recruiter.phone_number);
+        setEmail(res.data.recruiter.email);
+        setCompanyName(res.data.company_name);
+        setAbout(res.data.about);
+        setceo(res.data.ceo_name);
+        setFounder(res.data.founder);
+        setHeadOffice(res.data.head_office_location);
+        setLogo(res.data.company_logo);
+        setCompanyCategory(res.data.category.category_name);
+      });
+  };
   useEffect(() => {
     fetchProfile();
+    fetchCategory();
   }, []);
-
+  console.log(profile);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [company, setCompany] = useState("");
-  const [companyCategory, setCompanyCategory] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [companyCategory, setCompanyCategory] = useState("");
   const [about, setAbout] = useState("");
   const [ceo, setceo] = useState("");
   const [founder, setFounder] = useState("");
+  const [headOffice, setHeadOffice] = useState("");
+  const [logo, setLogo] = useState([]);
+
+  const BASEURL = `http://127.0.0.1:8000${logo}`;
+
+  // const recruiter = {
+  //   first_name: firstName,
+  //   last_name: lastName,
+  //   email: email,
+  //   phone_number: mobile,
+  // };
+
+  const handleFirstName = (e) => {
+    setFirstName(e.target.value);
+  };
+  const handleLastName = (e) => {
+    setLastName(e.target.value);
+  };
+  const handleMobile = (e) => {
+    setMobile(e.target.value);
+  };
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleCompanyName = (e) => {
+    setCompanyName(e.target.value);
+  };
+  const handleAbout = (e) => {
+    setAbout(e.target.value);
+  };
+  const handleCEO = (e) => {
+    setceo(e.target.value);
+  };
+  const handleFounder = (e) => {
+    setFounder(e.target.value);
+  };
+  const handleHeadOffice = (e) => {
+    setHeadOffice(e.target.value);
+  };
+  const handleLogo = (e) => {
+    setLogo(e);
+    // console.log(...e.target.files);
+  };
+  console.log(logo)
+  function refreshPage() {
+    window.location.reload(false);
+  }
+
+  const profileUpdate = (e) => {
+    const formData = new FormData();
+    formData.append("first_name", firstName);
+    formData.append("last_name", lastName);
+    formData.append("email", email);
+    formData.append("phone_number", mobile);
+    formData.append("category", companyCategory);
+    formData.append("company_name", companyName);
+    formData.append("about", about);
+    formData.append("ceo_name", ceo);
+    formData.append("founder", founder);
+    formData.append("head_office_location", headOffice);  
+    formData.append("company_logo", e.target.logo.files[0]);
+    formData.append("head_office_location", headOffice);
+
+    e.preventDefault();
+    let url = `/update-company-profile/?id=${profile_id}`;
+    axios.put(url, formData, {
+      headers: {
+        Authorization: `Bearer ${token.access}`,
+        // 'content-type': 'multipart/form-data'
+        
+        
+      },
+    }).then((res) => {
+      console.log(res.data);
+      refreshPage()
+    });
+  };
+
   return (
     <div className=" lg:py-20">
       <div className="grid lg:grid-cols-3">
@@ -37,6 +140,7 @@ function EditProfile() {
               novalidate=""
               action=""
               className="space-y-12 ng-untouched ng-pristine ng-valid"
+              onSubmit={profileUpdate}
             >
               <div className="my-5">
                 <h1 className="text-xl text-myBlue text-center mb-5">
@@ -52,8 +156,9 @@ function EditProfile() {
                       name="firstName"
                       id="firstName"
                       placeholder="Enter Your First Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                      value=""
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100"
+                      onChange={handleFirstName}
+                      value={firstName}
                       required
                     />
                   </div>
@@ -66,8 +171,9 @@ function EditProfile() {
                       name="lastName"
                       id="lastName"
                       placeholder="Enter Your Last Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                      value=""
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                      onChange={handleLastName}
+                      value={lastName}
                       required
                     />
                   </div>
@@ -82,7 +188,9 @@ function EditProfile() {
                       name="email"
                       id="email"
                       placeholder="Enter Your Email"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                      onChange={handleEmail}
+                      value={email}
                       required
                     />
                   </div>
@@ -97,7 +205,9 @@ function EditProfile() {
                       pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
                       maxlength="10"
                       title="Ten digits code"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                      onChange={handleMobile}
+                      value={mobile}
                       required
                     />
                   </div>
@@ -117,8 +227,9 @@ function EditProfile() {
                       name="firstName"
                       id="firstName"
                       placeholder="Enter Your Company Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                      value=""
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                      onChange={handleCompanyName}
+                      value={companyName}
                       required
                     />
                   </div>
@@ -133,10 +244,14 @@ function EditProfile() {
                         setCompanyCategory(selectedCategory);
                       }}
                     >
-                      <option>Please choose one option</option>
-                      {/* {categories.map((category, index) => {
-                      return <option value={category.category_name} key={index}>{category.category_name}</option>;
-                    })} */}
+                      <option>{companyCategory}</option>
+                      {categories.map((category, index) => {
+                        return (
+                          <option value={category.category_name} key={index}>
+                            {category.category_name}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
@@ -150,7 +265,9 @@ function EditProfile() {
                       name="email"
                       id="email"
                       placeholder="Write about your company"
-                      className="w-full px-3 h-20 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
+                      className="w-full px-3 h-20 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                      onChange={handleAbout}
+                      value={about}
                       required
                     />
                   </div>
@@ -164,8 +281,9 @@ function EditProfile() {
                         name="firstName"
                         id="firstName"
                         placeholder="Enter Name of CEO"
-                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                        value=""
+                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                        onChange={handleCEO}
+                        value={ceo}
                         required
                       />
                     </div>
@@ -178,8 +296,9 @@ function EditProfile() {
                         name="lastName"
                         id="lastName"
                         placeholder="Enter Name of Founder"
-                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                        value=""
+                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                        onChange={handleFounder}
+                        value={founder}
                         required
                       />
                     </div>
@@ -194,8 +313,9 @@ function EditProfile() {
                         name="firstName"
                         id="firstName"
                         placeholder="Enter Your Company Location"
-                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                        value=""
+                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                        onChange={handleHeadOffice}
+                        value={headOffice}
                         required
                       />
                     </div>
@@ -203,17 +323,26 @@ function EditProfile() {
                       <label for="LastName" className="block mb-2 text-sm">
                         Company Logo
                       </label>
+                      <img src={BASEURL} alt="" className="h-20" />
+
                       <input
                         type="file"
-                        name="lastName"
+                        name="logo"
                         id="lastName"
                         placeholder="Enter Your Last Name"
-                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 dark:text-gray-100"
-                        value=""
+                        className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
+                        onChange={handleLogo}
                         required
                       />
                     </div>
+                    
                   </div>
+                  <button
+                  type="submit"
+                  className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-myBlue border border-transparent rounded-md active:bg-gray-900 false"
+                >
+                  Save
+                </button>
                 </div>
               </div>
             </form>

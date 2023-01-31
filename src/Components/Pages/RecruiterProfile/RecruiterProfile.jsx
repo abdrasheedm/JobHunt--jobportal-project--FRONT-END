@@ -20,6 +20,7 @@ function RecruiterProfile() {
         Authorization: `Bearer ${token.access}`
       }
     }).then((res) => {
+      localStorage.setItem('CompanyProfile', JSON.stringify(res.data))
       setProfile(res.data)
     })
   }
