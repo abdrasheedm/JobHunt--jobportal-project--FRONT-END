@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "../../../axios";
-
+import ProfileCard from "../../Recruiter/ProfileCard/ProfileCard";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -10,9 +10,9 @@ function MyJobs() {
   const company = JSON.parse(localStorage.getItem("CompanyProfile"));
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
+  console.log(jobs)
   const fetchJobs = async () => {
-    await axios
-      .get(`recruiter-view-job/?id=${company.id}`, {
+    await axios.get(`recruiter-view-job/?id=${company.id}`, {
         headers: {
           Authorization: `Bearer ${token.access}`,
         },
@@ -26,11 +26,31 @@ function MyJobs() {
     fetchJobs();
   }, []);
 
+  function refreshPage() {
+    window.location.reload(false);
+  }
+  
+  const handleDeleteJob = (jobId) => {
+    axios.get(`recruiter-delete-job/?id=${jobId}`, {
+      headers: {
+        Authorization: `Bearer ${token.access}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data.message)
+      refreshPage()
+    });
+
+  }
+
   console.log(jobs);
 
   return (
     <div className="">
-      <div className="px-10 py-20 xl:mx-40 lg:mx-20">
+      <div className="grid lg:grid-cols-3">
+      <ProfileCard />
+      <div className="col-span-2 ">
+      <div className="px-10 py-20 xl:mx-40 lg:mx-10">
         <div className="">
           <button
             className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg my-5"
@@ -43,6 +63,7 @@ function MyJobs() {
         </div>
         <div>
           <div className="p-5 rounded-md bg-gray-100">
+            {jobs.length ? (<div>
             <h1 className="text-xl mb-2">MY JOBS</h1>
 
             <div className="overflow-auto rounded-lg shadow hidden md:block">
@@ -97,12 +118,13 @@ function MyJobs() {
                         <td className="p-2 text-sm text-green-700 whitespace-nowrap">
                           <i className="fas fa-edit" onClick={() => {
                             const value = job.id
-                            console.log(value, 'hai')
                             navigate('/recruiter-edit-job', {state: {data:value}})
                             }}></i>
                         </td>
                         <td className="p-2 text-sm text-red-700 whitespace-nowrap">
-                          <i class="fa-solid fa-trash"></i>
+                          <i class="fa-solid fa-trash" onClick={() => { 
+                              handleDeleteJob(job.id)
+                            }}></i>
                         </td>
                       </tr>
                     );
@@ -135,12 +157,33 @@ function MyJobs() {
                   {job.job_title}
                 </div>
                 <div className="text-sm font-medium text-black">0</div>
+               <div className="text-green-700 text-right"> <i className="fas fa-edit" onClick={() => {
+                            var value = job.id
+                            console.log(value, 'hai')
+                            navigate('/recruiter-edit-job', {state: {data:value}})
+                            }}></i></div>
+                            <div className="text-red-700 text-right">
+                            <i class="fa-solid fa-trash" onClick={() => { 
+                              handleDeleteJob(job.id)
+                            }} ></i>
+
+                            </div>
               </div>
                 )
               })}
             </div>
+            </div>) : (
+              <div className="text-center">
+                <h1 className="text-red-700 font-bold text-2xl">NO JOBS</h1>
+              </div>
+            ) }
+            
           </div>
         </div>
+      </div>
+      </div>
+
+
       </div>
     </div>
   );

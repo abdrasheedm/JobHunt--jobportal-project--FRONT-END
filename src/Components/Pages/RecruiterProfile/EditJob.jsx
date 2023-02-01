@@ -20,7 +20,16 @@ function EditJob() {
         })
         .then((res) => {
           setJobs(res.data);
+          console.log(res.data)
           setJobTitle(res.data.job_title)
+          setEmployeeType(res.data.level)
+          setWorkPlaceType(res.data.job_type)
+          setJobDescription(res.data.full_description)
+          setJobQualifications(res.data.qualification)
+          setLocation(res.data.location)
+          setJobDepartment(res.data.department)
+          setSalaryRange(res.data.salary_range)
+          setExperience(res.data.experience)
         });
     };
     const fetchProfile = () => {
@@ -123,7 +132,7 @@ function EditJob() {
           short_description : shortDescription[0],
           location : location
       }
-      axios.post("recruiter-post-job/", data, {
+      axios.put(`recruiter-update-job/?id=${jobID}`, data, {
         headers: {
           Authorization: `Bearer ${token.access}`,
         }
@@ -180,7 +189,7 @@ function EditJob() {
                         className="container p-2 my-1 rounded-md"
                         onChange={handleEmployeeType}
                       >
-                        <option>Select</option>
+                        <option value={employeeType}>{employeeType}</option>
                         <option key="fresher" value="fresher">
                           Fresher
                         </option>
@@ -194,27 +203,6 @@ function EditJob() {
                     </div>
                   </div>
                   <div className="flex flex-col lg:flex-row">
-                    {/* <div className="pr-2">
-                      <label for="firstName" className="block mb-2 text-sm">
-                        Job Category
-                      </label>
-                      <select
-                        className="container p-2 my-1 rounded-md"
-                        onChange={(e) => {
-                          const selectedCategory = e.target.value;
-                          setJobCategory(selectedCategory);
-                        }}
-                      >
-                        <option>Please choose one option</option>
-                        {categories.map((category, index) => {
-                          return (
-                            <option value={category.id} key={index}>
-                              {category.category_name}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div> */}
                     <div className="pl-2">
                       <label for="firstName" className="block mb-2 text-sm">
                         Workplace Type
@@ -225,8 +213,8 @@ function EditJob() {
                         className="container p-2 my-1 rounded-md"
                         onChange={handleWorkplaceType}
                       >
-                        <option>Select</option>
-                        <option key="part-time" value="part-time">
+                        <option value={workPlaceType}>{workPlaceType}</option>
+                        <option key="part-time" value="part-time" onClick={(e) => {console.log(e.target.key, "hai")}}>
                           Part Time
                         </option>
                         <option key="full-time" value="full-time">
@@ -268,7 +256,7 @@ function EditJob() {
                       onChange={handleJobQualifications}
                       className="p-2 my-1 rounded-md"
                     >
-                      <option>Select</option>
+                      <option value={jobQualifications}>select</option>
                       <option key="1" value="4">
                         Masters
                       </option>
@@ -304,7 +292,7 @@ function EditJob() {
                           setJobDepartment(selectedCategory);
                         }}
                       >
-                        <option>Please choose one option</option>
+                        <option value={jobDepartment}>select</option>
                         {departments.map((department, index) => {
                           return (
                             <option
@@ -355,7 +343,7 @@ function EditJob() {
                       type="submit"
                       className="w-full px-8 py-3 font-semibold rounded-md dark:bg-myBlue  dark:text-white"
                     >
-                      POST JOB
+                      Edit Job
                     </button>
                   </div>
                 </div>

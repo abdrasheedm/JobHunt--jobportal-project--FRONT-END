@@ -56,12 +56,6 @@ function EditProfile() {
 
   const BASEURL = `http://127.0.0.1:8000${logo}`;
 
-  // const recruiter = {
-  //   first_name: firstName,
-  //   last_name: lastName,
-  //   email: email,
-  //   phone_number: mobile,
-  // };
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);

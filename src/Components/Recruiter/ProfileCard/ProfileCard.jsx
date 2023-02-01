@@ -24,7 +24,7 @@ function ProfileCard() {
   const navigate = useNavigate()
   return (
     <div className="sm:m-10 lg:m-20 ">
-      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-10 sm:p-5 mb-5">
+      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-10 sm:p-5 mb-5 hover:shadow-2xl" onClick={() => {navigate('/recruiter-profile')}}>
         <div className="flex justify-center">
           <img
             className="h-40 w-40 rounded-full"

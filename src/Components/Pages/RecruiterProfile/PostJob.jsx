@@ -122,7 +122,7 @@ function PostJob() {
     <div>
       <div className="px-10 py-20 xl:mx-40 lg:mx-20">
         <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
-          <div className="flex flex-col p-6 rounded-md sm:p-10 xl:p-32 bg-white shadow-xl w-1/2 sm:max-w-2xl sm:rounded-lg my-20">
+          <div className="flex flex-col p-6 rounded-md sm:p-10 xl:p-32 bg-white shadow-xl sm:max-w-2xl sm:rounded-lg my-20">
             <div className="mb-8 text-center">
               <h1 className="my-3 text-4xl text-myBlue font-bold">
                 Post A Job
