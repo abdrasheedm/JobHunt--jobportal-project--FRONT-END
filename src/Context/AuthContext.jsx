@@ -1,7 +1,8 @@
 import { createContext,useState } from "react"
-import axios  from 'axios'
+import axios  from '../axios'
 import { useNavigate } from "react-router-dom";
 import jwt_decode from 'jwt-decode';
+import { useEffect } from "react";
 
 
 
@@ -13,7 +14,8 @@ export const AuthProvider = ({children}) => {
     let [user,setUser]=useState(()=>localStorage.getItem('authToken')? jwt_decode(localStorage.getItem('authToken')):null)
     let [admin,setAdmin]=useState(()=>localStorage.getItem('admin')? jwt_decode(localStorage.getItem('admin')):null)
     let [adminToken,setadminToken]=useState(()=>localStorage.getItem('admin')? JSON.parse(localStorage.getItem('admin')):null)
-
+    let [token, setToken] = useState(() => localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')):null)
+    let [loading, setLoading] = useState(true)
     // let [recruiter,setRecruiter]=useState(()=>localStorage.getItem('adminAuthToken')? jwt_decode(localStorage.getItem('adminAuthToken')):null)
     let [adminAuthToken,setAdminAuthToken]=useState(()=>localStorage.getItem('adminAuthToken')? JSON.parse(localStorage.getItem('adminAuthToken')):null)
 
@@ -24,7 +26,7 @@ export const AuthProvider = ({children}) => {
 
     const Userlogin=async(email,password)=>{
        
-        await axios.post('http://127.0.0.1:8000/api/user/signin/',{email:email,password:password}).then((res)=>{
+        await axios.post('user/signin/',{email:email,password:password}).then((res)=>{
                  console.log(res.data)
                  
                 //  console.log('id is here',res.data.user.user_id);
@@ -32,12 +34,11 @@ export const AuthProvider = ({children}) => {
                    console.log('recruiter is ' + res.data.user.user_type);
                    
                    if (res.data.user.user_type == 'JobSeeker'){
-                    console.log("hai");
                     localStorage.setItem('authToken',JSON.stringify(res.data));
                     localStorage.setItem('token',JSON.stringify(res.data.token));
                     localStorage.setItem('userType', JSON.stringify(res.data.user.user_type))
                     localStorage.setItem('profile_id', JSON.stringify(res.data.profile_id))
-                    console.log(res.data);
+                    setToken(res.data.token)
                     setAuthToken(res.data)
                     setUser(res.data.token)                      
                     //  SetError(res.data.message)
@@ -71,18 +72,6 @@ export const AuthProvider = ({children}) => {
                   console.log("hai");
 
                  }
-               
-            //    if(res.data.message){              
-            //      SetError(res.data.message)
-            //      handleShow()
- 
-            //      handleClicks()
-            //      setTimeout(() => {
-            //          handleClose(false);
-            //          handleCloses()
-            //             }, 5000);
-            //    }
- 
              }
              ).catch((response) => console.log('error', response)); ; 
          }
@@ -97,13 +86,55 @@ export const AuthProvider = ({children}) => {
             localStorage.removeItem('adminAuthToken')
             localStorage.removeItem('Admintoken')
             localStorage.removeItem('admin')
-            // localStorage.removeItem('Role')
             localStorage.removeItem('profile_id')
+            localStorage.removeItem('CompanyProfile')
+            localStorage.removeItem('userType')
 
             setUser(null)
             setAuthToken(null)
             navigate('/signin')
         }
+
+
+        let updateToken = async () => {
+          console.log('called')
+          let response = await fetch('http://127.0.0.1:8000/api/token/refresh/', {
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({'refresh':token?.refresh})
+          })
+          let data = await response.json()
+          if (response.status === 200){
+            setToken(data)
+            setUser(jwt_decode(data.access))
+            localStorage.setItem('token', JSON.stringify(data))
+          }else{
+            logOut()
+          }
+
+          if(loading){
+            setLoading(false)
+          }
+        }
+        
+        useEffect(() => {
+
+          if(loading){
+            console.log('called loading')
+            updateToken()
+          }
+
+          let fourMinute = 1000 * 60 * 4
+          let interval = setInterval(() => {
+            if(token){
+
+              updateToken()
+            }
+          }, fourMinute)
+          return () => clearInterval(interval)
+        },[token, loading])
 
 
         const [mobile,setMobile]=useState('')
@@ -128,7 +159,7 @@ export const AuthProvider = ({children}) => {
         }
         return(
             <AuthContext.Provider value={contextData}>
-                {children}
+                {loading ? null : children}
             </AuthContext.Provider>
         )
 

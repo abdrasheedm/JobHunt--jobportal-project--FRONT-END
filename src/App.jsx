@@ -1,5 +1,6 @@
 import Navbar from './Components/Navbar/Navbar'
 import './App.css'
+import RecruiterPrivateRoute from './Routes/RecruiterPrivateRoute'
 import Home from './Components/Home/Home'
 import Footer from './Components/Footer/Footer'
 import { Routes, Route } from 'react-router-dom'
@@ -16,6 +17,7 @@ import PostJob from './Components/Pages/RecruiterProfile/PostJob'
 import EditProfile from './Components/Pages/RecruiterProfile/EditProfile'
 import EditJob from './Components/Pages/RecruiterProfile/EditJob'
 import SingleJobView from './Components/Pages/RecruiterProfile/SingleJobView'
+import BrowseCandidates from './Components/Pages/RecruiterProfile/BrowseForCandiates/BrowseCandidates'
 
 function App() {
 
@@ -30,12 +32,18 @@ function App() {
         <Route path='/user-register' element={<UserRegister />} />
         <Route path='/recruiter-register' element={<RecruiterRegister />} />
         <Route path='/verify-otp' element={<VerifyOtp />} />
-        <Route path='/recruiter-profile' element={<RecruiterProfile />} />
-        <Route path='/recruiter-edit-profile' element={<EditProfile />} />
-        <Route path='/recruiter-my-jobs' element={<MyJobs />} />
-        <Route path='/recruiter-post-job' element={<PostJob />} />
-        <Route path='/recruiter-edit-job' element={<EditJob />} />
-        <Route path='/recruiter-single-job-view' element={<SingleJobView />} />
+        <Route element={<RecruiterPrivateRoute/>}>
+            <Route path='/recruiter-profile' element={<RecruiterProfile />} />
+            <Route path='/recruiter-edit-profile' element={<EditProfile />} />
+            <Route path='/recruiter-my-jobs' element={<MyJobs />} />
+            <Route path='/recruiter-post-job' element={<PostJob />} />
+            <Route path='/recruiter-edit-job' element={<EditJob />} />
+            <Route path='/recruiter-single-job-view' element={<SingleJobView />} />
+
+            <Route path='/recruiter-browse-candidates' element={<BrowseCandidates />} />
+
+        </Route>
+        
       </Routes>
       <Footer />
 

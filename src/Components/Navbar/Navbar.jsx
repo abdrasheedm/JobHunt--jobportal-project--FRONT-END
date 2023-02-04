@@ -7,13 +7,20 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AuthContext from "../../Context/AuthContext";
 
-const navigation = [
+const userNav = [
   { name: "HOME", href: "/", current: true },
   { name: "BROWSE JOBS ", href: "#", current: false },
   { name: "PAGE", href: "#", current: false },
   { name: "MESSAGING", href: "#", current: false },
   { name: "CONTACT", href: "#", current: false },
 ];
+const recruiterNav = [
+  { name: "BROWSE CANDIDATES ", href: "/recruiter-browse-candidates", current: false },
+  { name: "PAGE", href: "#", current: false },
+  { name: "MESSAGING", href: "#", current: false },
+  { name: "CONTACT", href: "#", current: false },
+];
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -21,7 +28,7 @@ function classNames(...classes) {
 
 function Navbar() {
   const { logOut, user } = useContext(AuthContext);
-  const userType = localStorage.getItem("userType");
+  const userType = JSON.parse(localStorage.getItem("userType"));
   console.log(userType =='"Recruiter"');
   console.log(localStorage.getItem("userType"));
   // console.log(user);
@@ -59,7 +66,7 @@ function Navbar() {
                 </div>
                 <div className="hidden sm:ml-6 sm:block pt-5">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    { userType==="Recruiter" ? recruiterNav.map((item) => (
                       <Link
                         key={item.name}
                         to={item.href}
@@ -73,7 +80,21 @@ function Navbar() {
                       >
                         {item.name}
                       </Link>
-                    ))}
+                    ) ): userNav.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className={classNames(
+                          item.current
+                            ? "bg-myBlue text-white"
+                            : "text-gray-900 hover:bg-blue-900 hover:text-white",
+                          "px-3 py-2 rounded-md text-sm font-medium"
+                        )}
+                        aria-current={item.current ? "page" : undefined}
+                      >
+                        {item.name}
+                      </Link>
+                    ) )}
                   </div>
                 </div>
                 {user ? (
@@ -111,7 +132,7 @@ function Navbar() {
                           <Menu.Item>
                             {({ active }) => (
                               <>
-                                {userType==='"Recruiter"' ? (
+                                {userType==='Recruiter' ? (
                                   <Link
                                     to="/recruiter-profile"
                                     className={classNames(
@@ -202,7 +223,22 @@ function Navbar() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              {navigation.map((item) => (
+              { userType==="Recruiter" ? recruiterNav.map((item) => (
+                <Disclosure.Button
+                  key={item.name}
+                  as="a"
+                  href={item.href}
+                  className={classNames(
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block px-3 py-2 rounded-md text-base font-medium"
+                  )}
+                  aria-current={item.current ? "page" : undefined}
+                >
+                  {item.name}
+                </Disclosure.Button>
+              )): userNav.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"

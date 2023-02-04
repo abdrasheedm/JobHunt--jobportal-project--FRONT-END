@@ -8,10 +8,6 @@ function RecruiterProfile() {
 
   const profile_id =localStorage.getItem("profile_id")
   const token = JSON.parse(localStorage.getItem("token"))
-  
-  console.log(token);
-  console.log(token.access);
-
 
   const [profile, setProfile] = useState([])
   const fetchProfile = () => {
@@ -29,7 +25,6 @@ useEffect(() => {
   fetchProfile()
 
 }, [])
-console.log(profile);
 const navigate = useNavigate()
 
   return (
@@ -52,7 +47,7 @@ const navigate = useNavigate()
             </div>
             <div>
             <h1 className="mb-3">EMAIL</h1>
-                <p className="text-sm font-bold ">{profile.recruiter?.email}</p>
+                <p className="text-sm font-bold overflow-x-auto">{profile.recruiter?.email}</p>
 
             </div>
             <div>

@@ -3,10 +3,16 @@ import HeroImg from "../../assets/hero-img.png";
 import BrowseTopJobs from "./BrowseTopJobs";
 import FindTalent from "./FindTalent";
 import BrowseTopCategory from "./BrowseTopCategory";
+import { useNavigate, Navigate } from "react-router-dom";
 
 function Home() {
+
+  const userType = JSON.parse(localStorage.getItem('userType'))
+  const navigate = useNavigate()
+  console.log(userType)
   return (
     <div>
+      {userType==="Recruiter" ? <Navigate to='recruiter-profile'/> : (<div>
       <div className="container-md flex flex-wrap justify-center bg-primary">
         <div className="px-10 py-20">
           <h4 className="py-10 font-medium text-xl">
@@ -31,6 +37,7 @@ function Home() {
       <BrowseTopJobs />
       <FindTalent />
       <BrowseTopCategory />
+    </div>) }
     </div>
   );
 }

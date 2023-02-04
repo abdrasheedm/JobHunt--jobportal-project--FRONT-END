@@ -25,9 +25,9 @@ function EditJob() {
           setEmployeeType(res.data.level)
           setWorkPlaceType(res.data.job_type)
           setJobDescription(res.data.full_description)
-          setJobQualifications(res.data.qualification)
+          setJobQualifications(res.data.qualification.id)
           setLocation(res.data.location)
-          setJobDepartment(res.data.department)
+          setJobDepartment(res.data.department.id)
           setSalaryRange(res.data.salary_range)
           setExperience(res.data.experience)
         });

@@ -85,7 +85,7 @@ function EditProfile() {
     setHeadOffice(e.target.value);
   };
   const handleLogo = (e) => {
-    setLogo(e);
+    // setLogo(e.target.logo.files[0]);
     // console.log(...e.target.files);
   };
   console.log(logo)
@@ -94,6 +94,7 @@ function EditProfile() {
   }
 
   const profileUpdate = (e) => {
+    setLogo(e.target.logo.files[0])
     const formData = new FormData();
     formData.append("first_name", firstName);
     formData.append("last_name", lastName);
@@ -326,7 +327,6 @@ function EditProfile() {
                         placeholder="Enter Your Last Name"
                         className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100 "
                         onChange={handleLogo}
-                        required
                       />
                     </div>
                     

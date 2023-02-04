@@ -50,7 +50,7 @@ function MyJobs() {
       <div className="grid lg:grid-cols-3">
       <ProfileCard />
       <div className="col-span-2 ">
-      <div className="px-10 py-20 xl:mx-40 lg:mx-10">
+      <div className="px-10 py-20 lg:mx-10">
         <div className="">
           <button
             className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg my-5"
@@ -101,7 +101,7 @@ function MyJobs() {
                             {index + 1}
                           </a>
                         </td>
-                        <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                        <td className="p-3 text-sm text-gray-700 whitespace-nowrap hover:cursor-pointer hover:text-myBlue" onClick={() => {navigate('/recruiter-single-job-view', {state: {data:job.id}})}}>
                           {job.job_title}
                         </td>
                         <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
