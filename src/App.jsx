@@ -23,6 +23,8 @@ import SeekerProfile from './Components/Pages/Seeker/SeekerProfile/SeekerProfile
 import EditSProfile from './Components/Pages/Seeker/SeekerProfile/EditProfile'
 import BrowseJobs from './Components/Pages/Seeker/BrowseForJobs/BrowseJobs'
 import SeekerJobView from './Components/Pages/Seeker/SingleJobView/SingleJobView'
+import FavouriteJobs from './Components/Pages/Seeker/FavouriteJobs/FavouriteJobs'
+import AppliedJobs from './Components/Pages/Seeker/AppliedJobs/AppliedJobs'
 
 function App() {
 
@@ -54,6 +56,8 @@ function App() {
 
           <Route path='/seeker-browse-jobs' element={<BrowseJobs />} />
           <Route path='/seeker-single-job-view' element={<SeekerJobView />} />
+          <Route path='/seeker-applied-jobs' element={<AppliedJobs />} />
+          <Route path='/seeker-favourite-jobs' element={<FavouriteJobs />} />
 
 
         </Route>

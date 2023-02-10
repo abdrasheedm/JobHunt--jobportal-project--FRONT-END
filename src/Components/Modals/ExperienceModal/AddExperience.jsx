@@ -102,6 +102,7 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
           'success'
         ).then((res)=>{
         // refreshPage()
+        onClose()
 
         })
       })
@@ -117,6 +118,8 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
           'success'
         ).then((res)=>{
         // refreshPage()
+        onClose()
+
 
         })
       })

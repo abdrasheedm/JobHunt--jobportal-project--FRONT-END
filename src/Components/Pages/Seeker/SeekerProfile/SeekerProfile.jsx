@@ -65,7 +65,7 @@ function SeekerProfile() {
     fetchProfile();
     fetchExperience();
     fetchProjects();
-  }, []);
+  }, [expModal, projModal]);
   const navigate = useNavigate();
 
   return (
@@ -115,7 +115,7 @@ function SeekerProfile() {
                 <p className="font-bold ">{profile.age}</p>
               </div>
               <div>
-                <h1 className="mb-3">LEVEL</h1>
+                <h1 className="mb-3">EXPERIENCE LEVEL</h1>
                 <p className="font-bold ">{profile.level} </p>
               </div>
             </div>

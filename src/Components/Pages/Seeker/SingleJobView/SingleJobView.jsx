@@ -3,6 +3,9 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
+import Swal from 'sweetalert2'
+
+
 
 function SeekerJobView() {
   const locat = useLocation();
@@ -12,7 +15,7 @@ function SeekerJobView() {
   const [jobData, setJobData] = useState({});
   const [companyData, setCompanyData] = useState("");
 
-  const [jobId, setJobId] = useState()
+  // const [jobId, setJobId] = useState()
   const [recruiterId, setRecruiterId] = useState()
   const [resume, setResume] = useState()
   const [firstName, setFirstName] = useState('')
@@ -50,8 +53,8 @@ function SeekerJobView() {
       .then((res) => {
         setJobData(res.data);
         setCompanyData(res.data.company_id);
-        setJobId(res.data.id)
-        setRecruiterId(res.data.recruiter_id)
+        // setJobId(res.data.id)
+        setRecruiterId(res.data.company_id.id)
       });
   };
 
@@ -61,6 +64,42 @@ function SeekerJobView() {
     fetchJobDetails();
   }, []);
   console.log(jobData)
+
+  const ApplyJob = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("first_name", firstName);
+    formData.append("last_name", lastName);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("job_id", jobID);
+    formData.append("recruiter_id", recruiterId);
+    formData.append("seeker_id", seekerId);
+    formData.append("resume", resume);
+    formData.append("is_applied", true);
+
+    console.log(formData)
+
+    let url = `apply-job/`;
+    axios
+      .post(url, formData, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+          // 'content-type': 'multipart/form-data'
+        },
+      })
+      .then((res) => {
+        Swal.fire(
+          'Congratulations!',
+          `${res.data.message} !`,
+          'success'
+        )
+        console.log(res.data);
+        // refreshPage();
+      });
+  };
+
 
   return (
     <div
@@ -159,7 +198,7 @@ function SeekerJobView() {
               novalidate=""
               action=""
               className="space-y-12 ng-untouched ng-pristine ng-valid"
-            //   onSubmit={profileUpdate}
+              onSubmit={ApplyJob}
             >
                 <div className="grid grid-cols-2 mb-5">
                   <div className="col-span-2 md:col-span-1 px-5">
@@ -239,7 +278,7 @@ function SeekerJobView() {
                       placeholder="Enter Your First Name"
                       className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
                       onChange={handleResume}
-                      value={resume}
+                      // value={resume}
                       required
                     />
                   </div>

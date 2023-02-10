@@ -72,14 +72,16 @@ function SProfileCard() {
       </div> */}
       <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-5 sm:p-5 flex flex-col justify-center mb-10">
         <button
-          className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5"
+          className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5 capitalize"
           onClick={() => {
-            navigate("/recruiter-my-jobs");
+            navigate('/seeker-favourite-jobs');
           }}
         >
-          MY WISHLIST
+          MY FAVOURITE JOBS
         </button>
-        <button className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5">
+        <button className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5 capitalize" onClick={() => {
+          navigate('/seeker-applied-jobs')
+        }}>
           APPLIED JOBS
         </button>
         <button className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5">

@@ -14,7 +14,7 @@ function SingleJobView() {
 
     const fetchJobDetails = async () => {
         await axios
-        .get(`recruiter-view-single-job/?id=${jobID}`, {
+        .get(`view-single-job/?id=${jobID}`, {
           headers: {
             Authorization: `Bearer ${token.access}`,
           },
