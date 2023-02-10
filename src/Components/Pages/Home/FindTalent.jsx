@@ -1,5 +1,5 @@
 import React from 'react'
-import FindTalentImg from '../../assets/FindTalent.png'
+import FindTalentImg from '../../../assets/FindTalent.png'
 
 function FindTalent() {
   return (

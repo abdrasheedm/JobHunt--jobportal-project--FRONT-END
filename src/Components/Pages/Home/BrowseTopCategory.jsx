@@ -1,5 +1,5 @@
 import React from 'react'
-import TopCategoryCard from '../Cards/TopCategory/TopCategoryCard'
+import TopCategoryCard from '../../Cards/TopCategory/TopCategoryCard'
 
 function BrowseTopCategory() {
   return (

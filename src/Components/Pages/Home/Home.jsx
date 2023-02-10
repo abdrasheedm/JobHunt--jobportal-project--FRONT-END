@@ -1,5 +1,5 @@
 import React from "react";
-import HeroImg from "../../assets/hero-img.png";
+import HeroImg from "../../../assets/hero-img.png";
 import BrowseTopJobs from "./BrowseTopJobs";
 import FindTalent from "./FindTalent";
 import BrowseTopCategory from "./BrowseTopCategory";
@@ -25,9 +25,9 @@ function Home() {
           <button className="bg-myBlue text-white font-medium py-2 px-8 rounded-xl mx-5 ">
             LOOKING FOR A JOB ?
           </button>
-          <button className="bg-myGreen text-white font-medium py-2 px-8 rounded-xl mx-5 ">
+          {userType === "Recruiter" ? (<button className="bg-myGreen text-white font-medium py-2 px-8 rounded-xl mx-5 ">
             FIND TALENT
-          </button>
+          </button>) : ""}
         </div>
         <div className="px-10 mt-20">
           <img className="md:h-50 sm:20" src={HeroImg} alt="" />
@@ -35,7 +35,8 @@ function Home() {
       </div>
 
       <BrowseTopJobs />
-      <FindTalent />
+      {userType==="Recruiter" ? <FindTalent /> : ""}
+      
       <BrowseTopCategory />
     </div>) }
     </div>

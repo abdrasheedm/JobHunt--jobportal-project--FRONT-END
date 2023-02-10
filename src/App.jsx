@@ -1,7 +1,7 @@
 import Navbar from './Components/Navbar/Navbar'
 import './App.css'
 import RecruiterPrivateRoute from './Routes/RecruiterPrivateRoute'
-import Home from './Components/Home/Home'
+import Home from './Components/Pages/Home/Home'
 import Footer from './Components/Footer/Footer'
 import { Routes, Route } from 'react-router-dom'
 import Login from './Components/Pages/Login/Login'
@@ -18,6 +18,11 @@ import EditProfile from './Components/Pages/RecruiterProfile/EditProfile'
 import EditJob from './Components/Pages/RecruiterProfile/EditJob'
 import SingleJobView from './Components/Pages/RecruiterProfile/SingleJobView'
 import BrowseCandidates from './Components/Pages/RecruiterProfile/BrowseForCandiates/BrowseCandidates'
+import SeekerPrivateRoute from './Routes/SeekerPrivateRoute'
+import SeekerProfile from './Components/Pages/Seeker/SeekerProfile/SeekerProfile'
+import EditSProfile from './Components/Pages/Seeker/SeekerProfile/EditProfile'
+import BrowseJobs from './Components/Pages/Seeker/BrowseForJobs/BrowseJobs'
+import SeekerJobView from './Components/Pages/Seeker/SingleJobView/SingleJobView'
 
 function App() {
 
@@ -41,6 +46,15 @@ function App() {
             <Route path='/recruiter-single-job-view' element={<SingleJobView />} />
 
             <Route path='/recruiter-browse-candidates' element={<BrowseCandidates />} />
+
+        </Route>
+        <Route element={<SeekerPrivateRoute />}>
+          <Route path='/seeker-profile' element={<SeekerProfile />} />
+          <Route path='/seeker-edit-profile' element={<EditSProfile />} />
+
+          <Route path='/seeker-browse-jobs' element={<BrowseJobs />} />
+          <Route path='/seeker-single-job-view' element={<SeekerJobView />} />
+
 
         </Route>
         

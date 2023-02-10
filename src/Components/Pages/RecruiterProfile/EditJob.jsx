@@ -30,6 +30,8 @@ function EditJob() {
           setJobDepartment(res.data.department.id)
           setSalaryRange(res.data.salary_range)
           setExperience(res.data.experience)
+          setLastDate(res.data.last_date)
+          setVacancy(res.data.vacancy)
         });
     };
     const fetchProfile = () => {
@@ -76,6 +78,8 @@ function EditJob() {
     const [jobDepartment, setJobDepartment] = useState("");
     const [salaryRange, setSalaryRange] = useState("");
     const [location, setLocation] = useState("");
+    const [lastDate, setLastDate] = useState("");
+    const [vacancy, setVacancy] = useState("");
   
   
     const handlejobTitle = (e) => {
@@ -113,6 +117,15 @@ function EditJob() {
       setExperience(e.target.value);
       
     };
+    const handleLastDate = (e) => {
+      setLastDate(e.target.value);
+      
+    };
+    const handleVacancy = (e) => {
+      setVacancy(e.target.value);
+      
+    };
+  
   
     const handleSubmit = (e) => {
       e.preventDefault()
@@ -130,7 +143,9 @@ function EditJob() {
           qualification : jobQualifications,
           full_description : jobDescriptions,
           short_description : shortDescription[0],
-          location : location
+          location : location,
+          vacancy : vacancy,
+          last_date : lastDate
       }
       axios.put(`recruiter-update-job/?id=${jobID}`, data, {
         headers: {
@@ -336,6 +351,39 @@ function EditJob() {
                       />
                     </div>
                   </div>
+                  <div className="grid grid-cols-3">
+                  
+                  <div className="pl-2">
+                    <label for="firstName" className="block mb-2 text-sm">
+                      Vacancy
+                    </label>
+                    <input
+                      type="name"
+                      name="firstName"
+                      id="firstName"
+                      placeholder="Enter salary Range"
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700"
+                      onChange={handleVacancy}
+                      value={vacancy}
+                      required
+                    />
+                  </div>
+                  <div className="pl-2">
+                    <label for="firstName" className="block mb-2 text-sm">
+                      Last Date
+                    </label>
+                    <input
+                      type="date"
+                      name="firstName"
+                      id="firstName"
+                      placeholder="Enter salary Range"
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700"
+                      onChange={handleLastDate}
+                      value={lastDate}
+                      required
+                    />
+                  </div>
+                </div>
                 </div>
                 <div className="space-y-2">
                   <div>

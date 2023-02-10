@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -6,10 +6,12 @@ import JobHuntLogo from "../../assets/JobHuntLogo.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AuthContext from "../../Context/AuthContext";
+import axios from "../../axios";
+
 
 const userNav = [
   { name: "HOME", href: "/", current: true },
-  { name: "BROWSE JOBS ", href: "#", current: false },
+  { name: "BROWSE JOBS ", href: "/seeker-browse-jobs", current: false },
   { name: "PAGE", href: "#", current: false },
   { name: "MESSAGING", href: "#", current: false },
   { name: "CONTACT", href: "#", current: false },
@@ -29,11 +31,50 @@ function classNames(...classes) {
 function Navbar() {
   const { logOut, user } = useContext(AuthContext);
   const userType = JSON.parse(localStorage.getItem("userType"));
-  console.log(userType =='"Recruiter"');
-  console.log(localStorage.getItem("userType"));
-  // console.log(user);
+
+  const token = JSON.parse(localStorage.getItem("token"));
+  const profile_id = localStorage.getItem("profile_id");
+  const [profileImage, setProfileImage] = useState('');
+  const fetchSeekerProfile = () => {
+    axios
+      .get(`seeker-profile/?id=${profile_id}`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+       setProfileImage(res.data.profile_photo)
+      });
+  };
+
+  const fetchRecruiterProfile = () => {
+    axios
+      .get(`company-profile/?id=${profile_id}`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+       setProfileImage(res.data.company_logo)
+      });
+  };
+
+  const BASEURL = `http://127.0.0.1:8000${profileImage}`;
+
+
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    
+    if(userType==='Recruiter'){
+      fetchRecruiterProfile()
+    }
+    else if(userType==='JobSeeker'){
+      fetchSeekerProfile()
+    }
+    
+  }, [])
   return (
     <Disclosure as="nav" className="bg-primary py-10">
       {({ open }) => (
@@ -114,7 +155,7 @@ function Navbar() {
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            src={BASEURL}
                             alt=""
                           />
                         </Menu.Button>
@@ -137,17 +178,17 @@ function Navbar() {
                                     to="/recruiter-profile"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     )}
                                   >
                                     Your Profile
                                   </Link>
                                 ) : (
                                   <Link
-                                    to="/"
+                                    to="/seeker-profile"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     )}
                                   >
                                     Your Profile

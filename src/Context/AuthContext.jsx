@@ -89,6 +89,7 @@ export const AuthProvider = ({children}) => {
             localStorage.removeItem('profile_id')
             localStorage.removeItem('CompanyProfile')
             localStorage.removeItem('userType')
+            localStorage.removeItem('UserProfile')
 
             setUser(null)
             setAuthToken(null)

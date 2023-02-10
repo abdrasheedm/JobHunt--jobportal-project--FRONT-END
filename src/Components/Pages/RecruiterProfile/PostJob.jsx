@@ -51,6 +51,8 @@ function PostJob() {
   const [jobDepartment, setJobDepartment] = useState("");
   const [salaryRange, setSalaryRange] = useState("");
   const [location, setLocation] = useState("");
+  const [lastDate, setLastDate] = useState("");
+  const [vacancy, setVacancy] = useState("");
 
 
   const handlejobTitle = (e) => {
@@ -88,6 +90,14 @@ function PostJob() {
     setExperience(e.target.value);
     
   };
+  const handleLastDate = (e) => {
+    setLastDate(e.target.value);
+    
+  };
+  const handleVacancy = (e) => {
+    setVacancy(e.target.value);
+    
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -105,7 +115,9 @@ function PostJob() {
         qualification : jobQualifications,
         full_description : jobDescriptions,
         short_description : shortDescription[0],
-        location : location
+        location : location,
+        vacancy : vacancy,
+        last_date : lastDate
     }
     axios.post("recruiter-post-job/", data, {
       headers: {
@@ -156,7 +168,7 @@ function PostJob() {
                   </div>
                   <div className="pl-2">
                     <label for="firstName" className="block mb-2 text-sm">
-                      Employee type
+                      Experience Level
                     </label>
                     <select
                       name="company"
@@ -201,7 +213,7 @@ function PostJob() {
                   </div> */}
                   <div className="pl-2">
                     <label for="firstName" className="block mb-2 text-sm">
-                      Workplace Type
+                      Job Type
                     </label>
                     <select
                       name="company"
@@ -328,6 +340,39 @@ function PostJob() {
                       className="w-full px-3 py-2 border rounded-md dark:border-gray-700"
                       onChange={handleExperience}
                       value={experience}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3">
+                  
+                  <div className="pl-2">
+                    <label for="firstName" className="block mb-2 text-sm">
+                      Vacancy
+                    </label>
+                    <input
+                      type="name"
+                      name="firstName"
+                      id="firstName"
+                      placeholder="Enter salary Range"
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700"
+                      onChange={handleVacancy}
+                      value={vacancy}
+                      required
+                    />
+                  </div>
+                  <div className="pl-2">
+                    <label for="firstName" className="block mb-2 text-sm">
+                      Last Date
+                    </label>
+                    <input
+                      type="date"
+                      name="firstName"
+                      id="firstName"
+                      placeholder="Enter salary Range"
+                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700"
+                      onChange={handleLastDate}
+                      value={lastDate}
                       required
                     />
                   </div>

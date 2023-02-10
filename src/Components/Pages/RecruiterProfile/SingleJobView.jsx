@@ -1,8 +1,8 @@
-import axios from "../../../axios";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
+import axios from "../../../axios"
 
 function SingleJobView() {
 
@@ -84,7 +84,7 @@ function SingleJobView() {
             <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50">
                 <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">Job Summary</div>
                 <div className="text-gray-600 py-1">published on : <span className="text-gray-900 font-semibold">{jobData.created_at}</span></div>
-                <div className="text-gray-600 py-1">vacancy: <span className="text-gray-900 font-semibold">{jobData.id}</span></div>
+                <div className="text-gray-600 py-1">vacancy: <span className="text-gray-900 font-semibold">{jobData.vacancy}</span></div>
                 <div className="text-gray-600 py-1">salary range : <span className="text-gray-900 font-semibold">{jobData.salary_range}</span></div>
                 <div className="text-gray-600 py-1">Location : <span className="text-gray-900 font-semibold">{jobData.location}</span></div>
                 <div className="text-gray-600 py-1">Job Nature : <span className="text-gray-900 font-semibold">{jobData.job_type}</span></div>

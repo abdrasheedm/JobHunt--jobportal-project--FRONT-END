@@ -3,10 +3,10 @@ import Card1 from '../../../assets/card1.webp'
 
 function HomePageCard() {
   return (
-    <div className='p-5'>
+    <div className='py-5 min-w-[400px]'>
 
 
-<div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md">
+<div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-xl">
     <a href="#">
         <img className="rounded-t-lg" src={Card1} alt="" />
     </a>

@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import profilePic from "../../../assets/card1.webp";
 import axios from "../../../axios"
 import ProfileCard from "../../Recruiter/ProfileCard/ProfileCard";
 
