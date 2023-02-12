@@ -1,47 +1,108 @@
 import axios from "../../../../axios";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
-import Swal from 'sweetalert2'
-
-
+import Swal from "sweetalert2";
 
 function SeekerJobView() {
   const locat = useLocation();
   const jobID = locat.state?.data;
   const token = JSON.parse(localStorage.getItem("token"));
-  const seekerId = localStorage.getItem('profile_id')
+  const seekerId = localStorage.getItem("profile_id");
   const [jobData, setJobData] = useState({});
   const [companyData, setCompanyData] = useState("");
 
   // const [jobId, setJobId] = useState()
-  const [recruiterId, setRecruiterId] = useState()
-  const [resume, setResume] = useState()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  const [recruiterId, setRecruiterId] = useState();
+  const [resume, setResume] = useState();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const [FavouritedJobIDs, setFavouriteJobIDs] = useState();
+  const [favourited, setFavourited] = useState(false);
+  const fetchFavouritedJobIDs = () => {
+    axios
+      .get(`seeker-favourited-job/?id=${seekerId}`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+        let response = res.data;
+        var job_id = [];
+        response.map((job) => {
+          job_id = [...job_id, job.job_id];
+        });
+        setFavouriteJobIDs(job_id);
+      });
+  };
+
+  const [isApplied, setIsApplied] = useState(false);
+  const [appliedJobIDs, setAppliedJobIDs] = useState([]);
+  const fetchAppliedJobIds = () => {
+    axios
+      .get(`applied-jobs/?seeker_id=${seekerId}`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+        let response = res.data;
+        var AppliedjobIds = [];
+        response.map((job) => {
+          AppliedjobIds = [...AppliedjobIds, job.job_id.id];
+        });
+        console.log(AppliedjobIds);
+        setAppliedJobIDs(AppliedjobIds);
+      });
+  };
+
+  const AddAndRemoveFavourite = (jobID) => {
+    console.log("in");
+    console.log(jobID);
+    let data = {
+      job_id: jobID,
+      seeker_id: seekerId,
+    };
+    axios
+      .post(`favourite-job/?seeker_id=${seekerId}&job_id=${jobID}`, data, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setFavourited(!favourited);
+        Swal.fire({
+          icon: "success",
+          title: `${res.data.message} !`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  };
+  console.log(appliedJobIDs);
 
   const handleFirstName = (e) => {
-    setFirstName(e.target.value)
-  }
+    setFirstName(e.target.value);
+  };
   const handleLastName = (e) => {
-    setLastName(e.target.value)
-  }
+    setLastName(e.target.value);
+  };
 
   const handleEmail = (e) => {
-    setEmail(e.target.value)
-  }
+    setEmail(e.target.value);
+  };
 
   const handlePhone = (e) => {
-    setPhone(e.target.value)
-  }
+    setPhone(e.target.value);
+  };
   const handleResume = (e) => {
-    setResume(e.target.files[0])
-  }
-
-
+    setResume(e.target.files[0]);
+  };
 
   const fetchJobDetails = async () => {
     await axios
@@ -54,7 +115,7 @@ function SeekerJobView() {
         setJobData(res.data);
         setCompanyData(res.data.company_id);
         // setJobId(res.data.id)
-        setRecruiterId(res.data.company_id.id)
+        setRecruiterId(res.data.company_id.id);
       });
   };
 
@@ -63,8 +124,14 @@ function SeekerJobView() {
   useEffect(() => {
     fetchJobDetails();
   }, []);
-  console.log(jobData)
 
+  useEffect(() => {
+    fetchFavouritedJobIDs()
+  }, [favourited])
+
+  useEffect(() => {
+    fetchAppliedJobIds()
+  }, [isApplied])
   const ApplyJob = (e) => {
     e.preventDefault();
 
@@ -79,7 +146,7 @@ function SeekerJobView() {
     formData.append("resume", resume);
     formData.append("is_applied", true);
 
-    console.log(formData)
+    console.log(formData);
 
     let url = `apply-job/`;
     axios
@@ -90,16 +157,17 @@ function SeekerJobView() {
         },
       })
       .then((res) => {
-        Swal.fire(
-          'Congratulations!',
-          `${res.data.message} !`,
-          'success'
-        )
+        Swal.fire({
+          icon:"success",
+          title: `${res.data.message} !`,
+          showConfirmButton:false,
+          timer:1500
+        })
+        setIsApplied(!isApplied);
         console.log(res.data);
         // refreshPage();
       });
   };
-
 
   return (
     <div
@@ -132,10 +200,19 @@ function SeekerJobView() {
                     <h1 className="">{jobData.job_type}</h1>
                   </div>
                 </div>
-                <div className="">
-                  <p className="bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-green-400 hover:bg-opacity-50 mt-4">
-                    <i class="fa-regular fa-2xl fa-heart"></i>
-                  </p>
+                <div className="pt-10">
+                  <span
+                    className={
+                      FavouritedJobIDs?.includes(jobID)
+                        ? "text-white bg-myGreen p-2 rounded bg-opacity-90 hover:bg-myGreen hover:bg-opacity-100 mt-4"
+                        : "bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-myGreen"
+                    }
+                    onClick={() => {
+                      AddAndRemoveFavourite(jobID);
+                    }}
+                  >
+                    <i className="fa-regular fa-2xl fa-heart"></i>
+                  </span>
                 </div>
               </div>
               <div>
@@ -189,101 +266,108 @@ function SeekerJobView() {
               </div>
             </div>
             <div>
-            <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50 bg-opacity-50">
-              <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">
-                Apply for the job
-              </div>
-              <div>
-              <form
-              novalidate=""
-              action=""
-              className="space-y-12 ng-untouched ng-pristine ng-valid"
-              onSubmit={ApplyJob}
-            >
-                <div className="grid grid-cols-2 mb-5">
-                  <div className="col-span-2 md:col-span-1 px-5">
-                    <label for="firstName" className="block mb-2 text-sm">
-                      First Name
-                    </label>
-                    <input
-                      type="name"
-                      name="firstName"
-                      id="firstName"
-                      placeholder="Enter Your First Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
-                      onChange={handleFirstName}
-                      value={firstName}
-                      required
-                    />
-                  </div>
-                  <div className="col-span-2 md:col-span-1 px-5">
-                    <label for="LastName" className="block mb-2 text-sm">
-                      Last Name
-                    </label>
-                    <input
-                      type="name"
-                      name="lastName"
-                      id="lastName"
-                      placeholder="Enter Your Last Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                      onChange={handleLastName}
-                      value={lastName}
-                      required
-                    />
-                  </div>
+              <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50 bg-opacity-50">
+                <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">
+                  Apply htmlFor the job
                 </div>
-                <div className="grid grid-cols-2 mb-5">
-                  <div className="col-span-2 md:col-span-1 px-5">
-                    <label for="email" className="block mb-2 text-sm">
-                      Email address
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      placeholder="Enter Your Email"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                      onChange={handleEmail}
-                      value={email}
-                      required
-                    />
-                  </div>
-                  <div className="col-span-2 md:col-span-1 px-5">
-                    <label for="number" className="block mb-2 text-sm">
-                      PhoneNumber
-                    </label>
-                    <input
-                      type="tel"
-                      name="telphone"
-                      placeholder="888 888 8888"
-                      pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
-                      maxlength="10"
-                      title="Ten digits code"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                      onChange={handlePhone}
-                      value={phone}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 mb-5">
-                  <div className="col-span-2 md:col-span-1 px-5">
-                    <label for="firstName" className="block mb-2 text-sm">
-                      Upload Resume
-                    </label>
-                    <input
-                      type="file"
-                      name="firstName"
-                      id="firstName"
-                      placeholder="Enter Your First Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
-                      onChange={handleResume}
-                      // value={resume}
-                      required
-                    />
-                  </div>
-                  {/* <div className="col-span-2 md:col-span-1 px-5">
-                    <label for="LastName" className="block mb-2 text-sm">
+                <div>
+                  {appliedJobIDs.includes(jobID) ? (
+                    <div>
+                      <div>
+                      You applied htmlFor this job. <Link className="text-myBlue underline" to='/seeker-applied-jobs'>See applied jobs Here</Link>
+                      </div>
+                    </div>
+                  ): (
+                    <form
+                    noValidate=""
+                    action=""
+                    className="space-y-12 ng-untouched ng-pristine ng-valid"
+                    onSubmit={ApplyJob}
+                  >
+                    <div className="grid grid-cols-2 mb-5">
+                      <div className="col-span-2 md:col-span-1 px-5">
+                        <label htmlFor="firstName" className="block mb-2 text-sm">
+                          First Name
+                        </label>
+                        <input
+                          type="name"
+                          name="firstName"
+                          id="firstName"
+                          placeholder="Enter Your First Name"
+                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
+                          onChange={handleFirstName}
+                          value={firstName}
+                          required
+                        />
+                      </div>
+                      <div className="col-span-2 md:col-span-1 px-5">
+                        <label htmlFor="LastName" className="block mb-2 text-sm">
+                          Last Name
+                        </label>
+                        <input
+                          type="name"
+                          name="lastName"
+                          id="lastName"
+                          placeholder="Enter Your Last Name"
+                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
+                          onChange={handleLastName}
+                          value={lastName}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 mb-5">
+                      <div className="col-span-2 md:col-span-1 px-5">
+                        <label htmlFor="email" className="block mb-2 text-sm">
+                          Email address
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          id="email"
+                          placeholder="Enter Your Email"
+                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
+                          onChange={handleEmail}
+                          value={email}
+                          required
+                        />
+                      </div>
+                      <div className="col-span-2 md:col-span-1 px-5">
+                        <label htmlFor="number" className="block mb-2 text-sm">
+                          PhoneNumber
+                        </label>
+                        <input
+                          type="tel"
+                          name="telphone"
+                          placeholder="888 888 8888"
+                          pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
+                          maxLength="10"
+                          title="Ten digits code"
+                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
+                          onChange={handlePhone}
+                          value={phone}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 mb-5">
+                      <div className="col-span-2 md:col-span-1 px-5">
+                        <label htmlFor="firstName" className="block mb-2 text-sm">
+                          Upload Resume
+                        </label>
+                        <input
+                          type="file"
+                          name="firstName"
+                          id="firstName"
+                          placeholder="Enter Your First Name"
+                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
+                          onChange={handleResume}
+                          // value={resume}
+                          required
+                        />
+                      </div>
+                      {/* <div className="col-span-2 md:col-span-1 px-5">
+                    <label htmlFor="LastName" className="block mb-2 text-sm">
                       Last Name
                     </label>
                     <input
@@ -297,20 +381,20 @@ function SeekerJobView() {
                       required
                     />
                   </div> */}
-                </div>
+                    </div>
 
-                <div className="flex justify-center py-5">
-                <button
-                    type="submit"
-                    className="inline-flex items-center px-10 py-2 ml-4 text-md font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-myGreen border border-transparent rounded-md active:bg-gray-900 false"
-                  >
-                    Apply Now
-                  </button>
+                    <div className="flex justify-center py-5">
+                      <button
+                        type="submit"
+                        className="inline-flex items-center px-10 py-2 ml-4 text-md font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-myGreen border border-transparent rounded-md active:bg-gray-900 false"
+                      >
+                        Apply Now
+                      </button>
+                    </div>
+                  </form>
+                  )}
                 </div>
-            </form>
-                
               </div>
-            </div>
             </div>
           </div>
           <div className="lg:col-span-2 col-span-6 px-10 ">

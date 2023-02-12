@@ -32,11 +32,11 @@ function SingleJobView() {
   return (
     <div>
       <div className="">
-        <div className="font-bold text-center text-3xl py-10 bg-primary">
+        <div className="font-bold text-center text-3xl py-10 bg-white">
           <h1 className="text-gray-600 uppercase">{jobData.job_title}</h1>
         </div>
         <div className="grid lg:grid-cols-6 xl:px-40 container mx-auto">
-          <div className="col-span-4 px-10 py-5 shadow-xl my-10 rounded-lg  bg-slate-50">
+          <div className="col-span-4 px-10 py-5 shadow-xl my-10 rounded-lg  bg-primar">
             <div className="my-10 px-10 py-5 border-b-2 border-gray-200">
               <h1 className="text-2xl my-5 font-semibold text-gray-600">{jobData.job_title}</h1>
               <div className="flex justify-between">

@@ -94,7 +94,6 @@ function EditProfile() {
   }
 
   const profileUpdate = (e) => {
-    setLogo(e.target.logo.files[0])
     const formData = new FormData();
     formData.append("first_name", firstName);
     formData.append("last_name", lastName);
@@ -109,6 +108,8 @@ function EditProfile() {
     formData.append("company_logo", e.target.logo.files[0]);
     formData.append("head_office_location", headOffice);
 
+    console.log(formData)
+
     e.preventDefault();
     let url = `/update-company-profile/?id=${profile_id}`;
     axios.put(url, formData, {
@@ -120,7 +121,7 @@ function EditProfile() {
       },
     }).then((res) => {
       console.log(res.data);
-      refreshPage()
+      // refreshPage()
     });
   };
 

@@ -4,6 +4,7 @@ import axios from "../../../../axios";
 import AddExperience from "../../../Modals/ExperienceModal/AddExperience";
 import ProjectModal from "../../../Modals/ProjectModal/ProjectModal";
 import ProfileCard from "../../../Seeker/ProfileCard/SProfileCard";
+import Swal from "sweetalert2";
 
 function SeekerProfile() {
   const profile_id = localStorage.getItem("profile_id");
@@ -61,11 +62,55 @@ function SeekerProfile() {
       });
   };
 
+
+  const [isDeleted, setIsDeleted] = useState(false)
+  const deleteExperience = (expID) => {
+    axios.get(`delete-seeker-experience/?exp_id=${expID}`, {
+      headers : {
+        Authorization : `Bearer ${token.access}`
+      }
+    }).then((res) => {
+      setIsDeleted(!isDeleted)
+      Swal.fire({
+        icon:"success",
+        title: `${res.data.message} !`,
+        showConfirmButton:false,
+        timer:1500
+      })
+
+    })
+  }
+
+
+  const deleteProject = (projID) => {
+    axios.get(`delete-seeker-project/?proj_id=${projID}`, {
+      headers : {
+        Authorization : `Bearer ${token.access}`
+      }
+    }).then((res) => {
+      setIsDeleted(!isDeleted)
+      Swal.fire({
+        icon:"success",
+        title: `${res.data.message} !`,
+        showConfirmButton:false,
+        timer:1500
+      })
+
+    })
+  }
+
   useEffect(() => {
     fetchProfile();
+  }, []);
+
+  useEffect(() => {
     fetchExperience();
+  }, [expModal, isDeleted]);
+
+  useEffect(() => {
     fetchProjects();
-  }, [expModal, projModal]);
+  }, [projModal, isDeleted]);
+  
   const navigate = useNavigate();
 
   return (
@@ -161,9 +206,9 @@ function SeekerProfile() {
                             </p>
                           </div>
                         </div>
-                        <div className="col-span-1 pt-5">
+                        <div className="col-span-1 pt-5 flex flex-col items-center">
                           <span
-                            className="bg-white p-3 rounded-3xl"
+                            className="bg-white p-3 rounded-3xl my-1 hover:cursor-pointer hover:bg-gray-300"
                             onClick={() => {
                               setExpModalType("edit");
                               setExpModalId(experience.id);
@@ -171,6 +216,14 @@ function SeekerProfile() {
                             }}
                           >
                             <i className="fa-sharp fa-solid fa-pen"></i>
+                          </span>
+                          <span
+                            className="bg-white p-3 rounded-3xl my-1 hover:cursor-pointer hover:bg-gray-300"
+                            onClick={() => {
+                              deleteExperience(experience.id)
+                            }}
+                          >
+                            <i className="fa-solid fa-trash-can"></i>
                           </span>
                         </div>
                       </div>
@@ -251,7 +304,7 @@ function SeekerProfile() {
                           {project.description}
                         </h2>
                       </div>
-                      <div className="col-span-1 pt-5">
+                      <div className="col-span-1 pt-5 flex flex-wrap">
                         <span
                           className="bg-white p-3 rounded-3xl"
                           onClick={() => {
@@ -262,6 +315,14 @@ function SeekerProfile() {
                         >
                           <i class="fa-sharp fa-solid fa-pen"></i>
                         </span>
+                        <span
+                            className="bg-white p-3 rounded-3xl mx-1 hover:cursor-pointer hover:bg-gray-300"
+                            onClick={() => {
+                              deleteProject(project.id)
+                            }}
+                          >
+                            <i className="fa-solid fa-trash-can"></i>
+                          </span>
                       </div>
                     </div>
                   );

@@ -1,14 +1,30 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-// import axios from "../../../axios";
+import axios from '../../../axios'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
-function JobCard({job, RemoveFromFavourite}) {
+function AppliedJobsCard({job, isRemoved}) {
+    const navigate = useNavigate()
+  const token = JSON.parse(localStorage.getItem("token"));
 
-  console.log(job)
-  const navigate = useNavigate()
+    const RemoveAppliedJob = (jobID) => {
+        axios.get(`remove-applied-job/?job_id=${jobID}`,{
+            headers: {
+                Authorization : `Bearer ${token.access}`
+            }
+        }).then((res) => {
 
+        isRemoved()
 
-  
+        Swal.fire({
+          icon:"success",
+          title: `${res.data.message} !`,
+          showConfirmButton:false,
+          timer:1500
+        })
+
+        })
+    }
   return (
     <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white">
       <div className="col-span-2">
@@ -60,7 +76,7 @@ function JobCard({job, RemoveFromFavourite}) {
         <button
           className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md"
           onClick={() =>
-            RemoveFromFavourite(job.id)
+            RemoveAppliedJob(job.id)
           }
         >
           Remove
@@ -70,7 +86,7 @@ function JobCard({job, RemoveFromFavourite}) {
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default JobCard;
+export default AppliedJobsCard

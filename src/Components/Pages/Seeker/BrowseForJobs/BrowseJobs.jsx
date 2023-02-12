@@ -28,6 +28,7 @@ function BrowseJobs() {
   };
 
   const [FavouritedJobIDs, setFavouriteJobIDs] = useState()
+  const [favourited, setFavourited] = useState(false)
   const fetchFavouritedJobIDs = () => {
     axios
       .get(`seeker-favourited-job/?id=${profileId}`, {
@@ -42,6 +43,7 @@ function BrowseJobs() {
           job_id = [...job_id, job.job_id]
           console.log(job_id)
 
+
         });
         setFavouriteJobIDs(job_id)
       });
@@ -49,7 +51,7 @@ function BrowseJobs() {
   const navigate = useNavigate();
 
 
-  const AddToFavourite = (jobID) => {
+  const AddAndRemoveFavourite = (jobID) => {
     console.log("in");
     console.log(jobID);
     let data = {
@@ -57,34 +59,66 @@ function BrowseJobs() {
       seeker_id: profileId,
     };
     axios
-      .post("favourite-job/", data, {
+      .post(`favourite-job/?seeker_id=${profileId}&job_id=${jobID}`, data, {
         headers: {
           Authorization: `Bearer ${token.access}`,
         },
       })
       .then((res) => {
         console.log(res.data);
-        Swal.fire("Congratulations!", `${res.data.message} !`, "success");
+        setFavourited(!favourited)
+        Swal.fire({
+          icon:"success",
+          title: `${res.data.message} !`,
+          showConfirmButton:false,
+          timer:1500
+        })
       });
   };
 
-  const RemoveFromFavourite = (jobID) => {
-    axios
-      .get(`seeker-remove-favourited-job/?job_id=${jobID}&seeker_id=${profileId}`, {
-        headers: {
-          Authorization: `Bearer ${token.access}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        Swal.fire("Congratulations!", `${res.data.message} !`, "success");
-      });
+  const [categories, setCategory] = useState([]);
+  const fetchCategory = async () => {
+    await axios.get(`company-category/`).then((res) => {
+      setCategory(res.data);
+    });
   };
+
+  const [departments, setDepartments] = useState([]);
+  const fetchDepartments = async () => {
+    console.log('called')
+    await axios.get(`company-department/`).then((res) => {
+      setDepartments(res.data);
+    });
+  };
+
+  const [qualifications, setQualifications] = useState([]);
+  const fetchQualifications = async () => {
+    console.log('called')
+    await axios.get(`job-qualifications-view/`).then((res) => {
+      setQualifications(res.data);
+    });
+  };
+
+  const jobTypes = ['part-time', 'full-time', 'intern']
+  const experienceLevels = ['Fresher', 'Internship', 'Intermediate', 'Professional']
+
+  const filterByCategory = (category) => {
+    let filtered = jobs.filter((job) => job.category.category_name ===category)
+    setJobs(filtered)
+    console.log(filtered);
+  }
+
+  useEffect(() => {
+    fetchFavouritedJobIDs();
+  }, [favourited]);
 
   useEffect(() => {
     fetchJobs();
-    fetchFavouritedJobIDs();
-  }, []);
+    fetchCategory();
+    fetchDepartments();
+    fetchQualifications();
+  }, [])
+   console.log(qualifications, jobTypes, experienceLevels)
 
   return (
     <div >
@@ -128,7 +162,9 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          <Menu.Item>
+                          {categories.map((category, index) => {
+                            return (
+                              <Menu.Item>
                             {({ active }) => (
                               <a
                                 href="#"
@@ -138,58 +174,14 @@ function BrowseJobs() {
                                     : "text-gray-700",
                                   "block px-4 py-2 text-sm"
                                 )}
-                              >
-                                Education
+                              onClick={() => filterByCategory(category.category_name) }>
+                                {category.category_name}
                               </a>
                             )}
                           </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Information Technology
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Construction
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <form method="POST" action="#">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  type="submit"
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block w-full px-4 py-2 text-left text-sm"
-                                  )}
-                                >
-                                  Entertainment
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </form>
+                            )
+                          })}
+                          
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -218,7 +210,9 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          <Menu.Item>
+                          {departments.map((department, index) => {
+                            return (
+                              <Menu.Item>
                             {({ active }) => (
                               <a
                                 href="#"
@@ -229,57 +223,13 @@ function BrowseJobs() {
                                   "block px-4 py-2 text-sm"
                                 )}
                               >
-                                Education
+                                {department.department_name}
                               </a>
                             )}
                           </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Information Technology
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Construction
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <form method="POST" action="#">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  type="submit"
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block w-full px-4 py-2 text-left text-sm"
-                                  )}
-                                >
-                                  Entertainment
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </form>
+                            )
+                          })}
+                          
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -308,7 +258,10 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          <Menu.Item>
+                          
+                          {jobTypes.map((jobType) => {
+                            return (
+                              <Menu.Item>
                             {({ active }) => (
                               <a
                                 href="#"
@@ -319,57 +272,12 @@ function BrowseJobs() {
                                   "block px-4 py-2 text-sm"
                                 )}
                               >
-                                Education
+                                {jobType}
                               </a>
                             )}
                           </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Information Technology
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Construction
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <form method="POST" action="#">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  type="submit"
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block w-full px-4 py-2 text-left text-sm"
-                                  )}
-                                >
-                                  Entertainment
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </form>
+                            )
+                          })}
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -398,7 +306,10 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          <Menu.Item>
+                          
+                          {qualifications.map((qualification, index) => {
+                            return (
+                              <Menu.Item>
                             {({ active }) => (
                               <a
                                 href="#"
@@ -409,57 +320,12 @@ function BrowseJobs() {
                                   "block px-4 py-2 text-sm"
                                 )}
                               >
-                                Education
+                                {qualification.title}
                               </a>
                             )}
                           </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Information Technology
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Construction
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <form method="POST" action="#">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  type="submit"
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block w-full px-4 py-2 text-left text-sm"
-                                  )}
-                                >
-                                  Entertainment
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </form>
+                            )
+                          })}
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -488,68 +354,25 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Education
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Information Technology
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
-                                )}
-                              >
-                                Construction
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <form method="POST" action="#">
+                         {experienceLevels.map((experienceLevel, index) => {
+                           return (
                             <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  type="submit"
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block w-full px-4 py-2 text-left text-sm"
-                                  )}
-                                >
-                                  Entertainment
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </form>
+                           {({ active }) => (
+                             <a
+                               href="#"
+                               className={classNames(
+                                 active
+                                   ? "bg-gray-100 text-gray-900"
+                                   : "text-gray-700",
+                                 "block px-4 py-2 text-sm"
+                               )}
+                             >
+                               {experienceLevel}
+                             </a>
+                           )}
+                         </Menu.Item>
+                           )
+                         })}
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -585,7 +408,7 @@ function BrowseJobs() {
               </div>
               {jobs.map((job, index) => {
                 return (
-                  <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white">
+                  <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white" key={index}>
                     <div className="col-span-2">
                       <img
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzRCgx-jrMQUQENdxiV71ZtID09zMRz3hnew&usqp=CAU"
@@ -606,11 +429,11 @@ function BrowseJobs() {
                       </h1>
                       <div className="flex pt-3">
                         <p className="mr-5 text-gray-600">
-                          <i class="fa-solid fa-user-tie"></i> &nbsp;
+                          <i className="fa-solid fa-user-tie"></i> &nbsp;
                           {job.category?.category_name}{" "}
                         </p>
                         <p className="text-gray-600">
-                          <i class="fa-thin fa-briefcase"></i> &nbsp;{" "}
+                          <i className="fa-thin fa-briefcase"></i> &nbsp;{" "}
                           {job.salary_range}{" "}
                         </p>
                       </div>
@@ -629,12 +452,10 @@ function BrowseJobs() {
                               : "bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-myGreen"
                           }
                           onClick={() => {
-                            FavouritedJobIDs.includes(job.id)
-                              ? RemoveFromFavourite(job.id)
-                              : AddToFavourite(job.id);
+                            AddAndRemoveFavourite(job.id)
                           }}
                         >
-                          <i class="fa-regular fa-2xl fa-heart"></i>
+                          <i className="fa-regular fa-2xl fa-heart"></i>
                         </span>
                       </div>
                       <button

@@ -474,101 +474,31 @@ function BrowseCandidates() {
             </div>
           </div>
           <div className="col-span-4 px-10 py-5">
-            <div className="shadow-xl my-5 rounded-lg  bg-white px-10 py-6 flex justify-between">
-              <h1 className="text-2xl font-semibold text-gray-600">
-                Candidates Listing
-              </h1>
-              <div className="text-end">
-                <Menu as="div" className="relative inline-block text-left">
-                  <div>
-                    <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                      Sort by
-                      <ChevronDownIcon
-                        className="-mr-1 ml-2 h-5 w-5"
-                        aria-hidden="true"
+          <div className="shadow-xl my-5 rounded-lg  bg-white px-10 py-6">
+                <form className="max-w-xl px-4">
+                  <div className="relative">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
-                    </Menu.Button>
+                    </svg>
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+                    />
                   </div>
-
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="py-1">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active
-                                  ? "bg-gray-100 text-gray-900"
-                                  : "text-gray-700",
-                                "block px-4 py-2 text-sm"
-                              )}
-                            >
-                              Year of experience
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active
-                                  ? "bg-gray-100 text-gray-900"
-                                  : "text-gray-700",
-                                "block px-4 py-2 text-sm"
-                              )}
-                            >
-                              Projects Count
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active
-                                  ? "bg-gray-100 text-gray-900"
-                                  : "text-gray-700",
-                                "block px-4 py-2 text-sm"
-                              )}
-                            >
-                        
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <form method="POST" action="#">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                type="submit"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block w-full px-4 py-2 text-left text-sm"
-                                )}
-                              >
-                                
-                              </button>
-                            )}
-                          </Menu.Item>
-                        </form>
-                      </div>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                </form>
               </div>
-            </div>
             <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between">
               <div className="col-span-2">
                 <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1600" className="rounded-lg w-20 h-20 object-cover" alt="" />

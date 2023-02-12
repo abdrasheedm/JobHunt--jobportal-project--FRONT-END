@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HeroImg from "../../../assets/hero-img.png";
 import BrowseTopJobs from "./BrowseTopJobs";
 import FindTalent from "./FindTalent";
@@ -8,8 +8,18 @@ import { useNavigate, Navigate } from "react-router-dom";
 function Home() {
 
   const userType = JSON.parse(localStorage.getItem('userType'))
-  const navigate = useNavigate()
-  console.log(userType)
+
+  const array = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1]
+  const fetchs = (hjjh) => {
+    const arr = array.filter((job) => job===hjjh)
+    console.log(arr)
+  }
+
+  useEffect(() => {
+    fetchs(1)
+  }, [])
+
+
   return (
     <div>
       {userType==="Recruiter" ? <Navigate to='recruiter-profile'/> : (<div>

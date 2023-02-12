@@ -23,23 +23,33 @@ function FavouriteJobs() {
       });
   };
 
+  const [isRemoved, setIsRemoved] = useState(false)
   const RemoveFromFavourite = (jobID) => {
+    let data = {
+      job_id: jobID,
+      seeker_id: profileId,
+    };
     axios
-      .get(`seeker-remove-favourited-job/?job_id=${jobID}&seeker_id=${profileId}`, {
+      .post(`favourite-job/?seeker_id=${profileId}&job_id=${jobID}`, data, {
         headers: {
           Authorization: `Bearer ${token.access}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
-        Swal.fire("Congratulations!", `${res.data.message} !`, "success");
+        setIsRemoved(!isRemoved)
+        Swal.fire({
+          icon:"success",
+          title: `${res.data.message} !`,
+          showConfirmButton:false,
+          timer:1500
+        })
       });
   };
 
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [isRemoved]);
 
 
   return (
@@ -51,10 +61,10 @@ function FavouriteJobs() {
         <ProfileCard />
         <div className="lg:m-20 sm:m-10 col-span-2 ">
             
-            {jobs ? (<div>
+            {jobs.length ? (<div>
                 {jobs.map((job, index) => {
                 return(
-          <JobCard job = {job} RemoveFromFavourite = {RemoveFromFavourite} />
+          <JobCard job = {job.job_id} RemoveFromFavourite = {RemoveFromFavourite} />
                 )
             })}
             </div>) : (

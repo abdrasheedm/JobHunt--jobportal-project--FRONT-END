@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import JobCard from "../../../Cards/JobCard/JobCard";
-import ProfileCard from "../../../Recruiter/ProfileCard/ProfileCard";
+import ProfileCard from "../../../Seeker/ProfileCard/SProfileCard";
 import axios from "../../../../axios";
+import AppliedJobsCard from "../../../Cards/AppliedJobsCard/AppliedJobsCard";
 
 function AppliedJobs() {
   const token = JSON.parse(localStorage.getItem("token"));
   const profileId = localStorage.getItem("profile_id");
+
+  const [isRemoved, setIsRemoved] = useState(false)
+  const toggleIsRemoved = () => {
+    setIsRemoved(!isRemoved)
+  }
   const [jobs, setJobs] = useState([]);
   const fetchJobs = () => {
     axios
@@ -20,25 +26,9 @@ function AppliedJobs() {
       });
   };
 
-  const RemoveFromFavourite = (jobID) => {
-    axios
-      .get(
-        `seeker-remove-favourited-job/?job_id=${jobID}&seeker_id=${profileId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.access}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        Swal.fire("Congratulations!", `${res.data.message} !`, "success");
-      });
-  };
-
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [isRemoved]);
 
   return (
     <div className="bg-primary lg:py-20">
@@ -48,11 +38,18 @@ function AppliedJobs() {
       <div className="grid lg:grid-cols-3">
         <ProfileCard />
         <div className="lg:m-20 sm:m-10 col-span-2 ">
-          <div>
-            {jobs.map((job, index) => {
-              <JobCard job={job} />;
+        {jobs.length ? (<div>
+                {jobs.map((job, index) => {
+                return(
+          <AppliedJobsCard job = {job.job_id} isRemoved={toggleIsRemoved}/>
+                )
             })}
-          </div>
+            </div>) : (
+                <div className="text-center text-2xl font-bold text-red-600 mt-20">
+                NO APPLIED JOBS
+            </div>
+            )}
+          
         </div>
       </div>
     </div>

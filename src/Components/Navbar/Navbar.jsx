@@ -9,6 +9,8 @@ import AuthContext from "../../Context/AuthContext";
 import axios from "../../axios";
 
 
+
+// const pathName = window.location.url
 const userNav = [
   { name: "HOME", href: "/", current: true },
   { name: "BROWSE JOBS ", href: "/seeker-browse-jobs", current: false },
@@ -16,6 +18,7 @@ const userNav = [
   { name: "MESSAGING", href: "#", current: false },
   { name: "CONTACT", href: "#", current: false },
 ];
+// console.log(window.location.pathname)
 const recruiterNav = [
   { name: "BROWSE CANDIDATES ", href: "/recruiter-browse-candidates", current: false },
   { name: "PAGE", href: "#", current: false },

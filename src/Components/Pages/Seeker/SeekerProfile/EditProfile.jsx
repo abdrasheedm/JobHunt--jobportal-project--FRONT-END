@@ -18,7 +18,6 @@ function EditSProfile() {
       console.log('called')
       await axios.get(`company-department/?id=${category}`).then((res) => {
         setDepartments(res.data);
-        // refreshPage()
       });
     };
 
