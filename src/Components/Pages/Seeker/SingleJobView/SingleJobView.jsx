@@ -1,15 +1,18 @@
 import axios from "../../../../axios";
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
 function SeekerJobView() {
   const locat = useLocation();
+  const navigate = useNavigate()
   const jobID = locat.state?.data;
-  const token = JSON.parse(localStorage.getItem("token"));
-  const seekerId = localStorage.getItem("profile_id");
+  const token = localStorage.getItem("token")
+  ? JSON.parse(localStorage.getItem("token"))
+  : null
+  const seekerId = localStorage.getItem("profile_id") ? localStorage.getItem("profile_id") : null ;
   const [jobData, setJobData] = useState({});
   const [companyData, setCompanyData] = useState("");
 
@@ -61,8 +64,17 @@ function SeekerJobView() {
   };
 
   const AddAndRemoveFavourite = (jobID) => {
-    console.log("in");
-    console.log(jobID);
+    if(!token){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You are not logged in!',
+        confirmButtonText: 'Signin',
+      }).then(() => {
+        navigate('/signin')
+      })
+      return
+    }
     let data = {
       job_id: jobID,
       seeker_id: seekerId,
@@ -106,15 +118,12 @@ function SeekerJobView() {
 
   const fetchJobDetails = async () => {
     await axios
-      .get(`view-single-job/?id=${jobID}`, {
-        headers: {
-          Authorization: `Bearer ${token.access}`,
-        },
-      })
+      .get(`view-single-job/?id=${jobID}`)
       .then((res) => {
         setJobData(res.data);
         setCompanyData(res.data.company_id);
         // setJobId(res.data.id)
+        console.log(res.data);
         setRecruiterId(res.data.company_id.id);
       });
   };
@@ -122,14 +131,21 @@ function SeekerJobView() {
   const BASEURL = `http://127.0.0.1:8000${companyData?.company_logo}`;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchJobDetails();
   }, []);
 
   useEffect(() => {
+    if(!token){
+      return
+    }
     fetchFavouritedJobIDs()
   }, [favourited])
 
   useEffect(() => {
+    if(!token){
+      return
+    }
     fetchAppliedJobIds()
   }, [isApplied])
   const ApplyJob = (e) => {
@@ -340,7 +356,7 @@ function SeekerJobView() {
                           type="tel"
                           name="telphone"
                           placeholder="888 888 8888"
-                          pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
+                          // pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
                           maxLength="10"
                           title="Ten digits code"
                           className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
@@ -384,12 +400,14 @@ function SeekerJobView() {
                     </div>
 
                     <div className="flex justify-center py-5">
-                      <button
+                      {token ? <button
                         type="submit"
                         className="inline-flex items-center px-10 py-2 ml-4 text-md font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-myGreen border border-transparent rounded-md active:bg-gray-900 false"
                       >
                         Apply Now
-                      </button>
+                      </button> : (
+                        <div>Please <Link to='/signin' className="text-myBlue">Signin</Link> to apply </div>
+                      )}
                     </div>
                   </form>
                   )}
@@ -440,9 +458,10 @@ function SeekerJobView() {
                 </div>
                 <div className="py-3">
                   <img
-                    className="h-32 w-32 object-cover rounded-full"
+                    className="h-32 w-32 object-cover rounded-full hover:cursor-pointer"
                     src={BASEURL}
                     alt=""
+                    onClick={() => navigate('/company-profile-view', {state : {data:companyData.id}})}
                   />
                 </div>
                 <div className="text-gray-600 py-1">

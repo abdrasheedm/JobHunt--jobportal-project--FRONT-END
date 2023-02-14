@@ -3,14 +3,25 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from '../../../axios'
+import "./userRegister.css"
 
 function UserRegister() {
 
+  const NAME_REGEX = /^[A-Za-z]{3,16}$/
+  const EMAIL_REGEXT = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  const PHONE_NUMBER_REGEX = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
+  const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
   const [firstName, setFirstName] = useState('');
+
   const [lastName, setLastName] = useState('');
+
   const [mobile, setMobile] = useState('');
+
   const [email, setEmail] = useState('');
+
   const [password, setPassword] = useState('');
+
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -20,8 +31,15 @@ function UserRegister() {
 
 
   const handleFirstName = (e) => {
-    setFirstName(e.target.value);
-    setSubmitted(false);
+
+  //   setSubmitted(false);
+  //   if(!/^[A-Za-z]{3,16}$/i.test(e.target.value)){
+  //     setFnameError(true)
+  // }
+  // else{
+  //   setFnameError(false)
+  // }
+  setFirstName(e.target.value)
 };
 
 const handleLastName = (e) => {
@@ -47,7 +65,12 @@ const handlePassword = (e) => {
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  if (firstName === '' || lastName ==='' || email === '' || mobile === '' || password === '') {
+  const V1 = NAME_REGEX.test(firstName)
+  const V2 = NAME_REGEX.test(lastName)
+  const V3 = EMAIL_REGEXT.test(email);
+  const V4 = PHONE_NUMBER_REGEX.test(mobile)
+  const V5 = PASSWORD_REGEX.test(password)
+  if (!V1 || !V2 || !V3 ||!V4 || !V5) {
       setError(true);
   } else {
       axios.post('user/signup/', {
@@ -75,17 +98,6 @@ const handleSubmit = (e) => {
   }
 };
 
-const successMessage = () => {
-  return (
-      <div
-          className="success"
-          style={{
-              display: submitted ? '' : 'none',
-          }}>
-          <h1 className='text-green-700 text-xl'>User {firstName} successfully registered!!</h1>
-      </div>
-  );
-};
 
 // Showing error message if error is true
 const errorMessage = () => {
@@ -95,7 +107,7 @@ const errorMessage = () => {
           style={{
               display: error ? '' : 'none',
           }}>
-          <h5 className='text-red-700 text-xl'>Please enter all the fields</h5>
+          <h5 className='text-red-700 text-xl'>Invalid Endtries</h5>
       </div>
   );
 };
@@ -108,31 +120,39 @@ const errorMessage = () => {
           <h1 className="my-3 text-4xl text-myBlue font-bold">Sign up</h1>
           <p className="text-sm dark:text-gray-400">Sign in to access your account</p>
         </div>
-        <form novalidate="" action="" className="space-y-12 ng-untouched ng-pristine ng-valid" onSubmit={handleSubmit}>
+        <form novalidate="" action="" className="space-y-12 ng-untouched ng-pristine ng-valid user-form" onSubmit={handleSubmit}>
           <div className="space-y-4">
           <div>
               <label for="firstName" className="block mb-2 text-sm">First Name</label>
-              <input type="name" name="firstName" id="firstName" placeholder="Enter Your First Name"
+              <input  id="firstName" placeholder="Enter Your First Name"
                 className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                onChange={handleFirstName} value={firstName} required/>
+                onChange={handleFirstName} value={firstName} pattern = "^[A-Za-z]{3,16}$"/>
+                <span className="">First Name should be 3-16 characters and shouldn't include any special character or number!</span>
+                
             </div>
             <div>
               <label for="lastName" className="block mb-2 text-sm">Last Name</label>
               <input type="name" name="lastName" id="lastName" placeholder="Enter Your Last Name"
                 className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                onChange={handleLastName} value={lastName} required/>
+                onChange={handleLastName} value={lastName} pattern = "^[A-Za-z]{3,16}$"/>
+                <span className="text-red-500 hidden">Last Name should be 3-16 characters and shouldn't include any special character or number!</span>
+
             </div>
             <div>
               <label for="email" className="block mb-2 text-sm">Email address</label>
               <input type="email" name="email" id="email" placeholder="Enter Your Email"
                 className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                onChange={handleEmail} value={email} required/>
+                onChange={handleEmail} value={email} pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"/>
+                <span className="text-red-500 hidden">Invalid Email !</span>
+
             </div>
             <div>
               <label for="number" className="block mb-2 text-sm">PhoneNumber</label>
-              <input type="tel" name="telphone" placeholder="888 888 8888" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="10"  title="Ten digits code"
+              <input type="tel" name="telphone" placeholder="888 888 8888" maxlength="10"  title="Ten digits code"
               className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-              onChange={handleMobile} value={mobile} required/>
+              onChange={handleMobile} value={mobile} pattern= "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"/>
+                <span className="text-red-500 hidden">Mobil should have 10 numbers!</span>
+            
             </div>
             <div>
               <div className="flex justify-between mb-2">
@@ -142,8 +162,15 @@ const errorMessage = () => {
               </div>
               <input type="password" name="password" id="password" placeholder="*****"
                 className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                onChange={handlePassword} value={password} required />
+                onChange={handlePassword} value={password} pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" />
+                <span className="text-red-500 hidden">password should have minimum 8 characters, at least one letter and one number!</span>
+
             </div>
+          </div>
+          <div>
+          <div className='text-center'>
+              {errorMessage()}
+              </div>
           </div>
           <div className="space-y-2">
             <div>

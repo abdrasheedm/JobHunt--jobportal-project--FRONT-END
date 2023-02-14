@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../axios";
 
-function SProfileCard() {
-  const profile_id = localStorage.getItem("profile_id");
+function SProfileCard({seekerID}) {
+  const profile_id = seekerID ? seekerID : localStorage.getItem("profile_id");
   const token = JSON.parse(localStorage.getItem("token"));
 
   const [profile, setProfile] = useState([]);
@@ -28,6 +28,9 @@ function SProfileCard() {
       <div
         className="bg-white rounded-2xl drop-shadow-2xl lg:p-10 sm:p-5 mb-5 hover:shadow-2xl"
         onClick={() => {
+          if(seekerID){
+            return
+          }
           navigate("/seeker-profile");
         }}
       >
@@ -70,7 +73,7 @@ function SProfileCard() {
           </h2>
         </div>
       </div> */}
-      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-5 sm:p-5 flex flex-col justify-center mb-10">
+      {seekerID ? "" : (<div className="bg-white rounded-2xl drop-shadow-2xl lg:p-5 sm:p-5 flex flex-col justify-center mb-10">
         <button
           className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5 capitalize"
           onClick={() => {
@@ -87,7 +90,7 @@ function SProfileCard() {
         <button className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5">
           FAVOURITE COMPANIES
         </button>
-      </div>
+      </div>)}
     </div>
   );
 }

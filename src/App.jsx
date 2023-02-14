@@ -25,6 +25,9 @@ import BrowseJobs from './Components/Pages/Seeker/BrowseForJobs/BrowseJobs'
 import SeekerJobView from './Components/Pages/Seeker/SingleJobView/SingleJobView'
 import FavouriteJobs from './Components/Pages/Seeker/FavouriteJobs/FavouriteJobs'
 import AppliedJobs from './Components/Pages/Seeker/AppliedJobs/AppliedJobs'
+import CandidatesProfile from './Components/Pages/RecruiterProfile/CandidatesProfile/CandidateProfile'
+import CompanyProfile from './Components/Pages/Seeker/CompanyProfile/CompanyProfile'
+import PlanDetails from './Components/Pages/RecruiterProfile/SubscriptionPlan'
 
 function App() {
 
@@ -39,6 +42,10 @@ function App() {
         <Route path='/user-register' element={<UserRegister />} />
         <Route path='/recruiter-register' element={<RecruiterRegister />} />
         <Route path='/verify-otp' element={<VerifyOtp />} />
+        <Route path='/seeker-browse-jobs' element={<BrowseJobs />} />
+        <Route path='/seeker-single-job-view' element={<SeekerJobView />} />
+
+
         <Route element={<RecruiterPrivateRoute/>}>
             <Route path='/recruiter-profile' element={<RecruiterProfile />} />
             <Route path='/recruiter-edit-profile' element={<EditProfile />} />
@@ -46,18 +53,21 @@ function App() {
             <Route path='/recruiter-post-job' element={<PostJob />} />
             <Route path='/recruiter-edit-job' element={<EditJob />} />
             <Route path='/recruiter-single-job-view' element={<SingleJobView />} />
+            <Route path='/recruiter-plan-details' element={<PlanDetails />} />
 
             <Route path='/recruiter-browse-candidates' element={<BrowseCandidates />} />
+            <Route path='/candidates-profile' element={<CandidatesProfile />} />
+
 
         </Route>
         <Route element={<SeekerPrivateRoute />}>
           <Route path='/seeker-profile' element={<SeekerProfile />} />
           <Route path='/seeker-edit-profile' element={<EditSProfile />} />
 
-          <Route path='/seeker-browse-jobs' element={<BrowseJobs />} />
-          <Route path='/seeker-single-job-view' element={<SeekerJobView />} />
           <Route path='/seeker-applied-jobs' element={<AppliedJobs />} />
           <Route path='/seeker-favourite-jobs' element={<FavouriteJobs />} />
+          <Route path='/company-profile-view' element={<CompanyProfile />} />
+
 
 
         </Route>

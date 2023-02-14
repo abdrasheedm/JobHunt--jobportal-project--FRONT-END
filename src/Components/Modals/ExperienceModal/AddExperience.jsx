@@ -4,6 +4,9 @@ import Swal from 'sweetalert2'
 
 function AddExperience({ visible , onClose, Type, ExpId}) {
   if(!visible) return null;
+  if(visible){
+    document.body.style.overflow = 'hidden';
+  } 
 
   const toggleIsPresent = () => {
     setIsPresent(!isPresent)

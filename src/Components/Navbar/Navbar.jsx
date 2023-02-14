@@ -3,14 +3,12 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import JobHuntLogo from "../../assets/JobHuntLogo.png";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../../Context/AuthContext";
 import axios from "../../axios";
 
 
 
-// const pathName = window.location.url
 const userNav = [
   { name: "HOME", href: "/", current: true },
   { name: "BROWSE JOBS ", href: "/seeker-browse-jobs", current: false },
@@ -18,7 +16,7 @@ const userNav = [
   { name: "MESSAGING", href: "#", current: false },
   { name: "CONTACT", href: "#", current: false },
 ];
-// console.log(window.location.pathname)
+console.log(window.location.pathname)
 const recruiterNav = [
   { name: "BROWSE CANDIDATES ", href: "/recruiter-browse-candidates", current: false },
   { name: "PAGE", href: "#", current: false },
@@ -115,8 +113,8 @@ function Navbar() {
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          item.current
-                            ? "bg-myBlue text-white"
+                          item.href === window.location.pathname
+                            ? "bg-gradient-to-r from-blue-800 to-indigo-900 text-white"
                             : "text-gray-900 hover:bg-blue-900 hover:text-white",
                           "px-3 py-2 rounded-md text-sm font-medium"
                         )}
@@ -129,8 +127,8 @@ function Navbar() {
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          item.current
-                            ? "bg-myBlue text-white"
+                          item.href === window.location.pathname
+                            ? "bg-gradient-to-r from-blue-800 to-indigo-900 text-white"
                             : "text-gray-900 hover:bg-blue-900 hover:text-white",
                           "px-3 py-2 rounded-md text-sm font-medium"
                         )}
@@ -215,16 +213,16 @@ function Navbar() {
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a
+                              <Link
                                 onClick={logOut}
-                                href="#"
+                                
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
                               >
                                 Sign out
-                              </a>
+                              </Link>
                             )}
                           </Menu.Item>
                         </Menu.Items>

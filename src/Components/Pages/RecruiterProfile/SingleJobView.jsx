@@ -30,13 +30,16 @@ function SingleJobView() {
 
 
   return (
-    <div>
+    <div style={{
+      backgroundImage: `url("https://wallpaperaccess.com/full/1410260.jpg")`,
+      backgroundSize: "cover",
+    }}>
       <div className="">
         <div className="font-bold text-center text-3xl py-10 bg-white">
           <h1 className="text-gray-600 uppercase">{jobData.job_title}</h1>
         </div>
         <div className="grid lg:grid-cols-6 xl:px-40 container mx-auto">
-          <div className="col-span-4 px-10 py-5 shadow-xl my-10 rounded-lg  bg-primar">
+          <div className="col-span-4 px-10 py-5 shadow-xl my-10 rounded-lg  bg-primary bg-opacity-60">
             <div className="my-10 px-10 py-5 border-b-2 border-gray-200">
               <h1 className="text-2xl my-5 font-semibold text-gray-600">{jobData.job_title}</h1>
               <div className="flex justify-between">
@@ -81,7 +84,7 @@ function SingleJobView() {
             </div>
           </div>
           <div className="lg:col-span-2 col-span-6 px-10 ">
-            <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50">
+            <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50 bg-opacity-60">
                 <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">Job Summary</div>
                 <div className="text-gray-600 py-1">published on : <span className="text-gray-900 font-semibold">{jobData.created_at}</span></div>
                 <div className="text-gray-600 py-1">vacancy: <span className="text-gray-900 font-semibold">{jobData.vacancy}</span></div>

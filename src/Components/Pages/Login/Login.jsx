@@ -1,107 +1,143 @@
-import React, { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from '../../../axios'
-import AuthContext from '../../../Context/AuthContext';
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../../../axios";
+import AuthContext from "../../../Context/AuthContext";
 
 function Login() {
+  const { Userlogin } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  const { errorMsg } = useContext(AuthContext);
 
-const {Userlogin} = useContext(AuthContext)
-const [email, setEmail ] = useState('');
-const [password, setPassword ] = useState('');
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+    // setSubmitted(false);
+  };
 
-const {errorMsg} = useContext(AuthContext)
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+    // setSubmitted(false);
+  };
 
-const handleEmail = (e) => {
-setEmail(e.target.value);
-// setSubmitted(false);
-};
+  // const navigate = useNavigate()
 
-const handlePassword = (e) => {
-setPassword(e.target.value);
-// setSubmitted(false);
-};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email === "" || password === "") {
+      setError(true);
+    } else {
+      Userlogin(email, password);
+      // axios.post('user/signin/', {
+      // email: email,
+      // password: password
+      // }).then((res) => {
+      // if(res.data.is_login){
+      // console.log(res.data.token.access);
+      // console.log("hello");
+      // localStorage.setItem("token", res.data.token.access)
+      // navigate('/')
 
+      // }
+      // console.log(res.data.message);
 
-// const navigate = useNavigate()
+      // })
 
-const handleSubmit = (e) => {
-e.preventDefault();
-if (email === '' || password === '' ) {
-setError(true);
-} else {
-Userlogin(email, password)
-// axios.post('user/signin/', {
-// email: email,
-// password: password
-// }).then((res) => {
-// if(res.data.is_login){
-// console.log(res.data.token.access);
-// console.log("hello");
-// localStorage.setItem("token", res.data.token.access)
-// navigate('/')
-
-// }
-// console.log(res.data.message);
-
-// })
-
-// // setSubmitted(true);
-// // setError(false);
-}
-};
-// Showing error message if error is true
-const errorMessage = () => {
-return (
-<div className="error" style={{ display: errorMsg ? '' : 'none' , }}>
-  <h5 className='text-red-700 text-xl'>{errorMsg}</h5>
-</div>
-);
-};
-
-
-return (
-<div>
-
-  <div>
-    <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 bg-gray-50">
-      <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white shadow-md sm:max-w-2xl sm:rounded-lg">
-        <div className="mb-8 text-center">
-          <h1 className="my-3 text-4xl text-myBlue font-bold">Sign in</h1>
-          <p className="text-sm dark:text-gray-400">Sign in to access your account</p>
-        </div>
-        <form noValidate="" action="" className="space-y-12 ng-untouched ng-pristine ng-valid" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block mb-2 text-sm">Email address</label>
-              <input type="email" name="email" id="email" placeholder="Enter Your Email"
-                className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                onChange={handleEmail} value={email} />
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <label htmlFor="password" className="text-sm">Password</label>
-                <a rel="noopener noreferrer" href="#" className="text-xs hover:underline dark:text-gray-400">Forgot
-                  password?</a>
-              </div>
-              <input type="password" name="password" id="password" placeholder="*****"
-                className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                onChange={handlePassword} value={password} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div>
-              <button type="submit"
-                className="w-full px-8 py-3 font-semibold rounded-md dark:bg-myBlue  dark:text-white">Sign in</button>
-            </div>
-            <p className="px-6 text-sm text-center dark:text-gray-400">Don't have an account yet?
-              <Link rel="noopener noreferrer" to='/user-register' className="hover:underline text-myBlue">Sign up</Link>
-              .
-            </p>
-          </div>
-        </form>
+      // // setSubmitted(true);
+      // // setError(false);
+    }
+  };
+  // Showing error message if error is true
+  const errorMessage = () => {
+    return (
+      <div className="error" style={{ display: errorMsg ? "" : "none" }}>
+        <h5 className="text-red-700 text-xl">{errorMsg}</h5>
       </div>
-      {/* <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-2xl sm:rounded-lg">
+    );
+  };
+
+  return (
+    <div>
+      <div>
+        <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 bg-gray-50">
+          <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white shadow-md sm:max-w-2xl sm:rounded-lg">
+            <div className="mb-8 text-center">
+              <h1 className="my-3 text-4xl text-myBlue font-bold">Sign in</h1>
+              <p className="text-sm dark:text-gray-400">
+                Sign in to access your account
+              </p>
+            </div>
+            <form
+              noValidate=""
+              action=""
+              className="space-y-12 ng-untouched ng-pristine ng-valid"
+              onSubmit={handleSubmit}
+            >
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="block mb-2 text-sm">
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Enter Your Email"
+                    className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                    onChange={handleEmail}
+                    value={email}
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <label htmlFor="password" className="text-sm">
+                      Password
+                    </label>
+                    <a
+                      rel="noopener noreferrer"
+                      href="#"
+                      className="text-xs hover:underline dark:text-gray-400"
+                    >
+                      Forgot password?
+                    </a>
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="*****"
+                    className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                    onChange={handlePassword}
+                    value={password}
+                  />
+                </div>
+              </div>
+          <div className="text-center">{errorMessage()}</div>
+
+              <div className="space-y-2">
+                <div>
+                  <button
+                    type="submit"
+                    className="w-full px-8 py-3 font-semibold rounded-md dark:bg-myBlue  dark:text-white"
+                  >
+                    Sign in
+                  </button>
+                </div>
+                <p className="px-6 text-sm text-center dark:text-gray-400">
+                  Don't have an account yet?
+                  <Link
+                    rel="noopener noreferrer"
+                    to="/user-register"
+                    className="hover:underline text-myBlue"
+                  >
+                    Sign up
+                  </Link>
+                  .
+                </p>
+              </div>
+            </form>
+          </div>
+          {/* <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-2xl sm:rounded-lg">
         <div className="py-10">
           <a href="/">
             <h3 className="text-4xl font-bold text-center">Sign In</h3>
@@ -142,10 +178,10 @@ return (
           </div>
         </form>
       </div> */}
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-)
+  );
 }
 
-export default Login
+export default Login;

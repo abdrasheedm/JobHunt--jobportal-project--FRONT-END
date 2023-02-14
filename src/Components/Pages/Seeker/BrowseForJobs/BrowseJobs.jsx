@@ -11,24 +11,25 @@ function classNames(...classes) {
 }
 
 function BrowseJobs() {
-  const token = JSON.parse(localStorage.getItem("token"));
-  const profileId = localStorage.getItem("profile_id");
+  const token = localStorage.getItem("token")
+  ? JSON.parse(localStorage.getItem("token"))
+  : null
+  const profileId = localStorage.getItem("profile_id") ? localStorage.getItem('profile_id') : null;
   const [jobs, setJobs] = useState([]);
+  const [tempJobs, setTempJobs] = useState([]);
   const fetchJobs = () => {
     axios
-      .get("browse-job/", {
-        headers: {
-          Authorization: `Bearer ${token.access}`,
-        },
-      })
+      .get("browse-job/")
       .then((res) => {
         setJobs(res.data);
+        setTempJobs(res.data);
         console.log(res.data);
+        console.log('hai');
       });
   };
 
-  const [FavouritedJobIDs, setFavouriteJobIDs] = useState()
-  const [favourited, setFavourited] = useState(false)
+  const [FavouritedJobIDs, setFavouriteJobIDs] = useState();
+  const [favourited, setFavourited] = useState(false);
   const fetchFavouritedJobIDs = () => {
     axios
       .get(`seeker-favourited-job/?id=${profileId}`, {
@@ -38,22 +39,29 @@ function BrowseJobs() {
       })
       .then((res) => {
         let response = res.data;
-        var job_id = []
+        var job_id = [];
         response.map((job) => {
-          job_id = [...job_id, job.job_id]
-          console.log(job_id)
-
-
+          
+          job_id = [...job_id, job.job_id];
+          console.log(job_id);
         });
-        setFavouriteJobIDs(job_id)
+        setFavouriteJobIDs(job_id);
       });
   };
   const navigate = useNavigate();
 
-
   const AddAndRemoveFavourite = (jobID) => {
-    console.log("in");
-    console.log(jobID);
+    if(!token){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You are not logged in!',
+        confirmButtonText: 'Signin',
+      }).then(() => {
+        navigate('/signin')
+      })
+      return
+    }
     let data = {
       job_id: jobID,
       seeker_id: profileId,
@@ -65,14 +73,13 @@ function BrowseJobs() {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setFavourited(!favourited)
+        setFavourited(!favourited);
         Swal.fire({
-          icon:"success",
+          icon: "success",
           title: `${res.data.message} !`,
-          showConfirmButton:false,
-          timer:1500
-        })
+          showConfirmButton: false,
+         
+        });
       });
   };
 
@@ -85,7 +92,6 @@ function BrowseJobs() {
 
   const [departments, setDepartments] = useState([]);
   const fetchDepartments = async () => {
-    console.log('called')
     await axios.get(`company-department/`).then((res) => {
       setDepartments(res.data);
     });
@@ -93,23 +99,71 @@ function BrowseJobs() {
 
   const [qualifications, setQualifications] = useState([]);
   const fetchQualifications = async () => {
-    console.log('called')
     await axios.get(`job-qualifications-view/`).then((res) => {
       setQualifications(res.data);
     });
   };
 
-  const jobTypes = ['part-time', 'full-time', 'intern']
-  const experienceLevels = ['Fresher', 'Internship', 'Intermediate', 'Professional']
+  const jobTypes = ["part-time", "full-time", "intern"];
+  const experienceLevels = [
+    "fresher",
+    "internship",
+    "intermediate",
+    "professional",
+  ];
+
+  const allJobs = () => {
+    setTempJobs(jobs);
+    console.log(jobs);
+  };
 
   const filterByCategory = (category) => {
-    let filtered = jobs.filter((job) => job.category.category_name ===category)
-    setJobs(filtered)
+    let filtered = jobs.filter(
+      (job) => job.category.category_name === category
+    );
+    setTempJobs(filtered);
     console.log(filtered);
-  }
+  };
 
+  const filterByDepartment = (department) => {
+    let filtered = jobs.filter(
+      (job) => job.department.department_name === department
+    );
+    setTempJobs(filtered);
+    console.log(filtered);
+  };
+
+  const filterByJobType = (jobType) => {
+    let filtered = jobs.filter((job) => job.job_type === jobType);
+    setTempJobs(filtered);
+  };
+
+  const filterByQualification = (qualification) => {
+    let filtered = jobs.filter(
+      (job) => job.qualification.title === qualification
+    );
+    setTempJobs(filtered);
+  };
+
+  const filterByExperienceLevel = (experience) => {
+    let filtered = jobs.filter((job) => job.level === experience);
+    setTempJobs(filtered);
+  };
+
+  const [search, setSearch] = useState("");
+  const searchData = (job) => {
+    return search === ""
+      ? job
+      : job.job_title.toLowerCase().includes(search) ||
+          job.category.category_name.toLowerCase().includes(search) ||
+          job.department.department_name.toLocaleLowerCase().includes(search) ||
+          job.level.toLowerCase().includes(search);
+  };
   useEffect(() => {
+    if(token){
     fetchFavouritedJobIDs();
+
+    }
   }, [favourited]);
 
   useEffect(() => {
@@ -117,24 +171,31 @@ function BrowseJobs() {
     fetchCategory();
     fetchDepartments();
     fetchQualifications();
-  }, [])
-   console.log(qualifications, jobTypes, experienceLevels)
+  }, []);
 
   return (
-    <div >
+    <div>
       <div className="">
         <div className="font-black text-center text-3xl py-10 bg-primary">
           <h1 className="text-gray-600 uppercase"> browse Jobs</h1>
         </div>
-        <div style={{
-        backgroundImage: `url("https://wallpaperaccess.com/full/1410260.jpg")`,
-        backgroundSize: "cover",
-      }}>
+        <div className="bg-gradient-to-r from-green-300 to-cyan-500"
+          // style={{
+          //   backgroundImage: `url("https://wallpaperaccess.com/full/1410260.jpg")`,
+          //   backgroundSize: "cover",
+          // }}
+        >
           <div className="grid lg:grid-cols-6 xl:px-40 container mx-auto ">
             <div className="lg:col-span-2 col-span-6 px-10 ">
               <div className="shadow-xl rounded-lg my-10 px-10 py-10 bg-white">
                 <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">
                   Filter
+                </div>
+                <div
+                  className="text-gray-600 py-3 text-center hover:cursor-pointer hover:bg-gray-200 rounded-lg"
+                  onClick={allJobs}
+                >
+                  All Jobs
                 </div>
                 <div className="text-gray-600 py-1 text-center ">
                   <Menu
@@ -164,24 +225,26 @@ function BrowseJobs() {
                         <div className="py-1">
                           {categories.map((category, index) => {
                             return (
-                              <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
+                              <Menu.Item key={index}>
+                                {({ active }) => (
+                                  <a
+                                    href="#"
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "block px-4 py-2 text-sm"
+                                    )}
+                                    onClick={() =>
+                                      filterByCategory(category.category_name)
+                                    }
+                                  >
+                                    {category.category_name}
+                                  </a>
                                 )}
-                              onClick={() => filterByCategory(category.category_name) }>
-                                {category.category_name}
-                              </a>
-                            )}
-                          </Menu.Item>
-                            )
+                              </Menu.Item>
+                            );
                           })}
-                          
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -212,24 +275,28 @@ function BrowseJobs() {
                         <div className="py-1">
                           {departments.map((department, index) => {
                             return (
-                              <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
+                              <Menu.Item key={index}>
+                                {({ active }) => (
+                                  <a
+                                    href="#"
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "block px-4 py-2 text-sm"
+                                    )}
+                                    onClick={() =>
+                                      filterByDepartment(
+                                        department.department_name
+                                      )
+                                    }
+                                  >
+                                    {department.department_name}
+                                  </a>
                                 )}
-                              >
-                                {department.department_name}
-                              </a>
-                            )}
-                          </Menu.Item>
-                            )
+                              </Menu.Item>
+                            );
                           })}
-                          
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -258,25 +325,26 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          
-                          {jobTypes.map((jobType) => {
+                          {jobTypes.map((jobType, index) => {
                             return (
-                              <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
+                              <Menu.Item >
+                                {({ active }) => (
+                                  <a
+                                  key={index}
+                                    href="#"
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "block px-4 py-2 text-sm"
+                                    )}
+                                    onClick={() => filterByJobType(jobType)}
+                                  >
+                                    {jobType}
+                                  </a>
                                 )}
-                              >
-                                {jobType}
-                              </a>
-                            )}
-                          </Menu.Item>
-                            )
+                              </Menu.Item>
+                            );
                           })}
                         </div>
                       </Menu.Items>
@@ -306,25 +374,28 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                          
                           {qualifications.map((qualification, index) => {
                             return (
-                              <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700",
-                                  "block px-4 py-2 text-sm"
+                              <Menu.Item >
+                                {({ active }) => (
+                                  <a
+                                  key={index}
+                                    href="#"
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "block px-4 py-2 text-sm"
+                                    )}
+                                    onClick={() =>
+                                      filterByQualification(qualification.title)
+                                    }
+                                  >
+                                    {qualification.title}
+                                  </a>
                                 )}
-                              >
-                                {qualification.title}
-                              </a>
-                            )}
-                          </Menu.Item>
-                            )
+                              </Menu.Item>
+                            );
                           })}
                         </div>
                       </Menu.Items>
@@ -354,25 +425,28 @@ function BrowseJobs() {
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
-                         {experienceLevels.map((experienceLevel, index) => {
-                           return (
-                            <Menu.Item>
-                           {({ active }) => (
-                             <a
-                               href="#"
-                               className={classNames(
-                                 active
-                                   ? "bg-gray-100 text-gray-900"
-                                   : "text-gray-700",
-                                 "block px-4 py-2 text-sm"
-                               )}
-                             >
-                               {experienceLevel}
-                             </a>
-                           )}
-                         </Menu.Item>
-                           )
-                         })}
+                          {experienceLevels.map((experienceLevel, index) => {
+                            return (
+                              <Menu.Item >
+                                {({ active }) => (
+                                  <a
+                                    href="#"
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "block px-4 py-2 text-sm"
+                                    )}
+                                    onClick={() =>
+                                      filterByExperienceLevel(experienceLevel)
+                                    }
+                                    key={index}>
+                                    {experienceLevel}
+                                  </a>
+                                )}
+                              </Menu.Item>
+                            );
+                          })}
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -402,79 +476,96 @@ function BrowseJobs() {
                       type="text"
                       placeholder="Search"
                       className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+                      onChange={(e) => {
+                        let searchValue = e.target.value.toLocaleLowerCase();
+                        setSearch(searchValue);
+                      }}
                     />
                   </div>
                 </form>
               </div>
-              {jobs.map((job, index) => {
-                return (
-                  <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white" key={index}>
-                    <div className="col-span-2">
-                      <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzRCgx-jrMQUQENdxiV71ZtID09zMRz3hnew&usqp=CAU"
-                        className="rounded-lg w-20 h-20 object-cover"
-                        alt=""
-                      />
-                    </div>
-                    <div
-                      className="col-span-5 pr-5 hover:cursor-pointer"
-                      onClick={() =>
-                        navigate("/seeker-single-job-view", {
-                          state: { data: job.id },
-                        })
-                      }
-                    >
-                      <h1 className="capitalize text-xl font-bold pt-3">
-                        {job.job_title}{" "}
-                      </h1>
-                      <div className="flex pt-3">
-                        <p className="mr-5 text-gray-600">
-                          <i className="fa-solid fa-user-tie"></i> &nbsp;
-                          {job.category?.category_name}{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          <i className="fa-thin fa-briefcase"></i> &nbsp;{" "}
-                          {job.salary_range}{" "}
-                        </p>
-                      </div>
-                      <div className="py-3">
-                        <p className="italic text-gray-400">
-                          {job.short_description}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-span-2 flex flex-col items-center">
-                      <div className="my-5">
-                        <span
-                          className={
-                            FavouritedJobIDs.includes(job.id)
-                              ? "text-white bg-myGreen p-2 rounded bg-opacity-90 hover:bg-myGreen hover:bg-opacity-100 mt-4"
-                              : "bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-myGreen"
-                          }
-                          onClick={() => {
-                            AddAndRemoveFavourite(job.id)
-                          }}
-                        >
-                          <i className="fa-regular fa-2xl fa-heart"></i>
-                        </span>
-                      </div>
-                      <button
-                        className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md"
-                        onClick={() =>
-                          navigate("/seeker-single-job-view", {
-                            state: { data: job.id },
-                          })
-                        }
+              {!tempJobs.length ? (
+                <div>
+                  <h1 className="text-center text-red-600 text-xl font-bold mt-10 bg-white bg-opacity-20 py-20 rounded-lg">
+                    Sorry , No Jobs available
+                  </h1>
+                </div>
+              ) : (
+                <div>
+                  {tempJobs.filter(searchData).map((job, index) => {
+                    return (
+                      <div
+                        className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white"
+                        key={index}
                       >
-                        Apply Now
-                      </button>
-                      <p className="text-center pt-3 italic text-gray-600">
-                        Last Date : {job.last_date}{" "}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+                        <div className="col-span-2">
+                          <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzRCgx-jrMQUQENdxiV71ZtID09zMRz3hnew&usqp=CAU"
+                            className="rounded-lg w-20 h-20 object-cover"
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          className="col-span-5 pr-5 hover:cursor-pointer"
+                          onClick={() =>
+                            navigate("/seeker-single-job-view", {
+                              state: { data: job.id },
+                            })
+                          }
+                        >
+                          <h1 className="capitalize text-xl font-bold pt-3">
+                            {job.job_title}{" "}
+                          </h1>
+                          <div className="flex pt-3">
+                            <p className="mr-5 text-gray-600">
+                              <i className="fa-solid fa-user-tie"></i> &nbsp;
+                              {job.category?.category_name}{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              <i className="fa-thin fa-briefcase"></i> &nbsp;{" "}
+                              {job.salary_range}{" "}
+                            </p>
+                          </div>
+                          <div className="py-3">
+                            <p className="italic text-gray-400">
+                              {job.short_description}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-span-2 flex flex-col items-center">
+                          <div className="my-5">
+                            <span
+                              className={
+                                FavouritedJobIDs?.includes(job.id)
+                                  ? "text-white bg-myGreen p-2 rounded bg-opacity-90 hover:bg-myGreen hover:bg-opacity-100 mt-4"
+                                  : "bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-myGreen"
+                              }
+                              onClick={() => {
+                                AddAndRemoveFavourite(job.id);
+                              }}
+                            >
+                              <i className="fa-regular fa-2xl fa-heart"></i>
+                            </span>
+                          </div>
+                          <button
+                            className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md"
+                            onClick={() =>
+                              navigate("/seeker-single-job-view", {
+                                state: { data: job.id },
+                              })
+                            }
+                          >
+                            Apply Now
+                          </button>
+                          <p className="text-center pt-3 italic text-gray-600">
+                            Last Date : {job.last_date}{" "}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

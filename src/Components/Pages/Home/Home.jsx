@@ -9,15 +9,6 @@ function Home() {
 
   const userType = JSON.parse(localStorage.getItem('userType'))
 
-  const array = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1]
-  const fetchs = (hjjh) => {
-    const arr = array.filter((job) => job===hjjh)
-    console.log(arr)
-  }
-
-  useEffect(() => {
-    fetchs(1)
-  }, [])
 
 
   return (
@@ -32,7 +23,7 @@ function Home() {
             Find Your Next <br />
             Dream Job
           </h1>
-          <button className="bg-myBlue text-white font-medium py-2 px-8 rounded-xl mx-5 ">
+          <button className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white font-medium py-2 px-8 rounded-xl mx-5 ">
             LOOKING FOR A JOB ?
           </button>
           {userType === "Recruiter" ? (<button className="bg-myGreen text-white font-medium py-2 px-8 rounded-xl mx-5 ">

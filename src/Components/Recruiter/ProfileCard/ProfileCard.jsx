@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../axios";
 
-function ProfileCard() {
-  const profile_id = localStorage.getItem("profile_id");
+function ProfileCard({CompId}) {
+  const profile_id = CompId ? CompId : localStorage.getItem("profile_id");
   const token = JSON.parse(localStorage.getItem("token"))
 
 
@@ -46,17 +46,19 @@ function ProfileCard() {
           <p className="text-center">{profile.about}</p>
         </div>
       </div>
-      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-5 sm:p-5 flex flex-col justify-center">
+      {CompId ? "" : (
+        <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-5 sm:p-5 flex flex-col justify-center">
         <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5" onClick={() => {navigate('/recruiter-my-jobs')}}>
           MY JOBS
         </button>
         <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5">
           SHORTLISTED CANDIDATES
         </button>
-        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5">
+        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5" onClick={() => {navigate('/recruiter-plan-details')}}>
           PLAN DETAILS
         </button>
       </div>
+      )}
     </div>
   );
 }

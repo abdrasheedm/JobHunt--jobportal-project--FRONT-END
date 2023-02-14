@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       ? JSON.parse(localStorage.getItem("token"))
       : null
   );
-  let [loading, setLoading] = useState(true);
+  let [loading, setLoading] = useState(localStorage.getItem('token') ? true : false);
   // let [recruiter,setRecruiter]=useState(()=>localStorage.getItem('adminAuthToken')? jwt_decode(localStorage.getItem('adminAuthToken')):null)
   let [adminAuthToken, setAdminAuthToken] = useState(() =>
     localStorage.getItem("adminAuthToken")
@@ -110,10 +110,13 @@ export const AuthProvider = ({ children }) => {
           console.log("hai");
         }
       })
-      .catch((response) => console.log("error", response));
+      .catch((response) => SetErrorMsg("Invalid Email or Password"));
   };
 
   let logOut = () => {
+    if(!token){
+      return
+    }
     axios
       .post(
         "user/logout/",
@@ -167,9 +170,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (loading) {
-      updateToken();
-    }
+  
+      if (loading) {
+        updateToken();
+      }
+
+    
 
     let fourMinute = 1000 * 60 * 4;
     let interval = setInterval(() => {
