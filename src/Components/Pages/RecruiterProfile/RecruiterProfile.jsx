@@ -8,6 +8,7 @@ function RecruiterProfile() {
   const profile_id = localStorage.getItem("profile_id");
   const token = JSON.parse(localStorage.getItem("token"));
   const [planModal, setPlanModal] = useState(false)
+  const [isFirst, setIsFirst] = useState(true)
 
   const isActive = () => {
     axios.get(`membership-purchase-view/?user_id=${profile_id}`,{
@@ -153,7 +154,7 @@ function RecruiterProfile() {
               </div>
             </div>
           </div>
-          <MembershipPlanModal visible={planModal} onClose={handelOnClose}/>
+          <MembershipPlanModal visible={planModal} isFirst={isFirst} onClose={handelOnClose}/>
         </div>
       </div>
     </div>

@@ -114,7 +114,6 @@ function BrowseJobs() {
 
   const allJobs = () => {
     setTempJobs(jobs);
-    console.log(jobs);
   };
 
   const filterByCategory = (category) => {
@@ -122,7 +121,6 @@ function BrowseJobs() {
       (job) => job.category.category_name === category
     );
     setTempJobs(filtered);
-    console.log(filtered);
   };
 
   const filterByDepartment = (department) => {
@@ -130,7 +128,6 @@ function BrowseJobs() {
       (job) => job.department.department_name === department
     );
     setTempJobs(filtered);
-    console.log(filtered);
   };
 
   const filterByJobType = (jobType) => {

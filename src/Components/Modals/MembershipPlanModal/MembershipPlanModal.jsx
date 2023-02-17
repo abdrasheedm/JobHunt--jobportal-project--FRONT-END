@@ -5,7 +5,7 @@ import PayPalModal from "../PayPalModal/PayPalModal";
 import ReactDOM from "react-dom";
 const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
 
-function MembershipPlanModal({ visible, onClose }) {
+function MembershipPlanModal({ visible, onClose, isFirst }) {
   if (!visible) return null;
 
 
@@ -70,8 +70,8 @@ function MembershipPlanModal({ visible, onClose }) {
               Please choose your Package
             </h1>
           </div>
-          <div className="grid grid-cols-4">
-            <div className="col-span-1 border-2 border-gray-400 hover:border-myBlue mx-2  text-center py-10 px-5">
+          <div className={isFirst ? "grid grid-cols-4" : "grid grid-cols-3"}>
+            {isFirst ? (<div className="col-span-1 border-2 border-gray-400 hover:border-myBlue mx-2  text-center py-10 px-5">
               <div className="text-gray-700 text-xl font-bold  mb-5">
                 Trial Plan
               </div>
@@ -95,7 +95,7 @@ function MembershipPlanModal({ visible, onClose }) {
                   </button>
                 </div>
               </div>
-            </div>
+            </div>): ""}
             <div className="col-span-1 border-2 border-gray-400 hover:border-myBlue mx-2  text-center py-10 px-5">
               <div className="text-gray-700 text-xl font-bold  mb-5">
                 Basic Plan

@@ -21,14 +21,37 @@ function PlanDetails() {
   }
 
   const [planModal, setPlanModal] = useState(false)
+  const [isFirst, setIsFirst] = useState(false)
   const handelOnClose = () => {
     document.body.style.overflow = "unset";
     setPlanModal(false);
   };
 
+  const validity = (key) => {
+    {{switch (key) {
+      case 0:
+        return '15 Days'
+        break;
+        case 30:
+          return '1 Month'
+          break;
+          case 90:
+        return '3 Months'
+        break;
+        case 180:
+          return '6 Months'
+          break;
+    
+      default:
+        break;
+    }}}
+  }
+
+
+
   useEffect(() => {
     fetchPlan()
-  }, []);
+  }, [planModal]);
   const navigate = useNavigate();
 
   return (
@@ -40,14 +63,14 @@ function PlanDetails() {
           <div className="bg-white p-16 rounded-2xl drop-shadow-2xl mb-5">
             <div className="flex justify-between">
               <h1 className="text-xl font-bold">Current Plan</h1>
-              <button
+              {!planDetails[0]?.user.is_active ? (<button
                 className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg"
                 onClick={() => {
                   setPlanModal(true)
                 }}
               >
                 Add Plan
-              </button>
+              </button>) : ''}
             </div>
 
             <div className="grid grid-cols-3 mt-8">
@@ -59,7 +82,7 @@ function PlanDetails() {
               <div>
                 <h1 className="mb-3">Validity</h1>
                 <p className="text-sm font-bold overflow-x-auto">
-                  {planDetails[0]?.user.membership.duration}
+                  {validity(planDetails[0]?.user.membership.duration)}
                 </p>
               </div>
               <div>
@@ -72,14 +95,17 @@ function PlanDetails() {
                 <h1 className="mb-3">Expiry Date</h1>
                 <p className="font-bold "> {planDetails[0]?.expiry_date}</p>
               </div>
-              <div></div>
+              <div>
+              <h1 className="mb-3">Remaining Jobs</h1>
+                <p className="font-bold "> {planDetails[0]?.user.postable_job_count}</p>
+              </div>
               <div>
                 <h1 className="mb-3">Status</h1>
-                <p className="font-bold ">{planDetails[0]?.is_active ? 'Active' : 'Expired'} </p>
+                <p className="font-bold ">{planDetails[0]?.user.is_active ? 'Active' : 'Expired'} </p>
               </div>
             </div>
           </div>
-          <MembershipPlanModal visible={planModal} onClose={handelOnClose}/>
+          <MembershipPlanModal visible={planModal} isFirst={isFirst} onClose={handelOnClose}/>
          
         </div>
       </div>

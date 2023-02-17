@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../axios";
+import Swal from "sweetalert2";
 
 function PostJob() {
 
@@ -124,7 +125,28 @@ function PostJob() {
         Authorization: `Bearer ${token.access}`,
       }
     }).then((res) => {
-    navigate('/recruiter-my-jobs')
+      if(res.data.message==='You reached Your limit !\nPlease Subscibe'){
+        Swal.fire({
+          icon: "error",
+          title: `${res.data.message} !`,
+          showConfirmButton: false,
+          timer: 2000
+         
+        })
+      }else{
+        Swal.fire({
+          icon: "success",
+          title: `${res.data.message} !`,
+          showConfirmButton: false,
+          timer: 1500
+         
+        }).then(
+          navigate('/recruiter-my-jobs')
+        )
+      }
+      
+      
+    
     })
 
     
