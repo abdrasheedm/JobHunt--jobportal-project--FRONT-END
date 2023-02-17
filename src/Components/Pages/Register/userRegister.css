@@ -6,4 +6,4 @@
 .user-form input:invalid ~ span{
     display: block;
     color: red;
-}
+} 

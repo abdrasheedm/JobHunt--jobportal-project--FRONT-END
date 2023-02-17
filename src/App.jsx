@@ -28,6 +28,8 @@ import AppliedJobs from './Components/Pages/Seeker/AppliedJobs/AppliedJobs'
 import CandidatesProfile from './Components/Pages/RecruiterProfile/CandidatesProfile/CandidateProfile'
 import CompanyProfile from './Components/Pages/Seeker/CompanyProfile/CompanyProfile'
 import PlanDetails from './Components/Pages/RecruiterProfile/SubscriptionPlan'
+import ApplicationTracking from './Components/Pages/RecruiterProfile/ApplicationTracking/ApplicationTracking'
+import ShortlistedCandidates from './Components/Pages/RecruiterProfile/ShortlistedCandidats/ShortlistedCandidates'
 
 function App() {
 
@@ -50,6 +52,8 @@ function App() {
             <Route path='/recruiter-profile' element={<RecruiterProfile />} />
             <Route path='/recruiter-edit-profile' element={<EditProfile />} />
             <Route path='/recruiter-my-jobs' element={<MyJobs />} />
+            <Route path='/application-tracking' element={<ApplicationTracking />} />
+
             <Route path='/recruiter-post-job' element={<PostJob />} />
             <Route path='/recruiter-edit-job' element={<EditJob />} />
             <Route path='/recruiter-single-job-view' element={<SingleJobView />} />
@@ -57,6 +61,8 @@ function App() {
 
             <Route path='/recruiter-browse-candidates' element={<BrowseCandidates />} />
             <Route path='/candidates-profile' element={<CandidatesProfile />} />
+            <Route path='/shortlisted-candidates' element={<ShortlistedCandidates />} />
+
 
 
         </Route>

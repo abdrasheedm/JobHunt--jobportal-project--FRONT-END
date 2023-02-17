@@ -71,11 +71,6 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
     }
   }, [])
 
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
-
   const handleSubmit = (e) => {
     e.preventDefault()
     let data = {

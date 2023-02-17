@@ -14,6 +14,7 @@ function SeekerProfile() {
   const [expModalType, setExpModalType] = useState("");
   const [expModalId, setExpModalId] = useState();
   const handelOnClose = () => {
+    document.body.style.overflow = 'unset';
     setExpModal(false);
     setProjModal(false);
   };

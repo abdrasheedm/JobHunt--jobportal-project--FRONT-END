@@ -51,7 +51,7 @@ function ProfileCard({CompId}) {
         <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5" onClick={() => {navigate('/recruiter-my-jobs')}}>
           MY JOBS
         </button>
-        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5">
+        <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5" onClick={() => {navigate('/shortlisted-candidates')}}>
           SHORTLISTED CANDIDATES
         </button>
         <button className="bg-myGreen text-white text-2xl font-bold px-16 py-3 rounded-lg mb-5" onClick={() => {navigate('/recruiter-plan-details')}}>

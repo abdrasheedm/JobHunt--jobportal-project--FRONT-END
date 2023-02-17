@@ -7,8 +7,26 @@ import ProfileCard from "../../Recruiter/ProfileCard/ProfileCard";
 function RecruiterProfile() {
   const profile_id = localStorage.getItem("profile_id");
   const token = JSON.parse(localStorage.getItem("token"));
-
   const [planModal, setPlanModal] = useState(false)
+
+  const isActive = () => {
+    axios.get(`membership-purchase-view/?user_id=${profile_id}`,{
+      headers: {
+        Authorization: `Bearer ${token.access}`
+      }
+    }).then((res) => {
+      console.log(res.data, '-------------------------------');
+
+      if(res.data===''){
+        console.log('null');
+        setPlanModal(true)
+      }
+    })
+  }
+  const handelOnClose = () => {
+    document.body.style.overflow = "unset";
+    setPlanModal(false);
+  };
 
   const [profile, setProfile] = useState([]);
   const fetchProfile = () => {
@@ -26,7 +44,8 @@ function RecruiterProfile() {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+    isActive();
+  }, [planModal]);
   const navigate = useNavigate();
 
   return (
@@ -134,7 +153,7 @@ function RecruiterProfile() {
               </div>
             </div>
           </div>
-          <MembershipPlanModal visible={true}/>
+          <MembershipPlanModal visible={planModal} onClose={handelOnClose}/>
         </div>
       </div>
     </div>

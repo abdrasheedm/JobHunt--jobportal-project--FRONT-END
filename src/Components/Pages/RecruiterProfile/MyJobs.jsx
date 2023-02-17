@@ -10,7 +10,6 @@ function MyJobs() {
   const company = JSON.parse(localStorage.getItem("CompanyProfile"));
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
-  console.log(jobs);
   const fetchJobs = async () => {
     await axios
       .get(`recruiter-view-job/?id=${company.id}`, {
@@ -23,8 +22,29 @@ function MyJobs() {
       });
   };
 
+  const [applidJobs, setAppliedJobs] = useState([])
+  const fetchAppliedJobs = () => {
+    axios
+    .get(`applied-jobs/?recruiter_id=${company.id}`, {
+      headers: {
+        Authorization: `Bearer ${token.access}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      let response = res.data;
+      var AppliedjobIds = [];
+      response.map((job) => {
+        AppliedjobIds = [...AppliedjobIds, job.job_id.id];
+      });
+      setAppliedJobs(AppliedjobIds);
+    });
+  }
+ console.log(applidJobs);
+
   useEffect(() => {
     fetchJobs();
+    fetchAppliedJobs()
   }, []);
 
   function refreshPage() {
@@ -63,7 +83,7 @@ function MyJobs() {
               </button>
             </div>
             <div>
-              <div className="p-5 rounded-md bg-gray-100">
+              <div className="p-5 rounded-md shadow-lg">
                 {jobs.length ? (
                   <div>
                     <h1 className="text-xl mb-2">MY JOBS</h1>
@@ -122,7 +142,13 @@ function MyJobs() {
                                   {job.created_at}
                                 </td>
                                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                                  {0}
+                                  {applidJobs.includes(job.id) ? (
+                                    <div className="text-myBlue font-bold text-lg hover:cursor-pointer" onClick={() => navigate('/application-tracking', {state:{data:job.id, title:job.job_title}})}>
+                                      
+                                     {applidJobs.filter((id)=>(id === job.id)).length}
+                                    </div>
+                                  ) : <div className="text-myBlue font-bold text-lg">0</div>}
+
                                 </td>
                                 <td className="p-2 text-sm text-green-700 whitespace-nowrap">
                                   <i
@@ -176,7 +202,12 @@ function MyJobs() {
                               {job.job_title}
                             </div>
                             <div className="text-sm font-medium text-black">
-                              0
+                            {applidJobs.includes(job.id) ? (
+                                    <div className="text-myBlue font-bold text-lg">
+                                      
+                                     {applidJobs.filter((id)=>(id === job.id)).length}
+                                    </div>
+                                  ) : <div className="text-myBlue font-bold text-lg">0</div>}
                             </div>
                             <div className="text-green-700 text-right">
                               {" "}
