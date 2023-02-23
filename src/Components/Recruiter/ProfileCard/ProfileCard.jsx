@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../axios";
+import { BASEURL } from "../../../Constants";
+
 
 function ProfileCard({CompId}) {
   const profile_id = CompId ? CompId : localStorage.getItem("profile_id");
@@ -24,12 +26,12 @@ function ProfileCard({CompId}) {
   const navigate = useNavigate()
   return (
     <div className="sm:m-10 lg:my-20 xl:m-20">
-      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-10 sm:p-5 mb-5 hover:shadow-2xl" onClick={() => {navigate('/recruiter-profile')}}>
+      <div className="bg-white rounded-2xl drop-shadow-2xl lg:p-10 sm:p-5 mb-5 hover:shadow-2xl" onClick={() => {if(!CompId){navigate('/recruiter-profile')}}}>
       <div className="flex justify-center">
           {profile.company_logo ? (
             <img
               className="h-40 w-40 rounded-full"
-              src={`http://127.0.0.1:8000/${profile.company_logo}`}
+              src={`${BASEURL+profile.company_logo}`}
               alt=""
             />
           ) : (

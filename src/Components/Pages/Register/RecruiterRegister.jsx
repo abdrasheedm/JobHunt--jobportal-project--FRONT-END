@@ -2,8 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "../../../axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import "../Register/userRegister.css";
 
 function RecruiterRegister() {
+  const NAME_REGEX = /^[A-Za-z]{3,16}$/;
+  const EMAIL_REGEXT =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  const PHONE_NUMBER_REGEX =
+    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+  const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
   const [categories, setCategory] = useState([]);
   const fetchCategory = async () => {
     await axios.get(`company-category/`).then((res) => {
@@ -61,13 +69,25 @@ function RecruiterRegister() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const V1 = NAME_REGEX.test(firstName);
+    const V2 = NAME_REGEX.test(lastName);
+    const V3 = EMAIL_REGEXT.test(email);
+    const V4 = PHONE_NUMBER_REGEX.test(mobile);
+    const V5 = PASSWORD_REGEX.test(password);
+    const V6 = PASSWORD_REGEX.test(company);
+
     if (
       firstName === "" ||
       lastName === "" ||
       company === "" ||
       email === "" ||
       mobile === "" ||
-      password === ""
+      password === "" ||
+      !V1 ||
+      !V2 ||
+      !V3 ||
+      !V4 ||
+      !V5
     ) {
       setError(true);
     } else {
@@ -135,7 +155,7 @@ function RecruiterRegister() {
                 <h3 className="text-4xl font-bold text-center">Sign Up</h3>
               </a>
             </div>
-            <form className="px-5 pb-10" onSubmit={handleSubmit}>
+            <form className="px-5 pb-10 user-form" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="first_name"
@@ -149,8 +169,13 @@ function RecruiterRegister() {
                     name="first_name"
                     onChange={handleFirstName}
                     value={firstName}
+                    pattern="^[A-Za-z]{3,16}$"
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                  <span className="">
+                    First Name should be 3-16 characters and shouldn't include
+                    any special character or number!
+                  </span>
                 </div>
               </div>
 
@@ -167,8 +192,13 @@ function RecruiterRegister() {
                     name="last_name"
                     onChange={handleLastName}
                     value={lastName}
+                    pattern="^[A-Za-z]{3,16}$"
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                  <span className="text-red-500 hidden">
+                    Last Name should be 3-16 characters and shouldn't include
+                    any special character or number!
+                  </span>
                 </div>
               </div>
               <div>
@@ -184,8 +214,13 @@ function RecruiterRegister() {
                     name="company_name"
                     onChange={handleCompany}
                     value={company}
+                    pattern="^[A-Za-z]{3,16}$"
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                  <span className="text-red-500 hidden">
+                    Comapny Name should be 3-16 characters and shouldn't include
+                    any special character or number!
+                  </span>
                 </div>
               </div>
               <div>
@@ -196,14 +231,20 @@ function RecruiterRegister() {
                   Company Category
                 </label>
                 <div className="flex flex-col items-start">
-                <select className="container p-2 my-1 rounded-md"
-                onChange={(e) => {
-                  const selectedCategory = e.target.value;
-                  setCompanyCategory (selectedCategory)
-                }}>
+                  <select
+                    className="container p-2 my-1 rounded-md"
+                    onChange={(e) => {
+                      const selectedCategory = e.target.value;
+                      setCompanyCategory(selectedCategory);
+                    }}
+                  >
                     <option>Please choose one option</option>
                     {categories.map((category, index) => {
-                      return <option value={category.category_name} key={index}>{category.category_name}</option>;
+                      return (
+                        <option value={category.category_name} key={index}>
+                          {category.category_name}
+                        </option>
+                      );
                     })}
                   </select>
                 </div>
@@ -221,8 +262,10 @@ function RecruiterRegister() {
                     name="email"
                     onChange={handleEmail}
                     value={email}
+                    pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                  <span className="text-red-500 hidden">Invalid Email !</span>
                 </div>
               </div>
               <div>
@@ -237,9 +280,13 @@ function RecruiterRegister() {
                     type="number"
                     name="phone_number"
                     onChange={handleMobile}
+                    pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"
                     value={mobile}
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                  <span className="text-red-500 hidden">
+                    Mobil should have 10 numbers and no characters !
+                  </span>
                 </div>
               </div>
               <div className="mt-4">
@@ -255,8 +302,13 @@ function RecruiterRegister() {
                     name="password"
                     onChange={handlePassword}
                     value={password}
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                  <span className="text-red-500 hidden">
+                    password should have minimum 8 characters, at least one
+                    letter and one number!
+                  </span>
                 </div>
               </div>
               {/* <div className="mt-4">
@@ -274,10 +326,7 @@ function RecruiterRegister() {
                   />
                 </div>
               </div> */}
-              <div className="text-center py-10">
-                {errorMessage()}
-                {successMessage()}
-              </div>
+              <div className="text-center py-10">{errorMessage()}</div>
               <div className="flex items-center justify-end mt-4">
                 <Link
                   to="/signin"

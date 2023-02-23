@@ -151,7 +151,7 @@ const errorMessage = () => {
               <input type="tel" name="telphone" placeholder="888 888 8888" maxlength="10"  title="Ten digits code"
               className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
               onChange={handleMobile} value={mobile} pattern= "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"/>
-                <span className="text-red-500 hidden">Mobil should have 10 numbers!</span>
+                <span className="text-red-500 hidden">Mobil should have 10 numbers and no characters!</span>
             
             </div>
             <div>

@@ -6,9 +6,10 @@ import Swal from 'sweetalert2'
 function AppliedJobsCard({job, isRemoved}) {
     const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem("token"));
+  const userID = localStorage.getItem('profile_id')
 
     const RemoveAppliedJob = (jobID) => {
-        axios.get(`remove-applied-job/?job_id=${jobID}`,{
+        axios.get(`remove-applied-job/?job_id=${jobID}&user_id=${userID}`,{
             headers: {
                 Authorization : `Bearer ${token.access}`
             }

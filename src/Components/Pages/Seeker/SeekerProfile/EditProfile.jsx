@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ProfileCard from "../../../Seeker/ProfileCard/SProfileCard";
 import axios from "../../../../axios";
+import { useNavigate } from "react-router-dom";
 
 function EditSProfile() {
+
+  const navigate = useNavigate()
   const profile_id = localStorage.getItem("profile_id");
   const token = JSON.parse(localStorage.getItem("token"));
 
@@ -111,9 +114,7 @@ function EditSProfile() {
     // setLogo(e.target.logo.files[0]);
     // console.log(...e.target.files);
   };
-  function refreshPage() {
-    window.location.reload(false);
-  }
+
 
   const profileUpdate = (e) => {
     e.preventDefault();
@@ -144,7 +145,7 @@ function EditSProfile() {
       })
       .then((res) => {
         console.log(res.data);
-        refreshPage();
+        navigate('/seeker-profile')
       });
   };
 

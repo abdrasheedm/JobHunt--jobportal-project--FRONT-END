@@ -30,6 +30,7 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
       setCompanyName(res.data.company_name)
       setLocation(res.data.location)
       setDescription(res.data.description)
+      setIsPresent(res.data.is_current)
 
     })
   }
@@ -142,10 +143,11 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
             >
               <div className="my-5">
               <div className='mb-5 px-5 flex justify-center'>
+
                 <label htmlFor="check-box-1" className='text-lg mr-5'>
                   Is Present
                 </label>
-                <input type="checkbox" id='check-box-1' value={isPresent} onChange={toggleIsPresent}/>
+                <input type="checkbox" id='check-box-1' value={isPresent} checked={isPresent} onChange={toggleIsPresent}/>
 
               </div>
                 <div className="grid grid-cols-2 mb-5">

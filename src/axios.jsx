@@ -1,8 +1,12 @@
 import axios from "axios";
+import { useContext } from "react";
+import { BASEURL } from "./Constants";
+
+console.log(BASEURL);
 
 
 const instance = axios.create({
-    baseURL:'http://127.0.0.1:8000/api/'
+    baseURL:`${BASEURL}/api/`
 })
 
 export default instance

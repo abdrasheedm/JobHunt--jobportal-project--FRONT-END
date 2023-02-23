@@ -16,7 +16,6 @@ function PlanDetails() {
       }
     }).then((res) => {
       setPlanDetails(res.data)
-      console.log(res.data);
     })
   }
 
@@ -56,20 +55,20 @@ function PlanDetails() {
 
   return (
     <div className="bg-primary lg:py-20">
-      <h1 className="text-center text-3xl font-bold">Plan Details</h1>
+      <h1 className="text-center text-3xl font-bold">Subsciption Details</h1>
       <div className="grid lg:grid-cols-3">
         <ProfileCard />
         <div className="lg:m-20 sm:m-10 col-span-2 ">
           <div className="bg-white p-16 rounded-2xl drop-shadow-2xl mb-5">
             <div className="flex justify-between">
-              <h1 className="text-xl font-bold">Current Plan</h1>
-              {!planDetails[0]?.user.is_active ? (<button
+              <h1 className="text-xl font-bold">Current Subscription Plan</h1>
+              {!planDetails[0]?.user.is_active_job ? (<button
                 className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg"
                 onClick={() => {
                   setPlanModal(true)
                 }}
               >
-                Add Plan
+                Upgrade Plan
               </button>) : ''}
             </div>
 

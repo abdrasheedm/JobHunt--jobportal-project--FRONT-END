@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../axios";
+import { BASEURL } from "../../../Constants";
 
 function SProfileCard({seekerID}) {
   const profile_id = seekerID ? seekerID : localStorage.getItem("profile_id");
@@ -38,7 +39,7 @@ function SProfileCard({seekerID}) {
           {profile.profile_photo ? (
             <img
               className="h-40 w-40 rounded-full"
-              src={`http://127.0.0.1:8000/${profile.profile_photo}`}
+              src={`${BASEURL+profile.profile_photo}`}
               alt=""
             />
           ) : (
@@ -87,9 +88,9 @@ function SProfileCard({seekerID}) {
         }}>
           APPLIED JOBS
         </button>
-        <button className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5">
+        {/* <button className="bg-myGreen text-white lg:text-2xl font-bold px-16 py-3 rounded-lg mb-5">
           FAVOURITE COMPANIES
-        </button>
+        </button> */}
       </div>)}
     </div>
   );

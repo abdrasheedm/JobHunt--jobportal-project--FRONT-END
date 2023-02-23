@@ -4,6 +4,7 @@ import ProfileCard from "../../Recruiter/ProfileCard/ProfileCard";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 function MyJobs() {
   const token = JSON.parse(localStorage.getItem("token"));
@@ -31,7 +32,6 @@ function MyJobs() {
       },
     })
     .then((res) => {
-      console.log(res.data);
       let response = res.data;
       var AppliedjobIds = [];
       response.map((job) => {
@@ -40,31 +40,45 @@ function MyJobs() {
       setAppliedJobs(AppliedjobIds);
     });
   }
- console.log(applidJobs);
 
-  useEffect(() => {
-    fetchJobs();
-    fetchAppliedJobs()
-  }, []);
 
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
+  const [isDeleted, setIsDeleted] = useState(false)
   const handleDeleteJob = (jobId) => {
-    axios
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
       .get(`recruiter-delete-job/?id=${jobId}`, {
         headers: {
           Authorization: `Bearer ${token.access}`,
         },
       })
       .then((res) => {
-        console.log(res.data.message);
-        refreshPage();
+        setIsDeleted(!isDeleted)
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
       });
+        
+      }
+    })
+    
   };
+  useEffect(() => {
+    fetchJobs();
+    fetchAppliedJobs()
+  }, [isDeleted]);
 
-  console.log(jobs);
+
 
   return (
     <div className="">
@@ -215,7 +229,6 @@ function MyJobs() {
                                 className="fas fa-edit"
                                 onClick={() => {
                                   var value = job.id;
-                                  console.log(value, "hai");
                                   navigate("/recruiter-edit-job", {
                                     state: { data: value },
                                   });

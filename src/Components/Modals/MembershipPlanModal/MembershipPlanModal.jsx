@@ -106,7 +106,7 @@ function MembershipPlanModal({ visible, onClose, isFirst }) {
                   <span>30 days</span>
                 </div>
                 <div className="my-5">
-                  <span>5 job posting</span>
+                  <span>10 job posting</span>
                 </div>
                 {/* <div className="my-5">
                 <span>
@@ -134,7 +134,7 @@ function MembershipPlanModal({ visible, onClose, isFirst }) {
                   <span>90 days</span>
                 </div>
                 <div className="my-5">
-                  <span>10 job posting / month</span>
+                  <span>40 job posting</span>
                 </div>
                 {/* <div className="my-5">
                 <span>
@@ -162,7 +162,7 @@ function MembershipPlanModal({ visible, onClose, isFirst }) {
                   <span>180 days</span>
                 </div>
                 <div className="my-5">
-                  <span>20 job posting / month</span>
+                  <span>100 job posting</span>
                 </div>
                 {/* <div className="my-5">
                 <span>

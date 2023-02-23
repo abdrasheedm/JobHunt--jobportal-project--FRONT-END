@@ -3,6 +3,7 @@ import axios from "../axios";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useEffect } from "react";
+import { BASEURL } from "../Constants";
 
 const AuthContext = createContext();
 export default AuthContext;
@@ -44,6 +45,7 @@ export const AuthProvider = ({ children }) => {
   let [errorMsg, SetErrorMsg] = useState("");
 
   const navigate = useNavigate();
+  // const BASEURL = 'http://10.4.0.85:8000'
 
   const Userlogin = async (email, password) => {
     await axios
@@ -148,7 +150,7 @@ export const AuthProvider = ({ children }) => {
 
   let updateToken = async () => {
    
-    let response = await fetch("http://127.0.0.1:8000/api/token/refresh/", {
+    let response = await fetch(`${BASEURL}/api/token/refresh/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -199,6 +201,7 @@ export const AuthProvider = ({ children }) => {
     errorMsg: errorMsg,
     adminAuthToken: adminAuthToken,
     admin: admin,
+    // BASEURL :BASEURL
     // setShow:setShow,
     // handleClose:handleClose,
     // handleShow:handleShow,

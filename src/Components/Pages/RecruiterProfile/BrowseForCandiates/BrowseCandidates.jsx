@@ -4,6 +4,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import axios from "../../../../axios";
 import { useNavigate } from "react-router-dom";
+import { BASEURL } from "../../../../Constants";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -371,7 +372,7 @@ function BrowseCandidates() {
                       <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white bg-opacity-60">
                         <div className="col-span-2">
                           <img
-                            src={`http://127.0.0.1:8000${seeker.profile_photo}`}
+                            src={`${BASEURL + seeker.profile_photo}`}
                             className="rounded-lg w-20 h-20 object-cover"
                             alt=""
                           />
@@ -380,8 +381,11 @@ function BrowseCandidates() {
                           <h1 className="capitalize text-xl font-bold pt-3 hover:cursor-pointer" onClick={() => navigate('/candidates-profile', {
                               state: { data: seeker.id },
                             })}>
-                            {seeker.department.department_name}
+                            {seeker.department?.department_name}
                           </h1>
+                          <div>
+                            {seeker.seeker?.first_name} &nbsp; &nbsp; {seeker.seeker?.last_name}
+                          </div>
                           <div className="flex pt-3">
                             <p className="mr-5 text-gray-600">
                               <i class="fa-solid fa-user-tie"></i>{" "}

@@ -30,6 +30,7 @@ import CompanyProfile from './Components/Pages/Seeker/CompanyProfile/CompanyProf
 import PlanDetails from './Components/Pages/RecruiterProfile/SubscriptionPlan'
 import ApplicationTracking from './Components/Pages/RecruiterProfile/ApplicationTracking/ApplicationTracking'
 import ShortlistedCandidates from './Components/Pages/RecruiterProfile/ShortlistedCandidats/ShortlistedCandidates'
+import Notifications from './Components/Pages/Notifications/Notifications'
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
         <Route path='/verify-otp' element={<VerifyOtp />} />
         <Route path='/seeker-browse-jobs' element={<BrowseJobs />} />
         <Route path='/seeker-single-job-view' element={<SeekerJobView />} />
+        <Route path='/notifications' element={<Notifications />} />
 
 
         <Route element={<RecruiterPrivateRoute/>}>

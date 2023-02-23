@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProfileCard from "../../Recruiter/ProfileCard/ProfileCard";
 import axios from "../../../axios";
+import { useNavigate } from "react-router-dom";
 
 function EditProfile() {
   const profile_id = localStorage.getItem("profile_id");
@@ -12,6 +13,8 @@ function EditProfile() {
       setCategory(res.data);
     });
   };
+
+  const navigate = useNavigate()
 
   const [profile, setProfile] = useState([]);
   const fetchProfile = () => {
@@ -36,10 +39,7 @@ function EditProfile() {
         setCompanyCategory(res.data.category.category_name);
       });
   };
-  useEffect(() => {
-    fetchProfile();
-    fetchCategory();
-  }, []);
+
   console.log(profile);
 
   const [firstName, setFirstName] = useState("");
@@ -53,6 +53,7 @@ function EditProfile() {
   const [founder, setFounder] = useState("");
   const [headOffice, setHeadOffice] = useState("");
   const [logo, setLogo] = useState([]);
+
 
   const BASEURL = `http://127.0.0.1:8000${logo}`;
 
@@ -88,11 +89,7 @@ function EditProfile() {
     // setLogo(e.target.logo.files[0]);
     // console.log(...e.target.files);
   };
-  console.log(logo)
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
+  
   const profileUpdate = (e) => {
     const formData = new FormData();
     formData.append("first_name", firstName);
@@ -121,9 +118,13 @@ function EditProfile() {
       },
     }).then((res) => {
       console.log(res.data);
-      // refreshPage()
+      navigate('/recruiter-profile')
     });
   };
+  useEffect(() => {
+    fetchProfile();
+    fetchCategory();
+  }, []);
 
   return (
     <div className=" lg:py-20">

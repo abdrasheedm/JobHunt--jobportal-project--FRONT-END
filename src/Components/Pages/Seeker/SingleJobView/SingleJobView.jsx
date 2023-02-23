@@ -4,15 +4,18 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import ReportJobModal from "../../../Modals/ReportJobModal/RepostJobModal";
 
 function SeekerJobView() {
   const locat = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const jobID = locat.state?.data;
   const token = localStorage.getItem("token")
-  ? JSON.parse(localStorage.getItem("token"))
-  : null
-  const seekerId = localStorage.getItem("profile_id") ? localStorage.getItem("profile_id") : null ;
+    ? JSON.parse(localStorage.getItem("token"))
+    : null;
+  const seekerId = localStorage.getItem("profile_id")
+    ? localStorage.getItem("profile_id")
+    : null;
   const [jobData, setJobData] = useState({});
   const [companyData, setCompanyData] = useState("");
 
@@ -63,17 +66,23 @@ function SeekerJobView() {
       });
   };
 
+  const [isModal, setIsModal] = useState(false)
+  const handelOnClose = () => {
+    document.body.style.overflow = "unset";
+    setIsModal(false);
+  };
+
   const AddAndRemoveFavourite = (jobID) => {
-    if(!token){
+    if (!token) {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'You are not logged in!',
-        confirmButtonText: 'Signin',
+        icon: "error",
+        title: "Oops...",
+        text: "You are not logged in!",
+        confirmButtonText: "Signin",
       }).then(() => {
-        navigate('/signin')
-      })
-      return
+        navigate("/signin");
+      });
+      return;
     }
     let data = {
       job_id: jobID,
@@ -117,37 +126,35 @@ function SeekerJobView() {
   };
 
   const fetchJobDetails = async () => {
-    await axios
-      .get(`view-single-job/?id=${jobID}`)
-      .then((res) => {
-        setJobData(res.data);
-        setCompanyData(res.data.company_id);
-        // setJobId(res.data.id)
-        console.log(res.data);
-        setRecruiterId(res.data.company_id.id);
-      });
+    await axios.get(`view-single-job/?id=${jobID}`).then((res) => {
+      setJobData(res.data);
+      setCompanyData(res.data.company_id);
+      // setJobId(res.data.id)
+      console.log(res.data);
+      setRecruiterId(res.data.company_id.id);
+    });
   };
 
   const BASEURL = `http://127.0.0.1:8000${companyData?.company_logo}`;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     fetchJobDetails();
   }, []);
 
   useEffect(() => {
-    if(!token){
-      return
+    if (!token) {
+      return;
     }
-    fetchFavouritedJobIDs()
-  }, [favourited])
+    fetchFavouritedJobIDs();
+  }, [favourited]);
 
   useEffect(() => {
-    if(!token){
-      return
+    if (!token) {
+      return;
     }
-    fetchAppliedJobIds()
-  }, [isApplied])
+    fetchAppliedJobIds();
+  }, [isApplied]);
   const ApplyJob = (e) => {
     e.preventDefault();
 
@@ -174,11 +181,11 @@ function SeekerJobView() {
       })
       .then((res) => {
         Swal.fire({
-          icon:"success",
+          icon: "success",
           title: `${res.data.message} !`,
-          showConfirmButton:false,
-          timer:1500
-        })
+          showConfirmButton: false,
+          timer: 1500,
+        });
         setIsApplied(!isApplied);
         console.log(res.data);
         // refreshPage();
@@ -268,7 +275,7 @@ function SeekerJobView() {
                     This job comes under{" "}
                     <span className="font-semibold">
                       {jobData.department?.department_name}
-                    </span>{" "}
+                    </span>
                     Department
                   </p>
                 </div>
@@ -279,137 +286,156 @@ function SeekerJobView() {
                     level employees are accepeted
                   </p>
                 </div>
+                <div className="border-t-2">
+                  <div className="text-blue-600 font-bold pt-4 flex justify-between">
+                    <span>{companyData.company_name}</span>
+                    <span className="hover:cursor-pointer p-1 " onClick={() => setIsModal(true)}>Report this job</span>
+                  </div>
+                </div>
               </div>
+              <ReportJobModal visible={isModal} onClose={handelOnClose}/>
             </div>
             <div>
               <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50 bg-opacity-50">
                 <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">
-                  Apply htmlFor the job
+                  Apply for the job
                 </div>
                 <div>
                   {appliedJobIDs.includes(jobID) ? (
                     <div>
                       <div>
-                      You applied htmlFor this job. <Link className="text-myBlue underline" to='/seeker-applied-jobs'>See applied jobs Here</Link>
+                        You applied for this job.{" "}
+                        <Link
+                          className="text-myBlue underline"
+                          to="/seeker-applied-jobs"
+                        >
+                          See applied jobs Here
+                        </Link>
                       </div>
                     </div>
-                  ): (
+                  ) : (
                     <form
-                    noValidate=""
-                    action=""
-                    className="space-y-12 ng-untouched ng-pristine ng-valid"
-                    onSubmit={ApplyJob}
-                  >
-                    <div className="grid grid-cols-2 mb-5">
-                      <div className="col-span-2 md:col-span-1 px-5">
-                        <label htmlFor="firstName" className="block mb-2 text-sm">
-                          First Name
-                        </label>
-                        <input
-                          type="name"
-                          name="firstName"
-                          id="firstName"
-                          placeholder="Enter Your First Name"
-                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
-                          onChange={handleFirstName}
-                          value={firstName}
-                          required
-                        />
+                      noValidate=""
+                      action=""
+                      className="space-y-12 ng-untouched ng-pristine ng-valid"
+                      onSubmit={ApplyJob}
+                    >
+                      <div className="grid grid-cols-2 mb-5">
+                        <div className="col-span-2 md:col-span-1 px-5">
+                          <label
+                            htmlFor="firstName"
+                            className="block mb-2 text-sm"
+                          >
+                            First Name
+                          </label>
+                          <input
+                            type="name"
+                            name="firstName"
+                            id="firstName"
+                            placeholder="Enter Your First Name"
+                            className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
+                            onChange={handleFirstName}
+                            value={firstName}
+                            required
+                          />
+                        </div>
+                        <div className="col-span-2 md:col-span-1 px-5">
+                          <label
+                            htmlFor="LastName"
+                            className="block mb-2 text-sm"
+                          >
+                            Last Name
+                          </label>
+                          <input
+                            type="name"
+                            name="lastName"
+                            id="lastName"
+                            placeholder="Enter Your Last Name"
+                            className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
+                            onChange={handleLastName}
+                            value={lastName}
+                            required
+                          />
+                        </div>
                       </div>
-                      <div className="col-span-2 md:col-span-1 px-5">
-                        <label htmlFor="LastName" className="block mb-2 text-sm">
-                          Last Name
-                        </label>
-                        <input
-                          type="name"
-                          name="lastName"
-                          id="lastName"
-                          placeholder="Enter Your Last Name"
-                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                          onChange={handleLastName}
-                          value={lastName}
-                          required
-                        />
+                      <div className="grid grid-cols-2 mb-5">
+                        <div className="col-span-2 md:col-span-1 px-5">
+                          <label htmlFor="email" className="block mb-2 text-sm">
+                            Email address
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="Enter Your Email"
+                            className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
+                            onChange={handleEmail}
+                            value={email}
+                            required
+                          />
+                        </div>
+                        <div className="col-span-2 md:col-span-1 px-5">
+                          <label
+                            htmlFor="number"
+                            className="block mb-2 text-sm"
+                          >
+                            PhoneNumber
+                          </label>
+                          <input
+                            type="tel"
+                            name="telphone"
+                            placeholder="888 888 8888"
+                            // pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
+                            maxLength="10"
+                            title="Ten digits code"
+                            className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
+                            onChange={handlePhone}
+                            value={phone}
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 mb-5">
-                      <div className="col-span-2 md:col-span-1 px-5">
-                        <label htmlFor="email" className="block mb-2 text-sm">
-                          Email address
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          id="email"
-                          placeholder="Enter Your Email"
-                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                          onChange={handleEmail}
-                          value={email}
-                          required
-                        />
+                      <div className="grid grid-cols-2 mb-5">
+                        <div className="col-span-2 md:col-span-1 px-5">
+                          <label
+                            htmlFor="firstName"
+                            className="block mb-2 text-sm"
+                          >
+                            Upload Resume
+                          </label>
+                          <input
+                            type="file"
+                            name="firstName"
+                            id="firstName"
+                            placeholder="Enter Your First Name"
+                            className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
+                            onChange={handleResume}
+                            // value={resume}
+                            required
+                          />
+                        </div>
+                      
                       </div>
-                      <div className="col-span-2 md:col-span-1 px-5">
-                        <label htmlFor="number" className="block mb-2 text-sm">
-                          PhoneNumber
-                        </label>
-                        <input
-                          type="tel"
-                          name="telphone"
-                          placeholder="888 888 8888"
-                          // pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
-                          maxLength="10"
-                          title="Ten digits code"
-                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                          onChange={handlePhone}
-                          value={phone}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 mb-5">
-                      <div className="col-span-2 md:col-span-1 px-5">
-                        <label htmlFor="firstName" className="block mb-2 text-sm">
-                          Upload Resume
-                        </label>
-                        <input
-                          type="file"
-                          name="firstName"
-                          id="firstName"
-                          placeholder="Enter Your First Name"
-                          className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent"
-                          onChange={handleResume}
-                          // value={resume}
-                          required
-                        />
-                      </div>
-                      {/* <div className="col-span-2 md:col-span-1 px-5">
-                    <label htmlFor="LastName" className="block mb-2 text-sm">
-                      Last Name
-                    </label>
-                    <input
-                      type="name"
-                      name="lastName"
-                      id="lastName"
-                      placeholder="Enter Your Last Name"
-                      className="w-full px-3 py-2 border rounded-md dark:border-gray-700 bg-transparent "
-                    //   onChange={handleLastName}
-                    //   value={lastName}
-                      required
-                    />
-                  </div> */}
-                    </div>
 
-                    <div className="flex justify-center py-5">
-                      {token ? <button
-                        type="submit"
-                        className="inline-flex items-center px-10 py-2 ml-4 text-md font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-myGreen border border-transparent rounded-md active:bg-gray-900 false"
-                      >
-                        Apply Now
-                      </button> : (
-                        <div>Please <Link to='/signin' className="text-myBlue">Signin</Link> to apply </div>
-                      )}
-                    </div>
-                  </form>
+                      <div className="flex justify-center py-5">
+                        {token ? (
+                          <button
+                            type="submit"
+                            className="inline-flex items-center px-10 py-2 ml-4 text-md font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-myGreen border border-transparent rounded-md active:bg-gray-900 false"
+                          >
+                            Apply Now
+                          </button>
+                        ) : (
+                          <div>
+                            Please{" "}
+                            <Link to="/signin" className="text-myBlue">
+                              Signin
+                            </Link>{" "}
+                            to apply{" "}
+                          </div>
+                        )}
+                      </div>
+                    </form>
                   )}
                 </div>
               </div>
@@ -461,7 +487,11 @@ function SeekerJobView() {
                     className="h-32 w-32 object-cover rounded-full hover:cursor-pointer"
                     src={BASEURL}
                     alt=""
-                    onClick={() => navigate('/company-profile-view', {state : {data:companyData.id}})}
+                    onClick={() =>
+                      navigate("/company-profile-view", {
+                        state: { data: companyData.id },
+                      })
+                    }
                   />
                 </div>
                 <div className="text-gray-600 py-1">

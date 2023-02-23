@@ -16,10 +16,8 @@ function RecruiterProfile() {
         Authorization: `Bearer ${token.access}`
       }
     }).then((res) => {
-      console.log(res.data, '-------------------------------');
 
       if(res.data===''){
-        console.log('null');
         setPlanModal(true)
       }
     })

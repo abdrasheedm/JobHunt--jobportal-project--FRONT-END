@@ -6,6 +6,7 @@ import JobHuntLogo from "../../assets/JobHuntLogo.png";
 import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../../Context/AuthContext";
 import axios from "../../axios";
+import { BASEURL } from "../../Constants";
 
 
 
@@ -60,7 +61,7 @@ function Navbar() {
       });
   };
 
-  const BASEURL = `http://127.0.0.1:8000${profileImage}`;
+  const IMGURL = `${BASEURL+profileImage}`;
 
 
 
@@ -75,7 +76,7 @@ function Navbar() {
       fetchSeekerProfile()
     }
     
-  }, [])
+  }, [profileImage])
   return (
     <Disclosure as="nav" className="bg-primary py-10">
       {({ open }) => (
@@ -156,7 +157,7 @@ function Navbar() {
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={BASEURL}
+                            src={IMGURL}
                             alt=""
                           />
                         </Menu.Button>

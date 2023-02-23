@@ -489,7 +489,7 @@ function BrowseJobs() {
                 </div>
               ) : (
                 <div>
-                  {tempJobs.filter(searchData).map((job, index) => {
+                  {tempJobs.filter(searchData).length ? <div>{tempJobs.filter(searchData).map((job, index) => {
                     return (
                       <div
                         className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white"
@@ -560,7 +560,11 @@ function BrowseJobs() {
                         </div>
                       </div>
                     );
-                  })}
+                  })}</div> : <div>
+                  <h1 className="text-center text-red-600 text-xl font-bold mt-10 bg-white bg-opacity-20 py-20 rounded-lg">
+                    Sorry , No Searches available
+                  </h1>
+                </div> }
                 </div>
               )}
             </div>
