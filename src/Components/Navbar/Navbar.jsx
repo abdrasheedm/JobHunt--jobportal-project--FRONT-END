@@ -7,6 +7,12 @@ import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../../Context/AuthContext";
 import axios from "../../axios";
 import { BASEURL } from "../../Constants";
+import { toast, Toaster } from "react-hot-toast";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { data } from "autoprefixer";
+
+
+
 
 
 
@@ -36,6 +42,7 @@ function Navbar() {
 
   const token = JSON.parse(localStorage.getItem("token"));
   const profile_id = localStorage.getItem("profile_id");
+  const userId = localStorage.getItem("userId");
   const [profileImage, setProfileImage] = useState('');
   const fetchSeekerProfile = () => {
     axios
@@ -77,8 +84,38 @@ function Navbar() {
     }
     
   }, [profileImage])
+
+  const client = new W3CWebSocket(
+    `ws://10.4.0.85:8000/ws/notification/${userId}/`
+  );
+  const [unread, setUnread] = useState('')
+  useEffect(() => { 
+      
+    if(userId){
+      axios.get(`notifications-count-view/?user_id=${userId}`,{
+        headers: {
+          Authorization: `Bearer ${token.access}`
+        }
+      }).then((res) => {
+        console.log(res.data);
+        setUnread(res.data.count)
+      })
+      client.onopen = () => {
+        console.log("WebSocket Client Connected");
+      };
+      client.onmessage = (message) => {
+        console.log("connected to web socket");
+        const dataFromServer = JSON.parse(message.data);
+        setUnread(dataFromServer.count)
+        console.log(dataFromServer.count);
+        toast.success(dataFromServer.notification)
+      };
+    }
+  }, []);
+  console.log(unread);
   return (
-    <Disclosure as="nav" className="bg-primary py-10">
+    <div>
+      <Disclosure as="nav" className="bg-primary py-10">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 md:flex md:justify-center">
@@ -142,12 +179,18 @@ function Navbar() {
                 </div>
                 {user ? (
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                      
+                   <div className="relative">
+                   <div style={{borderRadius:"50%"}} className="w-5 left-6 text-center bg-red-600 text-white absolute">
+                   <span className="text-sm">{unread}</span>
+
+                   </div>
+                   </div>
                     <button
                       type="button"
                       className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     >
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      <BellIcon className="h-6 w-6" aria-hidden="true" onClick={() => navigate('/notifications')}/>
                     </button>
 
                     {/* Profile dropdown */}
@@ -201,15 +244,16 @@ function Navbar() {
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a
+                              <Link
                                 href="#"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
+                                onClick={() => toast.error("Invalid password")}
                               >
                                 Settings
-                              </a>
+                              </Link>
                             )}
                           </Menu.Item>
                           <Menu.Item>
@@ -300,8 +344,14 @@ function Navbar() {
             </div>
           </Disclosure.Panel>
         </>
+        
       )}
     </Disclosure>
+    <div>
+      <Toaster position="top-center" reverseOrder={false}></Toaster>
+
+      </div>
+    </div>
   );
 }
 

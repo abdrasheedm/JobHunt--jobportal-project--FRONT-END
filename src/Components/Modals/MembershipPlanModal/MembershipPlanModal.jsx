@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../../axios";
 import Swal from "sweetalert2";
-import PayPalModal from "../PayPalModal/PayPalModal";
 import ReactDOM from "react-dom";
 const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
 
