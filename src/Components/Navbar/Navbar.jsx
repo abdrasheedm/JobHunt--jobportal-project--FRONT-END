@@ -69,7 +69,8 @@ function Navbar() {
   const IMGURL = `${BASEURL + profileImage}`;
 
   const navigate = useNavigate();
-
+  const [unread, setUnread] = useState("");
+  const {isReaded} = useContext(AuthContext)
   useEffect(() => {
     if (userType === "Recruiter") {
       fetchRecruiterProfile();
@@ -77,10 +78,21 @@ function Navbar() {
       fetchSeekerProfile();
     }
   }, [profileImage]);
-
+  if(token){
   const client = new W3CWebSocket(`${WsURL}${userId}/`);
-  const [unread, setUnread] = useState("");
-  const {isReaded} = useContext(AuthContext)
+    useEffect(() => {
+      client.onopen = () => {
+      };
+      client.onmessage = (message) => {
+        console.log("connected to web socket");
+        const dataFromServer = JSON.parse(message.data);
+        setUnread(dataFromServer.count);
+        toast.success(dataFromServer.notification);
+      };
+    }, [])
+  }
+
+  
   useEffect(() => {
     if (userId) {
       axios
@@ -92,14 +104,7 @@ function Navbar() {
         .then((res) => {
           setUnread(res.data.count);
         });
-      client.onopen = () => {
-      };
-      client.onmessage = (message) => {
-        console.log("connected to web socket");
-        const dataFromServer = JSON.parse(message.data);
-        setUnread(dataFromServer.count);
-        toast.success(dataFromServer.notification);
-      };
+      
     }
   }, [isReaded]);
   return (

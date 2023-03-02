@@ -13,7 +13,6 @@ function Notifications() {
   const navigate = useNavigate()
 
   const [notifications, setNotificatins] = useState([]);
-  const [data, setData] = useState();
 
   const fetchNotifications = async () => {
     await axios
@@ -46,30 +45,12 @@ function Notifications() {
     )
   };
 
-  const client = new W3CWebSocket(
-    `${WsURL}${userId}/`
-  );
 
   useEffect(() => { 
     UpdateNotification()
-    client.onopen = () => {
-      console.log("WebSocket Client Connected");
-    };
-    client.onmessage = (message) => {
-      console.log(notifications);
-      console.log("connected to web socket");
-      const dataFromServer = JSON.parse(message.data);
-      setData(dataFromServer);
-    };
     fetchNotifications();
 
   }, []);
-  useEffect(() => {
-    if (data) {
-      setNotificatins([data, ...notifications]);
-      setData("");
-    }
-  }, [data]);
 
   return (
     <div>

@@ -6,6 +6,7 @@ import "../Register/userRegister.css";
 
 function RecruiterRegister() {
   const NAME_REGEX = /^[A-Za-z]{3,16}$/;
+  const COMPAMY_REGEX = /^[A-Za-z]{3,50}$/;
   const EMAIL_REGEXT =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   const PHONE_NUMBER_REGEX =
@@ -74,7 +75,7 @@ function RecruiterRegister() {
     const V3 = EMAIL_REGEXT.test(email);
     const V4 = PHONE_NUMBER_REGEX.test(mobile);
     const V5 = PASSWORD_REGEX.test(password);
-    const V6 = PASSWORD_REGEX.test(company);
+    const V6 = COMPAMY_REGEX.test(company);
 
     if (
       firstName === "" ||
@@ -87,7 +88,8 @@ function RecruiterRegister() {
       !V2 ||
       !V3 ||
       !V4 ||
-      !V5
+      !V5 ||
+      !V6
     ) {
       setError(true);
     } else {
@@ -214,11 +216,11 @@ function RecruiterRegister() {
                     name="company_name"
                     onChange={handleCompany}
                     value={company}
-                    pattern="^[A-Za-z]{3,16}$"
+                    pattern="^[A-Za-z]{3,50}$"
                     className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
                   <span className="text-red-500 hidden">
-                    Comapny Name should be 3-16 characters and shouldn't include
+                    Comapny Name should be 3-50 characters and shouldn't include
                     any special character or number!
                   </span>
                 </div>
