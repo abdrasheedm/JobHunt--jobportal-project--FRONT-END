@@ -4,6 +4,7 @@ import BellIcon from "../../../assets/notification.png";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import AuthContext from "../../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { WsURL } from "../../../Constants";
 
 function Notifications() {
   const token = localStorage.getItem("token");
@@ -46,7 +47,7 @@ function Notifications() {
   };
 
   const client = new W3CWebSocket(
-    `ws://10.4.0.85:8000/ws/notification/${userId}/`
+    `${WsURL}${userId}/`
   );
 
   useEffect(() => { 
