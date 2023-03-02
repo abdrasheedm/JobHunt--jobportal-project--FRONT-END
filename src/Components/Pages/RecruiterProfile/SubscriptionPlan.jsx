@@ -62,7 +62,7 @@ function PlanDetails() {
           <div className="bg-white p-16 rounded-2xl drop-shadow-2xl mb-5">
             <div className="flex justify-between">
               <h1 className="text-xl font-bold">Current Subscription Plan</h1>
-              {!planDetails[0]?.user.is_active_job ? (<button
+              {!planDetails.is_active_job ? (<button
                 className="bg-myBlue text-white text-lg px-8 py-1 rounded-lg"
                 onClick={() => {
                   setPlanModal(true)
@@ -76,31 +76,31 @@ function PlanDetails() {
 
               <div>
                 <h1 className="mb-3">Package Name</h1>
-                <p className="font-bold "> # {planDetails[0]?.user.membership.title}</p>
+                <p className="font-bold "> # {planDetails.membership?.title}</p>
               </div>
               <div>
                 <h1 className="mb-3">Validity</h1>
                 <p className="text-sm font-bold overflow-x-auto">
-                  {validity(planDetails[0]?.user.membership.duration)}
+                  {validity(planDetails.membership?.duration)}
                 </p>
               </div>
               <div>
                 <h1 className="mb-3">Activation Date</h1>
-                <p className="font-bold ">{planDetails[0]?.activation_date} </p>
+                <p className="font-bold ">{planDetails?.activation_date} </p>
               </div>
             </div>
             <div className="grid grid-cols-3 mt-8">
               <div>
                 <h1 className="mb-3">Expiry Date</h1>
-                <p className="font-bold "> {planDetails[0]?.expiry_date}</p>
+                <p className="font-bold "> {planDetails?.expiry_date}</p>
               </div>
               <div>
               <h1 className="mb-3">Remaining Jobs</h1>
-                <p className="font-bold "> {planDetails[0]?.user.postable_job_count}</p>
+                <p className="font-bold "> {planDetails?.postable_job_count}</p>
               </div>
               <div>
                 <h1 className="mb-3">Status</h1>
-                <p className="font-bold ">{planDetails[0]?.user.is_active ? 'Active' : 'Expired'} </p>
+                <p className="font-bold ">{planDetails.is_active ? 'Active' : 'Expired'} </p>
               </div>
             </div>
           </div>

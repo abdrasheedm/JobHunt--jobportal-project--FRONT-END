@@ -2,37 +2,52 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../axios";
 import Swal from "sweetalert2";
 
-function ReportJobModal({ visible, onClose }) {
+function ReportJobModal({ visible, onClose, jobID }) {
   if (!visible) return null;
 
   const token = JSON.parse(localStorage.getItem("token"));
   const profileId = localStorage.getItem("profile_id");
-  const [checkout, setCheckout] = useState(false);
-  const [amount, setAmount] = useState("");
 
   if (visible) {
     document.body.style.overflow = "hidden";
   }
 
-  const planPurchase = (duration) => {
+  const reasons = ['Inappropriate Content', 'Incomplete information about job / company', 'Fake job / Non-recruitment related job / Scam', 'Duplicate of another job on the site', 'Incorrect Email ID', 'Phone number not contactable']
+  const [tags, setTags] = useState(
+    new Array(reasons.length).fill(false)
+
+  )
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    let selectedReasons = tags.filter((reason) => reason !==false)
     let data = {
-      user: profileId,
-      duration: duration,
-    };
-    axios
-      .post(`membership-purchase-view/`, data, {
-        headers: {
-          Authorization: `Bearer ${token.access}`,
-        },
-      })
-      .then((res) => {
+      "seeker_id" : profileId,
+      "job_id": jobID,
+      "tags": selectedReasons
+    }
+    axios.post('report-jobs/', data, {
+      headers: {
+        Authorization : `Bearer ${token.access}`
+      }
+    }).then((res) => {
+      if (res.data.message==="You already reaported this job"){
+        Swal.fire("Oops!", `${res.data.message} !`, "error").then(
+          (res) => {
+            onClose();
+          }
+        )
+      }else{
         Swal.fire("Good job!", `${res.data.message} !`, "success").then(
           (res) => {
             onClose();
           }
         );
-      });
-  };
+      }
+     
+    });
+
+  }
 
   return (
     <div className="bg-gray-900 fixed inset-0 bg-opacity-30 backdrop-blur-sm flex flex-col justify-center items-center">
@@ -42,51 +57,25 @@ function ReportJobModal({ visible, onClose }) {
         </div>
         <div>
           <h1 className="text-2xl font-bold p-10 text-center">Report Job</h1>
-          <form action="" className="px-10">
-            <div className="checkbox-wrapper">
+          <form action="" className="px-10" onSubmit={handleSubmit}>
+            {reasons.map((reason, index) => {
+              return(
+                <div className="checkbox-wrapper">
               <label>
-                <input type="checkbox" className="m-5" />
-                <span>Inappropriate Content</span>
+                <input type="checkbox" className="m-5" onChange={()=>{
+                  let tag = tags
+                  if (tag[index]===reason){
+                    tag[index]=false
+                  }else{
+                  tag[index ] = reason
+                  }
+                  setTags(tag)
+                } }/>
+                <span key={index}>{reason}</span>
               </label>
             </div>
-            <div className="checkbox-wrapper">
-              <label>
-                <input type="checkbox" className="m-5" />
-                <span>Incomplete information about job / company</span>
-              </label>
-            </div>
-            <div className="checkbox-wrapper">
-              <label>
-                <input type="checkbox" className="m-5" />
-                <span>Fake job / Non-recruitment related job / Scam</span>
-              </label>
-            </div>
-            <div className="checkbox-wrapper">
-              <label>
-                <input type="checkbox" className="m-5" />
-                <span>Duplicate of another job on the site</span>
-              </label>
-            </div>
-            <div className="checkbox-wrapper">
-              <label>
-                <input type="checkbox" className="m-5" />
-                <span>Incorrect Email ID</span>
-              </label>
-            </div>
-            <div className="checkbox-wrapper">
-              <label>
-                <input type="checkbox" className="m-5" />
-                <span>Phone number not contactable</span>
-              </label>
-            </div>
-            <div className="checkbox-wrapper flex flex-col">
-              <label>
-                <input type="checkbox" className="m-5" />
-                <span>Other</span>
-              </label>
-              <textarea name="" id="" className="border-2 border-gray-600 hidden" cols="30" rows="4"></textarea>
-
-            </div>
+              )
+            })}
             <div className="flex justify-center mb-5">
               <button
                 type="submit"

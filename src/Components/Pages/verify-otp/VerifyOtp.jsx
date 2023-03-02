@@ -1,8 +1,7 @@
-import axios from 'axios'
+import axios from '../../../axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-
 function VerifyOtp() {
 
 
@@ -23,7 +22,7 @@ function VerifyOtp() {
         if (otp === '') {
             SpeechSynthesisErrorEvent(true)
         } else {
-            axios.post('http://127.0.0.1:8000/api/user/verify-otp/', {
+            axios.post(`user/verify-otp/`, {
                 otp : otp,
                 mobile : mobile
             }).then((res) => {

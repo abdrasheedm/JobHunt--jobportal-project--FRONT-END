@@ -12,20 +12,18 @@ function classNames(...classes) {
 
 function BrowseJobs() {
   const token = localStorage.getItem("token")
-  ? JSON.parse(localStorage.getItem("token"))
-  : null
-  const profileId = localStorage.getItem("profile_id") ? localStorage.getItem('profile_id') : null;
+    ? JSON.parse(localStorage.getItem("token"))
+    : null;
+  const profileId = localStorage.getItem("profile_id")
+    ? localStorage.getItem("profile_id")
+    : null;
   const [jobs, setJobs] = useState([]);
   const [tempJobs, setTempJobs] = useState([]);
   const fetchJobs = () => {
-    axios
-      .get("browse-job/")
-      .then((res) => {
-        setJobs(res.data);
-        setTempJobs(res.data);
-        console.log(res.data);
-        console.log('hai');
-      });
+    axios.get("browse-job/").then((res) => {
+      setJobs(res.data);
+      setTempJobs(res.data);
+    });
   };
 
   const [FavouritedJobIDs, setFavouriteJobIDs] = useState();
@@ -41,9 +39,7 @@ function BrowseJobs() {
         let response = res.data;
         var job_id = [];
         response.map((job) => {
-          
           job_id = [...job_id, job.job_id];
-          console.log(job_id);
         });
         setFavouriteJobIDs(job_id);
       });
@@ -51,16 +47,16 @@ function BrowseJobs() {
   const navigate = useNavigate();
 
   const AddAndRemoveFavourite = (jobID) => {
-    if(!token){
+    if (!token) {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'You are not logged in!',
-        confirmButtonText: 'Signin',
+        icon: "error",
+        title: "Oops...",
+        text: "You are not logged in!",
+        confirmButtonText: "Signin",
       }).then(() => {
-        navigate('/signin')
-      })
-      return
+        navigate("/signin");
+      });
+      return;
     }
     let data = {
       job_id: jobID,
@@ -78,7 +74,6 @@ function BrowseJobs() {
           icon: "success",
           title: `${res.data.message} !`,
           showConfirmButton: false,
-         
         });
       });
   };
@@ -117,6 +112,7 @@ function BrowseJobs() {
   };
 
   const filterByCategory = (category) => {
+    console.log(category);
     let filtered = jobs.filter(
       (job) => job.category.category_name === category
     );
@@ -157,9 +153,8 @@ function BrowseJobs() {
           job.level.toLowerCase().includes(search);
   };
   useEffect(() => {
-    if(token){
-    fetchFavouritedJobIDs();
-
+    if (token) {
+      fetchFavouritedJobIDs();
     }
   }, [favourited]);
 
@@ -176,7 +171,8 @@ function BrowseJobs() {
         <div className="font-black text-center text-3xl py-10 bg-primary">
           <h1 className="text-gray-600 uppercase"> browse Jobs</h1>
         </div>
-        <div className="bg-gradient-to-r from-green-300 to-cyan-500"
+        <div
+          className="bg-gradient-to-r from-green-300 to-cyan-500"
           // style={{
           //   backgroundImage: `url("https://wallpaperaccess.com/full/1410260.jpg")`,
           //   backgroundSize: "cover",
@@ -195,259 +191,89 @@ function BrowseJobs() {
                   All Jobs
                 </div>
                 <div className="text-gray-600 py-1 text-center ">
-                  <Menu
-                    as="div"
-                    className="relative inline-block text-left w-full pb-5"
-                  >
-                    <div>
-                      <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-10 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                        Category
-                        <ChevronDownIcon
-                          className="-mr-1 ml-2 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          {categories.map((category, index) => {
-                            return (
-                              <Menu.Item key={index}>
-                                {({ active }) => (
-                                  <a
-                                    href="#"
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700",
-                                      "block px-4 py-2 text-sm"
-                                    )}
-                                    onClick={() =>
-                                      filterByCategory(category.category_name)
-                                    }
-                                  >
-                                    {category.category_name}
-                                  </a>
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                  <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByCategory(e.target.value)}>
+                    <option value="" className="text-center">
+                      Category
+                    </option>
+                    {categories.map((category, index) => {
+                      return (
+                        <option
+                          value={category.category_name}
+                          
+                        >
+                          {category.category_name}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                  <Menu as="div" className="relative inline-block w-full pb-5">
-                    <div>
-                      <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-12 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                        Department
-                        <ChevronDownIcon
-                          className="-mr-1 ml-2 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          {departments.map((department, index) => {
-                            return (
-                              <Menu.Item key={index}>
-                                {({ active }) => (
-                                  <a
-                                    href="#"
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700",
-                                      "block px-4 py-2 text-sm"
-                                    )}
-                                    onClick={() =>
-                                      filterByDepartment(
-                                        department.department_name
-                                      )
-                                    }
-                                  >
-                                    {department.department_name}
-                                  </a>
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByDepartment(e.target.value)}>
+                    <option value="" className="text-center">
+                      Department
+                    </option>
+                    {departments.map((department, index) => {
+                      return (
+                        <option
+                          value={department.department_name}
+                          
+                        >
+                          {department.department_name}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                  <Menu as="div" className="relative inline-block w-full pb-5">
-                    <div>
-                      <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-12 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                        Job Type
-                        <ChevronDownIcon
-                          className="-mr-1 ml-2 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          {jobTypes.map((jobType, index) => {
-                            return (
-                              <Menu.Item >
-                                {({ active }) => (
-                                  <a
-                                  key={index}
-                                    href="#"
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700",
-                                      "block px-4 py-2 text-sm"
-                                    )}
-                                    onClick={() => filterByJobType(jobType)}
-                                  >
-                                    {jobType}
-                                  </a>
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByJobType(e.target.value)}>
+                    <option value="" className="text-center">
+                      Job Tyoe
+                    </option>
+                    {jobTypes.map((job_type, index) => {
+                      return (
+                        <option
+                          value={job_type}
+                          
+                        >
+                          {job_type}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                  <Menu as="div" className="relative inline-block w-full pb-5">
-                    <div>
-                      <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-10 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                        Qualification
-                        <ChevronDownIcon
-                          className="-mr-1 ml-2 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          {qualifications.map((qualification, index) => {
-                            return (
-                              <Menu.Item >
-                                {({ active }) => (
-                                  <a
-                                  key={index}
-                                    href="#"
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700",
-                                      "block px-4 py-2 text-sm"
-                                    )}
-                                    onClick={() =>
-                                      filterByQualification(qualification.title)
-                                    }
-                                  >
-                                    {qualification.title}
-                                  </a>
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                  <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByQualification(e.target.value)}>
+                    <option value="" className="text-center">
+                      Qualification
+                    </option>
+                    {qualifications.map((qualification, index) => {
+                      return (
+                        <option
+                          value={qualification.title}
+                          
+                        >
+                          {qualification.title}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                  <Menu as="div" className="relative inline-block w-full pb-5">
-                    <div>
-                      <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-10 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                        Experience Level
-                        <ChevronDownIcon
-                          className="-mr-1 ml-2 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          {experienceLevels.map((experienceLevel, index) => {
-                            return (
-                              <Menu.Item >
-                                {({ active }) => (
-                                  <a
-                                    href="#"
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700",
-                                      "block px-4 py-2 text-sm"
-                                    )}
-                                    onClick={() =>
-                                      filterByExperienceLevel(experienceLevel)
-                                    }
-                                    key={index}>
-                                    {experienceLevel}
-                                  </a>
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByExperienceLevel(e.target.value)}>
+                    <option value="" className="text-center">
+                      Experience Level
+                    </option>
+                    {experienceLevels.map((experience, index) => {
+                      return (
+                        <option
+                          value={experience}
+                          
+                        >
+                          {experience}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
               </div>
             </div>
@@ -489,82 +315,89 @@ function BrowseJobs() {
                 </div>
               ) : (
                 <div>
-                  {tempJobs.filter(searchData).length ? <div>{tempJobs.filter(searchData).map((job, index) => {
-                    return (
-                      <div
-                        className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white"
-                        key={index}
-                      >
-                        <div className="col-span-2">
-                          <img
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzRCgx-jrMQUQENdxiV71ZtID09zMRz3hnew&usqp=CAU"
-                            className="rounded-lg w-20 h-20 object-cover"
-                            alt=""
-                          />
-                        </div>
-                        <div
-                          className="col-span-5 pr-5 hover:cursor-pointer"
-                          onClick={() =>
-                            navigate("/seeker-single-job-view", {
-                              state: { data: job.id },
-                            })
-                          }
-                        >
-                          <h1 className="capitalize text-xl font-bold pt-3">
-                            {job.job_title}{" "}
-                          </h1>
-                          <div className="flex pt-3">
-                            <p className="mr-5 text-gray-600">
-                              <i className="fa-solid fa-user-tie"></i> &nbsp;
-                              {job.category?.category_name}{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              <i className="fa-thin fa-briefcase"></i> &nbsp;{" "}
-                              {job.salary_range}{" "}
-                            </p>
-                          </div>
-                          <div className="py-3">
-                            <p className="italic text-gray-400">
-                              {job.short_description}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="col-span-2 flex flex-col items-center">
-                          <div className="my-5">
-                            <span
-                              className={
-                                FavouritedJobIDs?.includes(job.id)
-                                  ? "text-white bg-myGreen p-2 rounded bg-opacity-90 hover:bg-myGreen hover:bg-opacity-100 mt-4"
-                                  : "bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-myGreen"
-                              }
-                              onClick={() => {
-                                AddAndRemoveFavourite(job.id);
-                              }}
-                            >
-                              <i className="fa-regular fa-2xl fa-heart"></i>
-                            </span>
-                          </div>
-                          <button
-                            className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md"
-                            onClick={() =>
-                              navigate("/seeker-single-job-view", {
-                                state: { data: job.id },
-                              })
-                            }
+                  {tempJobs.filter(searchData).length ? (
+                    <div>
+                      {tempJobs.filter(searchData).map((job, index) => {
+                        return (
+                          <div
+                            className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white"
+                            key={index}
                           >
-                            Apply Now
-                          </button>
-                          <p className="text-center pt-3 italic text-gray-600">
-                            Last Date : {job.last_date}{" "}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}</div> : <div>
-                  <h1 className="text-center text-red-600 text-xl font-bold mt-10 bg-white bg-opacity-20 py-20 rounded-lg">
-                    Sorry , No Searches available
-                  </h1>
-                </div> }
+                            <div className="col-span-2">
+                              <img
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzRCgx-jrMQUQENdxiV71ZtID09zMRz3hnew&usqp=CAU"
+                                className="rounded-lg w-20 h-20 object-cover"
+                                alt=""
+                              />
+                            </div>
+                            <div
+                              className="col-span-5 pr-5 hover:cursor-pointer"
+                              onClick={() =>
+                                navigate("/seeker-single-job-view", {
+                                  state: { data: job.id },
+                                })
+                              }
+                            >
+                              <h1 className="capitalize text-xl font-bold pt-3">
+                                {job.job_title}{" "}
+                              </h1>
+                              <div className="flex pt-3">
+                                <p className="mr-5 text-gray-600">
+                                  <i className="fa-solid fa-user-tie"></i>{" "}
+                                  &nbsp;
+                                  {job.category?.category_name}{" "}
+                                </p>
+                                <p className="text-gray-600">
+                                  <i className="fa-thin fa-briefcase"></i>{" "}
+                                  &nbsp; {job.salary_range}{" "}
+                                </p>
+                              </div>
+                              <div className="py-3">
+                                <p className="italic text-gray-400 max-h-40 overflow-hidden">
+                                  {job.full_description}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="col-span-2 flex flex-col items-center">
+                              <div className="my-5">
+                                <span
+                                  className={
+                                    FavouritedJobIDs?.includes(job.id)
+                                      ? "text-white bg-myGreen p-2 rounded bg-opacity-90 hover:bg-myGreen hover:bg-opacity-100 mt-4"
+                                      : "bg-green-100 p-2 rounded bg-opacity-60 text-myGreen hover:text-white hover:bg-myGreen"
+                                  }
+                                  onClick={() => {
+                                    AddAndRemoveFavourite(job.id);
+                                  }}
+                                >
+                                  <i className="fa-regular fa-2xl fa-heart"></i>
+                                </span>
+                              </div>
+                              <button
+                                className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md"
+                                onClick={() =>
+                                  navigate("/seeker-single-job-view", {
+                                    state: { data: job.id },
+                                  })
+                                }
+                              >
+                                Apply Now
+                              </button>
+                              <p className="text-center pt-3 italic text-gray-600">
+                                Last Date : {job.last_date}{" "}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div>
+                      <h1 className="text-center text-red-600 text-xl font-bold mt-10 bg-white bg-opacity-20 py-20 rounded-lg">
+                        Sorry , No Searches available
+                      </h1>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

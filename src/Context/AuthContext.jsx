@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   let [errorMsg, SetErrorMsg] = useState("");
+  let [isReaded, setIsReaded] = useState(false)
 
   const navigate = useNavigate();
   // const BASEURL = 'http://10.4.0.85:8000'
@@ -77,6 +78,7 @@ export const AuthProvider = ({ children }) => {
               JSON.stringify(res.data.user.user_id)
             );
             navigate("/");
+            window.location.reload(false)
           } else if (res.data.user.user_type == "Recruiter") {
             localStorage.setItem("authToken", JSON.stringify(res.data));
             localStorage.setItem("token", JSON.stringify(res.data.token));
@@ -98,6 +100,7 @@ export const AuthProvider = ({ children }) => {
               JSON.stringify(res.data.user.user_id)
             );
             navigate("/recruiter-profile");
+            window.location.reload(false)
           } else {
             localStorage.setItem("admin", JSON.stringify(res.data));
             localStorage.setItem("token", JSON.stringify(res.data.token));
@@ -201,6 +204,8 @@ export const AuthProvider = ({ children }) => {
     errorMsg: errorMsg,
     adminAuthToken: adminAuthToken,
     admin: admin,
+    isReaded : isReaded,
+    setIsReaded : setIsReaded
     // BASEURL :BASEURL
     // setShow:setShow,
     // handleClose:handleClose,

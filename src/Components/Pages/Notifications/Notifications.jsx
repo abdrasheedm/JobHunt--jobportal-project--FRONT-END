@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "../../../axios";
 import BellIcon from "../../../assets/notification.png";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import AuthContext from "../../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const array = [1, 3, 4, 5, 6, 7, 8, 6];
 function Notifications() {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
+
+  const navigate = useNavigate()
 
   const [notifications, setNotificatins] = useState([]);
   const [data, setData] = useState();
@@ -19,11 +22,14 @@ function Notifications() {
       });
   };
 
+  const {setIsReaded, isReaded} = useContext(AuthContext)
   const UpdateNotification = async () => {
     await axios.patch(`notifications-update-view/?user_id=${userId}`,{
       headers: {
         Authorization: `Bearer ${token.access}`,
       },
+    }).then((res) => {
+      setIsReaded(!isReaded)
     })
   }
 

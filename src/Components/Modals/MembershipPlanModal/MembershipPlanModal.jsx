@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../axios";
 import Swal from "sweetalert2";
 import ReactDOM from "react-dom";
-const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+// const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
 
 function MembershipPlanModal({ visible, onClose, isFirst }) {
   if (!visible) return null;
@@ -185,13 +186,15 @@ function MembershipPlanModal({ visible, onClose, isFirst }) {
         </div>
       ) : (
         <div className="bg-white p-10">
-          <PayPalButton
+          <PayPalScriptProvider options={{"client-id" : import.meta.env.VITE_CLIENTID}} >
+          <PayPalButtons
             createOrder={(data, actions) => createOrder(data, actions)}
             onApprove={(data, actions) => onApprove(data, actions)}
             onError={(err) => {
               onError(err);
             }}
           />
+          </PayPalScriptProvider>
         </div>
       )}
       <button className="bg-red-600 text-white p-2 rounded-lg" onClick={() => onClose()}>close</button>

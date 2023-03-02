@@ -25,6 +25,19 @@ function PostJob() {
       });
   };
 
+  const [qualifications, setQualifications] = useState([]);
+  const fetchQualifications = async () => {
+    await axios
+      .get(`job-qualifications-view/`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then((res) => {
+        setQualifications(res.data);
+      });
+  };
+
   const [departments, setDepartments] = useState([]);
   const fetchDepartment = async () => {
     await axios
@@ -43,6 +56,7 @@ function PostJob() {
   useEffect(() => {
     fetchProfile();
     fetchDepartment();
+    fetchQualifications();
   }, []);
 
   const navigate = useNavigate();
@@ -99,8 +113,8 @@ function PostJob() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const V1 = VACANCY_REGEX.test(vacancy)
-    const V2 = EXPERIENCE_REGEX.test(experience)
+    const V1 = VACANCY_REGEX.test(vacancy);
+    const V2 = EXPERIENCE_REGEX.test(experience);
     if (
       jobTitle === "" ||
       jobDepartment === "" ||
@@ -143,9 +157,7 @@ function PostJob() {
           },
         })
         .then((res) => {
-          if (
-            res.data.message === "You reached Your limit !\nPlease Upgrade"
-          ) {
+          if (res.data.message === "You reached Your limit !\nPlease Upgrade") {
             Swal.fire({
               icon: "error",
               title: `${res.data.message} !`,
@@ -292,18 +304,13 @@ function PostJob() {
                         className="p-2 my-1 rounded-md border bg-white dark:border-gray-700"
                       >
                         <option>Select</option>
-                        <option key="1" value="4">
-                          Masters
-                        </option>
-                        <option key="2" value="5">
-                          Under Graducation
-                        </option>
-                        <option key="3" value="6">
-                          Higher Secondary
-                        </option>
-                        <option key="4" value="7">
-                          SSLC
-                        </option>
+                        {qualifications.map((qualification, index) => {
+                          return (
+                            <option key={index} value={qualification.id}>
+                              {qualification.title}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                     <div className="col-span-2 md:col-span-1">

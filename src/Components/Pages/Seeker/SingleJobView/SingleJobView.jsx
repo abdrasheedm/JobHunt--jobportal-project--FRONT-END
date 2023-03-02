@@ -61,7 +61,6 @@ function SeekerJobView() {
         response.map((job) => {
           AppliedjobIds = [...AppliedjobIds, job.job_id.id];
         });
-        console.log(AppliedjobIds);
         setAppliedJobIDs(AppliedjobIds);
       });
   };
@@ -95,7 +94,6 @@ function SeekerJobView() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setFavourited(!favourited);
         Swal.fire({
           icon: "success",
@@ -105,7 +103,6 @@ function SeekerJobView() {
         });
       });
   };
-  console.log(appliedJobIDs);
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -130,7 +127,6 @@ function SeekerJobView() {
       setJobData(res.data);
       setCompanyData(res.data.company_id);
       // setJobId(res.data.id)
-      console.log(res.data);
       setRecruiterId(res.data.company_id.id);
     });
   };
@@ -169,7 +165,6 @@ function SeekerJobView() {
     formData.append("resume", resume);
     formData.append("is_applied", true);
 
-    console.log(formData);
 
     let url = `apply-job/`;
     axios
@@ -187,7 +182,6 @@ function SeekerJobView() {
           timer: 1500,
         });
         setIsApplied(!isApplied);
-        console.log(res.data);
         // refreshPage();
       });
   };
@@ -293,7 +287,7 @@ function SeekerJobView() {
                   </div>
                 </div>
               </div>
-              <ReportJobModal visible={isModal} onClose={handelOnClose}/>
+              <ReportJobModal visible={isModal} onClose={handelOnClose} jobID={jobID}/>
             </div>
             <div>
               <div className="shadow-xl rounded-lg my-10 px-10 py-10  bg-slate-50 bg-opacity-50">

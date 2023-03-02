@@ -398,9 +398,10 @@ function BrowseCandidates() {
                           </div>
                         </div>
                         <div className="col-span-2 flex flex-col">
-                          <button className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md">
-                            Message
-                          </button>
+                          {/* <button className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md" onClick={() => }>
+                            Email
+                          </button> */}
+                          <a href={`mailto: ${seeker.seeker.email}`} target='_blank' className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md">Email</a>
                           <p className="text-center pt-3 italic text-gray-600">
                             Open to work{" "}
                           </p>

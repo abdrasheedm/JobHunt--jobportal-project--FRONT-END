@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HomePageCard from "../../Cards/HomePageCard/HomePageCard";
+import axios from '../../../axios'
 
 function BrowseTopJobs() {
+
+  const [topJobs, setTopJobs] = useState([])
+    const fetchTopJobs = () => {
+        axios.get('top-job-view/').then((res) => {
+            console.log(res.data);
+            setTopJobs(res.data)
+        })
+    }
+
+    useEffect(() => {
+        fetchTopJobs()
+    }, [])
   return (
     <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-2xl">
       <div className="py-20">
@@ -19,14 +32,11 @@ function BrowseTopJobs() {
           </div>
         </div>
         <div className="flex justify-center overflow-scroll shadow-xl">
-          <HomePageCard />
-          <HomePageCard />
-          <HomePageCard />
-          <HomePageCard />
-          <HomePageCard />
-          <HomePageCard />
-          <HomePageCard />
-          <HomePageCard />
+          {topJobs?.map((job, index) => {
+            return(
+              <HomePageCard job = {job}/>
+            )
+          })}
         </div>
       </div>
     </div>
