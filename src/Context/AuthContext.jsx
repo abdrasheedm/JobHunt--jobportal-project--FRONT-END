@@ -148,6 +148,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setAuthToken(null);
         navigate("/signin");
+        window.location.reload(false)
       });
   };
 

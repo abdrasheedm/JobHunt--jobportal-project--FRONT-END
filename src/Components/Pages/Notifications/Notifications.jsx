@@ -110,7 +110,14 @@ function Notifications() {
                             />
                           </div>
                           <div className="col-span-5 pr-5 hover:cursor-pointer">
-                            <h1 className="capitalize text-xl font-bold pt-3">
+                            <h1 className="capitalize text-xl font-bold pt-3" onClick={() => {
+                              if(notification.parameter){
+                                navigate(notification.url, {state: {data: notification.parameter}})
+                              }
+                              else{
+                                navigate(notification.url)
+                              }
+                            }}>
                               {notification.title}
                             </h1>
                             <div className="flex pt-3"></div>
