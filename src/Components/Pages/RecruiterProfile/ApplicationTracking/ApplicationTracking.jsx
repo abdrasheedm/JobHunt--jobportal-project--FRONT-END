@@ -24,7 +24,6 @@ function ApplicationTracking() {
       })
       .then((res) => {
         setApplicants(res.data);
-        console.log(res.data);
       });
   };
 
@@ -75,12 +74,10 @@ function ApplicationTracking() {
   //         },
   //       })
   //       .then((res) => {
-  //         console.log(res.data.message);
   //         refreshPage();
   //       });
   //   };
 
-  //   console.log(jobs);
 
   return (
     <div className="">

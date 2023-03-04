@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import axios from "../../../../axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import ReactPaginate from "react-paginate";
+import "./pagination.css"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -112,7 +111,6 @@ function BrowseJobs() {
   };
 
   const filterByCategory = (category) => {
-    console.log(category);
     let filtered = jobs.filter(
       (job) => job.category.category_name === category
     );
@@ -152,6 +150,18 @@ function BrowseJobs() {
           job.department.department_name.toLocaleLowerCase().includes(search) ||
           job.level.toLowerCase().includes(search);
   };
+
+  // paginations
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const dataToRender = tempJobs.filter(searchData).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
   useEffect(() => {
     if (token) {
       fetchFavouritedJobIDs();
@@ -191,16 +201,16 @@ function BrowseJobs() {
                   All Jobs
                 </div>
                 <div className="text-gray-600 py-1 text-center ">
-                  <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByCategory(e.target.value)}>
+                  <select
+                    class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                    onChange={(e) => filterByCategory(e.target.value)}
+                  >
                     <option value="" className="text-center">
                       Category
                     </option>
                     {categories.map((category, index) => {
                       return (
-                        <option
-                          value={category.category_name}
-                          
-                        >
+                        <option value={category.category_name}>
                           {category.category_name}
                         </option>
                       );
@@ -208,16 +218,16 @@ function BrowseJobs() {
                   </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByDepartment(e.target.value)}>
+                  <select
+                    class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                    onChange={(e) => filterByDepartment(e.target.value)}
+                  >
                     <option value="" className="text-center">
                       Department
                     </option>
                     {departments.map((department, index) => {
                       return (
-                        <option
-                          value={department.department_name}
-                          
-                        >
+                        <option value={department.department_name}>
                           {department.department_name}
                         </option>
                       );
@@ -225,33 +235,29 @@ function BrowseJobs() {
                   </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByJobType(e.target.value)}>
+                  <select
+                    class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                    onChange={(e) => filterByJobType(e.target.value)}
+                  >
                     <option value="" className="text-center">
                       Job Tyoe
                     </option>
                     {jobTypes.map((job_type, index) => {
-                      return (
-                        <option
-                          value={job_type}
-                          
-                        >
-                          {job_type}
-                        </option>
-                      );
+                      return <option value={job_type}>{job_type}</option>;
                     })}
                   </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                  <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByQualification(e.target.value)}>
+                  <select
+                    class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                    onChange={(e) => filterByQualification(e.target.value)}
+                  >
                     <option value="" className="text-center">
                       Qualification
                     </option>
                     {qualifications.map((qualification, index) => {
                       return (
-                        <option
-                          value={qualification.title}
-                          
-                        >
+                        <option value={qualification.title}>
                           {qualification.title}
                         </option>
                       );
@@ -259,19 +265,15 @@ function BrowseJobs() {
                   </select>
                 </div>
                 <div className="text-gray-600 py-1 text-center">
-                <select class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" onChange={(e) => filterByExperienceLevel(e.target.value)}>
+                  <select
+                    class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                    onChange={(e) => filterByExperienceLevel(e.target.value)}
+                  >
                     <option value="" className="text-center">
                       Experience Level
                     </option>
                     {experienceLevels.map((experience, index) => {
-                      return (
-                        <option
-                          value={experience}
-                          
-                        >
-                          {experience}
-                        </option>
-                      );
+                      return <option value={experience}>{experience}</option>;
                     })}
                   </select>
                 </div>
@@ -317,7 +319,7 @@ function BrowseJobs() {
                 <div>
                   {tempJobs.filter(searchData).length ? (
                     <div>
-                      {tempJobs.filter(searchData).map((job, index) => {
+                      {dataToRender.map((job, index) => {
                         return (
                           <div
                             className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white"
@@ -390,6 +392,22 @@ function BrowseJobs() {
                           </div>
                         );
                       })}
+                      <ReactPaginate
+                        pageCount={Math.ceil(
+                          tempJobs.filter(searchData).length / itemsPerPage
+                        )}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageChange}
+                        containerClassName="pagination"
+                        activeClassName="active"
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        pageLinkClassName="page-link"
+                        previousLinkClassName="page-link"
+                        nextLinkClassName="page-link"
+                        disabledClassName="disabled"
+                      />
                     </div>
                   ) : (
                     <div>

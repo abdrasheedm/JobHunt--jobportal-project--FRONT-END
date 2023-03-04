@@ -19,7 +19,6 @@ function SingleJobView() {
             Authorization: `Bearer ${token.access}`,
           },
         }).then((res) => {
-            console.log(res.data)
             setJobData(res.data)
         })
     }

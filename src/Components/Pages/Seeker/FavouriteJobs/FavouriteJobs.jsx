@@ -19,7 +19,6 @@ function FavouriteJobs() {
       })
       .then((res) => {
         setJobs(res.data);
-        console.log(res.data);
       });
   };
 

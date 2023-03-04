@@ -7,7 +7,6 @@ function BrowseTopJobs() {
   const [topJobs, setTopJobs] = useState([])
     const fetchTopJobs = () => {
         axios.get('top-job-view/').then((res) => {
-            console.log(res.data);
             setTopJobs(res.data)
         })
     }

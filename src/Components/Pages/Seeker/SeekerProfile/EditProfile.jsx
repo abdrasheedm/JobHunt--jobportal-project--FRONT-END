@@ -18,7 +18,6 @@ function EditSProfile() {
 
     const [departments, setDepartments] = useState([]);
     const fetchDepartments = async () => {
-      console.log('called')
       await axios.get(`company-department/?id=${category}`).then((res) => {
         setDepartments(res.data);
       });
@@ -51,8 +50,7 @@ function EditSProfile() {
         });
     };
    
-    console.log(profile);
-    console.log(departments)
+ 
 
 
   const [firstName, setFirstName] = useState("");
@@ -102,7 +100,6 @@ function EditSProfile() {
     setDOB(e.target.value);
   };
   const handleCity = (e) => {
-    console.log(e.target.value)
     setCity(e.target.value);
   };
   const handleState = (e) => {
@@ -112,7 +109,6 @@ function EditSProfile() {
   };
   const handleLogo = (e) => {
     // setLogo(e.target.logo.files[0]);
-    // console.log(...e.target.files);
   };
 
 
@@ -144,7 +140,6 @@ function EditSProfile() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         navigate('/seeker-profile')
       });
   };
@@ -272,7 +267,6 @@ function EditSProfile() {
                       className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-100"
                         onChange={(e) => {
                           const selectedDepartment = e.target.value;
-                          console.log(e.target.value)
                           setDepartment(selectedDepartment);
                         }}
                     >

@@ -30,6 +30,7 @@ function RecruiterRegister() {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -68,6 +69,11 @@ function RecruiterRegister() {
     setSubmitted(false);
   };
 
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+    setSubmitted(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const V1 = NAME_REGEX.test(firstName);
@@ -84,12 +90,13 @@ function RecruiterRegister() {
       email === "" ||
       mobile === "" ||
       password === "" ||
+      password != confirmPassword ||
       !V1 ||
       !V2 ||
       !V3 ||
       !V4 ||
       !V5 ||
-      !V6
+      !V6 
     ) {
       setError(true);
     } else {
@@ -106,7 +113,6 @@ function RecruiterRegister() {
         })
         .then((res) => {
           if (res.data.otp) {
-            console.log(mobile);
             dispatch({
               type: "mobile",
               payload: mobile,
@@ -310,6 +316,27 @@ function RecruiterRegister() {
                   <span className="text-red-500 hidden">
                     password should have minimum 8 characters, at least one
                     letter and one number!
+                  </span>
+                </div>
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="password"
+                  className="block text-lg h-10 font-medium text-gray-700 undefined"
+                >
+                  Confirm Password
+                </label>
+                <div className="flex flex-col items-start">
+                  <input
+                    type="password"
+                    name="password"
+                    onChange={handleConfirmPassword}
+                    value={confirmPassword}
+                    pattern={password}
+                    className="block w-full mt-1 h-10 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                  <span className="text-red-500 hidden">
+                    Password not match !
                   </span>
                 </div>
               </div>

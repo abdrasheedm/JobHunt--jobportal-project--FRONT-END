@@ -40,7 +40,6 @@ function EditProfile() {
       });
   };
 
-  console.log(profile);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -87,7 +86,6 @@ function EditProfile() {
   };
   const handleLogo = (e) => {
     // setLogo(e.target.logo.files[0]);
-    // console.log(...e.target.files);
   };
   
   const profileUpdate = (e) => {
@@ -105,7 +103,6 @@ function EditProfile() {
     formData.append("company_logo", e.target.logo.files[0]);
     formData.append("head_office_location", headOffice);
 
-    console.log(formData)
 
     e.preventDefault();
     let url = `/update-company-profile/?id=${profile_id}`;
@@ -117,7 +114,6 @@ function EditProfile() {
         
       },
     }).then((res) => {
-      console.log(res.data);
       navigate('/recruiter-profile')
     });
   };

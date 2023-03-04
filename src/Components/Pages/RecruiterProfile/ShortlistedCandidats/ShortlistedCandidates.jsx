@@ -36,7 +36,6 @@ function ShortlistedCandidates() {
 //           },
 //         })
 //         .then((res) => {
-//          console.log(res.data);
 //         })
 //     };
 const [isDeleted, setIsDeleted] = useState(false)
@@ -65,7 +64,6 @@ const handelRemoveCandidate = (id) => {
 
 
 
-  //   console.log(jobs);
 
   return (
     <div className="">

@@ -5,6 +5,9 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import axios from "../../../../axios";
 import { useNavigate } from "react-router-dom";
 import { BASEURL } from "../../../../Constants";
+import ReactPaginate from "react-paginate";
+import "../../../Pages/Seeker/BrowseForJobs/pagination.css"
+import Avatar from "../../../../assets/avatar.webp"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -25,12 +28,10 @@ function BrowseCandidates() {
       .then((res) => {
         setSeekers(res.data);
         setTempSeekers(res.data)
-        console.log(res.data);
       });
   };
 
   const [categories, setCategory] = useState([]);
-  console.log(categories);
   const fetchCategory = async () => {
     await axios.get(`company-category/`).then((res) => {
       setCategory(res.data);
@@ -63,6 +64,7 @@ function BrowseCandidates() {
   };
 
   const filterByCategory = (category) => {
+    console.log(category);
     let filtered = seekers.filter(
       (seeker) => seeker.category.category_name === category
     );
@@ -98,6 +100,18 @@ function BrowseCandidates() {
           seeker.level.toLowerCase().includes(search);
   };
   // const BASEURL = `http://127.0.0.1:8000${seeker.seeker_profile}`;
+
+
+   // paginations
+
+   const [currentPage, setCurrentPage] = useState(0);
+   const [itemsPerPage, setItemsPerPage] = useState(1);
+ 
+   const dataToRender = tempSeekers.filter(searchData).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+ 
+   const handlePageChange = ({ selected }) => {
+     setCurrentPage(selected);
+   };
 
 
   useEffect(() => {
@@ -367,12 +381,12 @@ function BrowseCandidates() {
               </div>
               {tempSeekers.length ? (
                 <div>
-                  {tempSeekers.filter(searchData).map((seeker, index) => {
+                  {dataToRender.map((seeker, index) => {
                     return (
                       <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white bg-opacity-60">
                         <div className="col-span-2">
                           <img
-                            src={`${BASEURL + seeker.profile_photo}`}
+                            src={seeker.profile_photo ? `${BASEURL + seeker.profile_photo}` : Avatar}
                             className="rounded-lg w-20 h-20 object-cover"
                             alt=""
                           />
@@ -409,6 +423,22 @@ function BrowseCandidates() {
                       </div>
                     );
                   })}
+                  <ReactPaginate
+                        pageCount={Math.ceil(
+                          tempSeekers.filter(searchData).length / itemsPerPage
+                        )}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageChange}
+                        containerClassName="pagination"
+                        activeClassName="active"
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        pageLinkClassName="page-link"
+                        previousLinkClassName="page-link"
+                        nextLinkClassName="page-link"
+                        disabledClassName="disabled"
+                      />
                 </div>
               ) : (
                 <div>

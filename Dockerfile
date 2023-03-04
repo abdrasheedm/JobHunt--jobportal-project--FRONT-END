@@ -1,16 +1,16 @@
-FROM node:alpine
+    FROM node:alpine
 
-WORKDIR /usr/src/react
+    WORKDIR /usr/src/react
 
-COPY . .
+    COPY . .
 
 
-WORKDIR /usr/src/react/clint
+    WORKDIR /usr/src/react/clint
 
-RUN npm install 
+    RUN npm install 
 
-WORKDIR /usr/src/react/server
+    WORKDIR /usr/src/react/server
 
-EXPOSE 5173
+    EXPOSE 5173
 
-CMD [ "npm", "run", "dev" ]
+    CMD [ "npm", "run", "dev" ]

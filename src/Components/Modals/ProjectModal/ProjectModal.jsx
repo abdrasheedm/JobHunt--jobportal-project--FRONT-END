@@ -10,7 +10,6 @@ function ProjectModal({ visible , onClose, Type, ExpId}) {
   const toggleIsPresent = () => {
     setIsPresent(!isPresent)
   }
-  console.log(Type)
 
   const token = JSON.parse(localStorage.getItem("token"));
   const profileId = localStorage.getItem("profile_id");
@@ -21,7 +20,6 @@ function ProjectModal({ visible , onClose, Type, ExpId}) {
         Authorization: `Bearer ${token.access}`,
       }
     }).then((res) => {
-        console.log(res.data)
       setProjectTitle(res.data.project_title)
       setStartDate(res.data.start_date)
       setEndDate(res.data.end_date)
@@ -38,7 +36,6 @@ function ProjectModal({ visible , onClose, Type, ExpId}) {
   const [description, setDescription] = useState('')
   const [isPresent, setIsPresent] = useState(false)
   
-  console.log(projectURL, description)
 
 
 
@@ -85,7 +82,6 @@ function ProjectModal({ visible , onClose, Type, ExpId}) {
 
     }
     if(Type==='add'){
-      console.log(data)
       axios.post("post-seeker-project/", data, {
         headers: {
           Authorization: `Bearer ${token.access}`,

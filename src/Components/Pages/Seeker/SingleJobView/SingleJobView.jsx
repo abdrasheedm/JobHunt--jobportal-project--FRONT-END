@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import ReportJobModal from "../../../Modals/ReportJobModal/RepostJobModal";
+import { BASEURL } from "../../../../Constants";
+
 
 function SeekerJobView() {
   const locat = useLocation();
@@ -131,7 +133,7 @@ function SeekerJobView() {
     });
   };
 
-  const BASEURL = `http://127.0.0.1:8000${companyData?.company_logo}`;
+  const IMGURL = `${BASEURL+companyData?.company_logo}`;
 
   useEffect(() => {
     // window.scrollTo(0, 0);
@@ -479,7 +481,7 @@ function SeekerJobView() {
                 <div className="py-3">
                   <img
                     className="h-32 w-32 object-cover rounded-full hover:cursor-pointer"
-                    src={BASEURL}
+                    src={IMGURL}
                     alt=""
                     onClick={() =>
                       navigate("/company-profile-view", {

@@ -52,11 +52,8 @@ export const AuthProvider = ({ children }) => {
     await axios
       .post("user/signin/", { email: email, password: password })
       .then((res) => {
-        console.log(res.data);
 
-        //  console.log('id is here',res.data.user.user_id);
         if (res.data.token) {
-          console.log("recruiter is " + res.data.user.user_type);
 
           if (res.data.user.user_type == "JobSeeker") {
             localStorage.setItem("authToken", JSON.stringify(res.data));
@@ -111,8 +108,7 @@ export const AuthProvider = ({ children }) => {
           }
         } else {
           SetErrorMsg(res.data.message);
-          console.log(errorMsg);
-          console.log("hai");
+        
         }
       })
       .catch((response) => SetErrorMsg("Invalid Email or Password"));
@@ -133,7 +129,6 @@ export const AuthProvider = ({ children }) => {
         }
       )
       .then((res) => {
-        console.log(res.data);
         localStorage.removeItem("authToken");
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
@@ -148,6 +143,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setAuthToken(null);
         navigate("/signin");
+        window.location.reload(false)
         window.location.reload(false)
       });
   };
@@ -186,7 +182,6 @@ export const AuthProvider = ({ children }) => {
     let fourMinute = 1000 * 60 * 4;
     let interval = setInterval(() => {
       if (token) {
-        console.log('called')
         updateToken();
       }
     }, fourMinute);
@@ -203,6 +198,7 @@ export const AuthProvider = ({ children }) => {
     mobile: mobile,
     setMobile: setMobile,
     errorMsg: errorMsg,
+    SetErrorMsg : SetErrorMsg,
     adminAuthToken: adminAuthToken,
     admin: admin,
     isReaded : isReaded,

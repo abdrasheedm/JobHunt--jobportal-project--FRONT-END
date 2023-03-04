@@ -1,58 +1,48 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../../axios";
-import AuthContext from "../../../Context/AuthContext";
+import Swal from "sweetalert2";
 
-function Login() {
-  const { Userlogin } = useContext(AuthContext);
+
+function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { errorMsg, SetErrorMsg } = useContext(AuthContext);
+  const navigate = useNavigate()
+
+  const [isVerified, setIsVerified] = useState(false);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
-    // setSubmitted(false);
   };
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
-    // setSubmitted(false);
   };
 
-  // const navigate = useNavigate()
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email === "" || password === "") {
-      SetErrorMsg("Please Enter All the fields");
-    } else {
-      Userlogin(email, password);
-      // axios.post('user/signin/', {
-      // email: email,
-      // password: password
-      // }).then((res) => {
-      // if(res.data.is_login){
-      // localStorage.setItem("token", res.data.token.access)
-      // navigate('/')
+    e.preventDefault()
+    axios.post('user/forgot-password/', {
+        "email" : email,
+        "password" : password
+    }).then((res) => {
+        console.log(res.data);
+        Swal.fire({
+            icon: "success",
+            title: `${res.data.message} !`,
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        navigate('/signin')
 
-      // }
+    })
+  }
 
-      // })
-
-      // // setSubmitted(true);
-      // // setError(false);
-    }
-  };
-  // Showing error message if error is true
-  const errorMessage = () => {
-    return (
-      <div className="error" style={{ display: errorMsg ? "" : "none" }}>
-        <h5 className="text-red-700 text-xl">{errorMsg}</h5>
-      </div>
-    );
-  };
 
   return (
     <div>
@@ -60,20 +50,22 @@ function Login() {
         <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 bg-gray-50">
           <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white shadow-md sm:max-w-2xl sm:rounded-lg">
             <div className="mb-8 text-center">
-              <h1 className="my-3 text-4xl text-myBlue font-bold">Sign in</h1>
-              <p className="text-sm dark:text-gray-400">
+              <h1 className="my-3 text-4xl text-myBlue font-bold">
+                Forgot Password
+              </h1>
+              {/* <p className="text-sm dark:text-gray-400">
                 Sign in to access your account
-              </p>
+              </p> */}
             </div>
             <form
               noValidate=""
               action=""
-              className="space-y-12 ng-untouched ng-pristine ng-valid"
-              onSubmit={handleSubmit}
+              className="space-y-12 ng-untouched ng-pristine ng-valid user-form"
+                onSubmit={handleSubmit}
             >
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block mb-2 text-sm">
+                  <label for="email" className="block mb-2 text-sm">
                     Email address
                   </label>
                   <input
@@ -84,20 +76,15 @@ function Login() {
                     className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                     onChange={handleEmail}
                     value={email}
+                    pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                   />
+                  <span className="text-red-500 hidden">Invalid Email !</span>
                 </div>
                 <div>
                   <div className="flex justify-between mb-2">
-                    <label htmlFor="password" className="text-sm">
+                    <label for="password" className="text-sm">
                       Password
                     </label>
-                    <Link
-                      rel="noopener noreferrer"
-                      to="/forgot-password"
-                      className="text-xs hover:underline dark:text-gray-400"
-                    >
-                      Forgot password?
-                    </Link>
                   </div>
                   <input
                     type="password"
@@ -107,10 +94,35 @@ function Login() {
                     className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                     onChange={handlePassword}
                     value={password}
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                   />
+                  <span className="text-red-500 hidden">
+                    password should have minimum 8 characters, at least one
+                    letter and one number!
+                  </span>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <label for="password" className="text-sm">
+                      Confirm Password
+                    </label>
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="*****"
+                    className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                    onChange={handleConfirmPassword}
+                    value={confirmPassword}
+                    pattern={password}
+                  />
+                  <span className="text-red-500 hidden">
+                    password not match !
+                  </span>
                 </div>
               </div>
-          <div className="text-center">{errorMessage()}</div>
+              {/* <div className="text-center">{errorMessage()}</div> */}
 
               <div className="space-y-2">
                 <div>
@@ -118,7 +130,7 @@ function Login() {
                     type="submit"
                     className="w-full px-8 py-3 font-semibold rounded-md dark:bg-myBlue  dark:text-white"
                   >
-                    Sign in
+                    Submit
                   </button>
                 </div>
                 <p className="px-6 text-sm text-center dark:text-gray-400">
@@ -182,4 +194,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ForgetPassword;

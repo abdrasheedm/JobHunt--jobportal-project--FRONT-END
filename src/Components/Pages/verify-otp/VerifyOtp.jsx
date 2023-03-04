@@ -9,7 +9,6 @@ function VerifyOtp() {
     const mobile = useSelector((state) => {
         return state.mobile
     })
-    console.log(mobile)
 
     const navigate = useNavigate()
 
@@ -31,7 +30,6 @@ function VerifyOtp() {
 
                 }
                 else{
-                    console.log("verification failed")
                 }
             })
         }

@@ -31,6 +31,7 @@ import PlanDetails from './Components/Pages/RecruiterProfile/SubscriptionPlan'
 import ApplicationTracking from './Components/Pages/RecruiterProfile/ApplicationTracking/ApplicationTracking'
 import ShortlistedCandidates from './Components/Pages/RecruiterProfile/ShortlistedCandidats/ShortlistedCandidates'
 import Notifications from './Components/Pages/Notifications/Notifications'
+import ForgetPassword from './Components/Pages/Register/ForgetPassword'
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/signin' element={<Login />} />
+        <Route path='/forgot-password' element={<ForgetPassword />} />
         <Route path='/user-register' element={<UserRegister />} />
         <Route path='/recruiter-register' element={<RecruiterRegister />} />
         <Route path='/verify-otp' element={<VerifyOtp />} />

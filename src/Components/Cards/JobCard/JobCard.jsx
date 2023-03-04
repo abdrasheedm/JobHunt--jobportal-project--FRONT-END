@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 function JobCard({job, RemoveFromFavourite}) {
 
-  console.log(job)
   const navigate = useNavigate()
 
 

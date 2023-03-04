@@ -11,7 +11,6 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
   const toggleIsPresent = () => {
     setIsPresent(!isPresent)
   }
-  console.log(Type)
 
   const token = JSON.parse(localStorage.getItem("token"));
   const profileId = localStorage.getItem("profile_id");
@@ -64,7 +63,6 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
   const handleDescription = (e) => {
     setDescription(e.target.value)
   }
-  console.log(profile)
 
   useEffect(() => {
     if(Type==='edit'){
@@ -87,7 +85,6 @@ function AddExperience({ visible , onClose, Type, ExpId}) {
       data.end_date = endDate
 
     }
-    console.log(isPresent, data)
 
     if(Type==='add'){
       axios.post("post-seeker-experience/", data, {
