@@ -3,7 +3,7 @@ import axios from "../../../../axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import ReactPaginate from "react-paginate";
-import "./pagination.css"
+import "./pagination.css";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -156,11 +156,18 @@ function BrowseJobs() {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const dataToRender = tempJobs.filter(searchData).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+  const dataToRender = tempJobs
+    .filter(searchData)
+    .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
+
+  const [showFilter, setShowFilter] = useState(true)
+  const handlShowFilter = () => {
+    setShowFilter(!showFilter)
+  }
 
   useEffect(() => {
     if (token) {
@@ -189,11 +196,13 @@ function BrowseJobs() {
           // }}
         >
           <div className="grid lg:grid-cols-6 xl:px-40 container mx-auto ">
-            <div className="lg:col-span-2 col-span-6 px-10 ">
+            <div className="lg:col-span-2 col-span-6 px-10">
               <div className="shadow-xl rounded-lg my-10 px-10 py-10 bg-white">
-                <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5">
+                <div className="border-b-2 border-gray-200 text-2xl my-5 font-semibold text-gray-600 pb-5" onClick={handlShowFilter}>
                   Filter
+                   <div className="text-sm font-thin text-end">{showFilter ? <i className="fa-solid fa-up-right-from-square"></i> : <i class="fa-solid fa-rectangle-xmark"></i> }</div>
                 </div>
+                <div className="" hidden={showFilter}>
                 <div
                   className="text-gray-600 py-3 text-center hover:cursor-pointer hover:bg-gray-200 rounded-lg"
                   onClick={allJobs}
@@ -277,6 +286,8 @@ function BrowseJobs() {
                     })}
                   </select>
                 </div>
+                </div>
+
               </div>
             </div>
             <div className="col-span-4 px-10 py-5">
@@ -325,7 +336,7 @@ function BrowseJobs() {
                             className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white"
                             key={index}
                           >
-                            <div className="col-span-2">
+                            <div className="md:col-span-2 col-span-9">
                               <img
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzRCgx-jrMQUQENdxiV71ZtID09zMRz3hnew&usqp=CAU"
                                 className="rounded-lg w-20 h-20 object-cover"
@@ -333,7 +344,7 @@ function BrowseJobs() {
                               />
                             </div>
                             <div
-                              className="col-span-5 pr-5 hover:cursor-pointer"
+                              className="md:col-span-5 col-span-9 pr-5 hover:cursor-pointer"
                               onClick={() =>
                                 navigate("/seeker-single-job-view", {
                                   state: { data: job.id },
@@ -360,7 +371,7 @@ function BrowseJobs() {
                                 </p>
                               </div>
                             </div>
-                            <div className="col-span-2 flex flex-col items-center">
+                            <div className="md:col-span-2 col-span-9 flex flex-col items-center">
                               <div className="my-5">
                                 <span
                                   className={

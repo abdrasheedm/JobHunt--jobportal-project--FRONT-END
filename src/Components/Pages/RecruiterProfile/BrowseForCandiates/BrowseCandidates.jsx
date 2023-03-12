@@ -105,7 +105,7 @@ function BrowseCandidates() {
    // paginations
 
    const [currentPage, setCurrentPage] = useState(0);
-   const [itemsPerPage, setItemsPerPage] = useState(1);
+   const [itemsPerPage, setItemsPerPage] = useState(10);
  
    const dataToRender = tempSeekers.filter(searchData).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
  
@@ -384,14 +384,14 @@ function BrowseCandidates() {
                   {dataToRender.map((seeker, index) => {
                     return (
                       <div className="shadow-xl p-10 my-5 rounded-lg hover:shadow-2xl grid grid-cols-9 justify-between bg-white bg-opacity-60">
-                        <div className="col-span-2">
+                        <div className="md:col-span-2 col-span-9">
                           <img
                             src={seeker.profile_photo ? `${BASEURL + seeker.profile_photo}` : Avatar}
                             className="rounded-lg w-20 h-20 object-cover"
                             alt=""
                           />
                         </div>
-                        <div className="col-span-5 pr-5">
+                        <div className="md:col-span-5 col-span-9 pr-5">
                           <h1 className="capitalize text-xl font-bold pt-3 hover:cursor-pointer" onClick={() => navigate('/candidates-profile', {
                               state: { data: seeker.id },
                             })}>
@@ -411,11 +411,11 @@ function BrowseCandidates() {
                             </p>
                           </div>
                         </div>
-                        <div className="col-span-2 flex flex-col">
+                        <div className="md:col-span-2 col-span-9 flex flex-col">
                           {/* <button className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md" onClick={() => }>
                             Email
                           </button> */}
-                          <a href={`mailto: ${seeker.seeker.email}`} target='_blank' className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md">Email</a>
+                          <span className="mt-5"><a href={`mailto: ${seeker.seeker.email}`} target='_blank' className="bg-myGreen hover:bg-green-500 text-white px-7 py-2 rounded-md">Email</a></span>
                           <p className="text-center pt-3 italic text-gray-600">
                             Open to work{" "}
                           </p>

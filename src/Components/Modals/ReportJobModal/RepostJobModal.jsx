@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../../axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function ReportJobModal({ visible, onClose, jobID }) {
   if (!visible) return null;
@@ -18,8 +19,21 @@ function ReportJobModal({ visible, onClose, jobID }) {
 
   )
 
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault()
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You are not logged in!",
+        confirmButtonText: "Signin",
+      }).then(() => {
+        document.body.style.overflow = "unset";
+        navigate("/signin");
+      });
+      return;
+    }
     let selectedReasons = tags.filter((reason) => reason !==false)
     let data = {
       "seeker_id" : profileId,

@@ -57,7 +57,7 @@ function EditSProfile() {
   const [lastName, setLastName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
+  const [departmentName, setDepartment] = useState("");
   const [category, setCategory] = useState("");
   const [about, setAbout] = useState("");
   const [level, setlevel] = useState("");
@@ -121,7 +121,7 @@ function EditSProfile() {
     formData.append("email", email);
     formData.append("phone_number", mobile);
     formData.append("category", category);
-    formData.append("department", department);
+    formData.append("department", departmentName);
     formData.append("about", about);
     formData.append("level", level);
     formData.append("year_of_experience", YearExperience);
@@ -250,10 +250,10 @@ function EditSProfile() {
                         onChange={handleCategory}
                     >
                       <option>category</option>
-                      {categories.map((category, index) => {
+                      {categories.map((categry, index) => {
                         return (
-                          <option value={category.id} key={index}>
-                            {category.category_name}
+                          <option value={categry.id} key={index} selected={categry.id===category ? true : false}>
+                            {categry.category_name}
                           </option>
                         );
                       })}
@@ -273,7 +273,7 @@ function EditSProfile() {
                       <option>Department</option>
                       {departments.map((department, index) => {
                         return (
-                          <option value={department.id} key={index}>
+                          <option value={department.id} key={index} selected={department.id===departmentName ? true : false}>
                             {department.department_name}
                           </option>
                         );
