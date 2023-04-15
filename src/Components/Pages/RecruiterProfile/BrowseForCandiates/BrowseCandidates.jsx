@@ -95,8 +95,9 @@ function BrowseCandidates() {
     return search === ""
       ? seeker
       : 
-          seeker.category.category_name.toLowerCase().includes(search) ||
-          seeker.department.department_name.toLocaleLowerCase().includes(search) ||
+          seeker.category?.category_name.toLowerCase().includes(search) ||
+          seeker.department?.department_name.toLocaleLowerCase().includes(search) ||
+          seeker.seeker?.first_name.toLocaleLowerCase().includes(search) ||
           seeker.level.toLowerCase().includes(search);
   };
   // const BASEURL = `http://127.0.0.1:8000${seeker.seeker_profile}`;
@@ -106,7 +107,6 @@ function BrowseCandidates() {
 
    const [currentPage, setCurrentPage] = useState(0);
    const [itemsPerPage, setItemsPerPage] = useState(10);
- 
    const dataToRender = tempSeekers.filter(searchData).slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
  
    const handlePageChange = ({ selected }) => {

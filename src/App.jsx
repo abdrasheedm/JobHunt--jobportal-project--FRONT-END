@@ -6,7 +6,7 @@ import Footer from './Components/Footer/Footer'
 import { Routes, Route } from 'react-router-dom'
 import Login from './Components/Pages/Login/Login'
 import UserRegister from './Components/Pages/Register/UserRegister'
-import RecruiterRegister from './Components/Pages/Register/RecruiterRegister'
+// import RecruiterRegister from './Components/Pages/Register/RecruiterRegister'
 import VerifyOtp from './Components/Pages/verify-otp/VerifyOtp'
 import { Provider } from 'react-redux'
 import Store from './Redux/Store'
@@ -32,6 +32,7 @@ import ApplicationTracking from './Components/Pages/RecruiterProfile/Application
 import ShortlistedCandidates from './Components/Pages/RecruiterProfile/ShortlistedCandidats/ShortlistedCandidates'
 import Notifications from './Components/Pages/Notifications/Notifications'
 import ForgetPassword from './Components/Pages/Register/ForgetPassword'
+import Chat from './Components/Pages/Chat/chat'
 
 function App() {
 
@@ -45,7 +46,7 @@ function App() {
         <Route path='/signin' element={<Login />} />
         <Route path='/forgot-password' element={<ForgetPassword />} />
         <Route path='/user-register' element={<UserRegister />} />
-        <Route path='/recruiter-register' element={<RecruiterRegister />} />
+        {/* <Route path='/recruiter-register' element={<RecruiterRegister />} /> */}
         <Route path='/verify-otp' element={<VerifyOtp />} />
         <Route path='/seeker-browse-jobs' element={<BrowseJobs />} />
         <Route path='/seeker-single-job-view' element={<SeekerJobView />} />
@@ -66,6 +67,7 @@ function App() {
             <Route path='/recruiter-browse-candidates' element={<BrowseCandidates />} />
             <Route path='/candidates-profile' element={<CandidatesProfile />} />
             <Route path='/shortlisted-candidates' element={<ShortlistedCandidates />} />
+            <Route path='/messages' element={<Chat />} />
 
 
 

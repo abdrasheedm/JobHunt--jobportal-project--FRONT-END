@@ -139,8 +139,8 @@ function EditProfile() {
                 <h1 className="text-xl text-myBlue text-center mb-5">
                   Personal Details
                 </h1>
-                <div className="flex flex-wrap justify-around mb-5">
-                  <div>
+                <div className="grid grid-cols-2 mb-5">
+                  <div className="col-span-2 md:col-span-1 px-5">
                     <label for="firstName" className="block mb-2 text-sm">
                       First Name
                     </label>
@@ -155,7 +155,7 @@ function EditProfile() {
                       required
                     />
                   </div>
-                  <div>
+                  <div className="col-span-2 md:col-span-1 px-5">
                     <label for="LastName" className="block mb-2 text-sm">
                       Last Name
                     </label>
@@ -171,8 +171,8 @@ function EditProfile() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-around">
-                  <div>
+                <div className="grid grid-cols-2 mb-5">
+                  <div className="col-span-2 md:col-span-1 px-5">
                     <label for="email" className="block mb-2 text-sm">
                       Email address
                     </label>
@@ -187,7 +187,7 @@ function EditProfile() {
                       required
                     />
                   </div>
-                  <div>
+                  <div className="col-span-2 md:col-span-1 px-5">
                     <label for="number" className="block mb-2 text-sm">
                       PhoneNumber
                     </label>
@@ -210,8 +210,8 @@ function EditProfile() {
                 <h1 className="text-xl text-myBlue text-center mb-5">
                   Company Details
                 </h1>
-                <div className="flex flex-wrap justify-around mb-5">
-                  <div>
+                <div className="grid grid-cols-2 mb-5">
+                  <div className="col-span-2 md:col-span-1 px-5">
                     <label for="firstName" className="block mb-2 text-sm">
                       Company Name
                     </label>
@@ -226,12 +226,12 @@ function EditProfile() {
                       required
                     />
                   </div>
-                  <div>
+                  <div className="col-span-2 md:col-span-1 px-5">
                     <label for="LastName" className="block mb-2 text-sm">
                       Category
                     </label>
                     <select
-                      className="container p-2 my-1 rounded-md"
+                      className="container p-2 my-1 border rounded-md dark:border-gray-700"
                       onChange={(e) => {
                         const selectedCategory = e.target.value;
                         setCompanyCategory(selectedCategory);
@@ -248,8 +248,8 @@ function EditProfile() {
                     </select>
                   </div>
                 </div>
-                <div className="">
-                  <div className="mb-5 px-8">
+                <div className="mb-5">
+                  <div className="px-5">
                     <label for="about" className="block mb-2 text-sm">
                       About
                     </label>
@@ -264,8 +264,9 @@ function EditProfile() {
                       required
                     />
                   </div>
-                  <div className="flex flex-wrap justify-around mb-5">
-                    <div>
+                  </div>
+                  <div className="grid grid-cols-3 mb-5">
+                    <div className="col-span-3 md:col-span-1 px-5">
                       <label for="firstName" className="block mb-2 text-sm">
                         CEO Name
                       </label>
@@ -280,7 +281,7 @@ function EditProfile() {
                         required
                       />
                     </div>
-                    <div>
+                    <div className="col-span-3 md:col-span-1 px-5">
                       <label for="LastName" className="block mb-2 text-sm">
                         Founder Name
                       </label>
@@ -295,9 +296,7 @@ function EditProfile() {
                         required
                       />
                     </div>
-                  </div>
-                  <div className="flex flex-wrap  justify-around mb-5">
-                    <div>
+                    <div className="col-span-3 md:col-span-1 px-5">
                       <label for="firstName" className="block mb-2 text-sm">
                         Head office Location
                       </label>
@@ -312,6 +311,9 @@ function EditProfile() {
                         required
                       />
                     </div>
+                  </div>
+                  <div className="flex flex-wrap  justify-around mb-5">
+                    
                     <div>
                       <label for="LastName" className="block mb-2 text-sm">
                         Company Logo
@@ -335,7 +337,6 @@ function EditProfile() {
                 >
                   Save
                 </button>
-                </div>
               </div>
             </form>
           </div>
